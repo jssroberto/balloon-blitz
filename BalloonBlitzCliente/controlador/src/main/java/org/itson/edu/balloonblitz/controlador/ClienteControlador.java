@@ -2,12 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package org.itson.edu.balloonblitzcliente.vista;
+package org.itson.edu.balloonblitz.controlador;
 
 /**
  *
  * @author elimo
  */
-public class PartidaVista {
+public class ClienteControlador {
     
 }
