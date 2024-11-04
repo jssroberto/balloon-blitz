@@ -7,9 +7,9 @@
     <packaging>pom</packaging>
     
     <modules>
-        <module>../modelo</module>
-        <module>../controlador</module>
-        <module>../vista</module>
+         <module>../modelo-cliente</module>
+        <module>../controlador-cliente</module>
+        <module>../vista-cliente</module>
     </modules>
     
     <properties>
