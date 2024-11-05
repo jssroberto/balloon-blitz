@@ -39,7 +39,7 @@ public class FramePrincipal extends javax.swing.JFrame {
         }
         initComponents();
         setIcons();
-        iniciarMusica(70.0F);
+        iniciarMusica(80.0F);
     }
 
     /**

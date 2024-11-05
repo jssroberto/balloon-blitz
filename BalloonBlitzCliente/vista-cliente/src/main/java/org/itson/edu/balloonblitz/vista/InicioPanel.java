@@ -59,7 +59,9 @@ public class InicioPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnJugarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnJugarActionPerformed
-        // TODO add your handling code here:
+        if (true) {
+            framePrincipal.cambiarPanel(new PersonalizarPanel(framePrincipal));
+        }
     }//GEN-LAST:event_btnJugarActionPerformed
 
 
