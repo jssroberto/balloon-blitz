@@ -14,8 +14,12 @@ public class pruebacliente {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Cliente cliente = new Cliente("localhost", 12345);
-        cliente.enviarMensaje("Hola, servidor!", "Cliente");
+         Cliente cliente = new Cliente("localhost", 12345);
+        
+        cliente.start();
+
+
+    
     }
 
 }

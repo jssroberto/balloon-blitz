@@ -8,47 +8,75 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import org.itson.edu.balloonblitz.entidades.Mensaje;
+import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 
 /**
  *
  * @author elimo
  */
-public class Cliente {
+public class Cliente extends Thread {
+
     private Socket socket;
     private ObjectOutputStream salida;
     private ObjectInputStream entrada;
-    private Mensaje mensaje;
+    private boolean conectado;
 
     public Cliente(String host, int puerto) {
         try {
             socket = new Socket(host, puerto);
             salida = new ObjectOutputStream(socket.getOutputStream());
             entrada = new ObjectInputStream(socket.getInputStream());
+            conectado = true;
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void enviarMensaje(String contenido, String remitente) {
+    @Override
+    public void run() {
+        while (conectado) {
+            
+            Evento mensajeRecibido;
+            try {
+                mensajeRecibido = (Evento) entrada.readObject();
+                procesarMensaje(mensajeRecibido);
+            } catch (IOException | ClassNotFoundException ex) {
+                ex.getMessage();
+            }
+            
+        }
+        desconectar();
+    }
+
+    private void procesarMensaje(Evento mensajeRecibido) {
+       
+        System.out.println("Mensaje recibido: " + mensajeRecibido);
+    }
+
+    public void enviarMensaje(Evento evento) {
         try {
-            mensaje = new Mensaje(contenido, remitente);
-            salida.writeObject(mensaje);
-
-            Mensaje respuesta = (Mensaje) entrada.readObject();
-            System.out.println("Servidor responde: " + respuesta.getContenido() + ", Enviado por: " + respuesta.getRemitente());
-
-            salida.close();
-            entrada.close();
-            socket.close();
-        } catch (IOException | ClassNotFoundException e) {
+            salida.writeObject(evento);
+            salida.flush(); 
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void main(String[] args) {
-        Cliente cliente = new Cliente("localhost", 12345);
-        cliente.enviarMensaje("Hola, servidor!", "Cliente");
+    private Evento obtenerEvento() {
+        
+        //TO DO
+        return new Evento("Mensaje de prueba"); 
     }
-    
+
+    private void desconectar() {
+        try {
+            conectado = false; 
+            entrada.close();
+            salida.close();
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

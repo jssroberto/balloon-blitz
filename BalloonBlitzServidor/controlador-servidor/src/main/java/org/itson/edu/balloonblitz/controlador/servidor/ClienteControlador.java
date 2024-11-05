@@ -8,47 +8,85 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import org.itson.edu.balloonblitz.entidades.Mensaje;
+import java.util.HashSet;
+import java.util.Set;
+import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 
 /**
  *
  * @author elimo
  */
-public class ClienteControlador extends Thread{
+public class ClienteControlador extends Thread {
+
     private Socket socket;
     private ObjectOutputStream salida;
     private ObjectInputStream entrada;
-    private Mensaje mensajeCliente;
-    
-    
+    private static Set<ObjectOutputStream> clientes = new HashSet<>();
+    private boolean conectado;
+
     public ClienteControlador(Socket socket) {
         this.socket = socket;
         try {
-            salida = new ObjectOutputStream(socket.getOutputStream());
             entrada = new ObjectInputStream(socket.getInputStream());
+            salida = new ObjectOutputStream(socket.getOutputStream());
+            conectado = true;
+
+            synchronized (clientes) {
+                clientes.add(salida);
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
+
     @Override
     public void run() {
         try {
-            mensajeCliente =  (Mensaje) entrada.readObject();
-            System.out.println("Cliente dice: " + mensajeCliente.getContenido() + ", Enviado: " + mensajeCliente.getRemitente());
+            while (conectado) {
 
-            // Responde al cliente con un nuevo objeto
-            Mensaje respuesta = new Mensaje("Hola, cliente!", "Eliana");
-            salida.writeObject(respuesta);
+                Evento mensajeRecibido = (Evento) entrada.readObject();
+                procesarMensaje(mensajeRecibido);
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            desconectar();
+        }
+    }
 
-          
+    private void procesarMensaje(Evento mensajeRecibido) {
+        System.out.println("Mensaje recibido: " + mensajeRecibido);
+
+        enviarEventoAMisClientes(mensajeRecibido);
+    }
+
+    private void enviarEventoAMisClientes(Evento evento) {
+        synchronized (clientes) {
+            for (ObjectOutputStream cliente : clientes) {
+                try {
+                    cliente.writeObject(evento);
+                    cliente.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void desconectar() {
+        conectado = false;
+        try {
+
+            synchronized (clientes) {
+                clientes.remove(salida);
+            }
             entrada.close();
             salida.close();
             socket.close();
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
-    
+
 }

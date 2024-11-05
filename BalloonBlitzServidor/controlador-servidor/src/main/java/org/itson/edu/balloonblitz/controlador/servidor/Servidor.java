@@ -35,20 +35,12 @@ public class Servidor {
         while (true) {
             Socket socketCliente = serverSocket.accept();
             System.out.println("Cliente conectado: " + socketCliente.getInetAddress().getHostAddress());
-
+            
             ClienteControlador controladorCliente = new ClienteControlador(socketCliente);
             controladorCliente.start();  // Inicia el hilo para manejar la comunicación
         }
     }
 
-    public static void main(String[] args) {
-        try {
-            Servidor servidor = Servidor.obtenerInstancia();
-            servidor.iniciarSocket(12345);  // Escucha en el puerto 12345
-        } catch (IOException e) {
-            System.err.println("Error al iniciar el servidor: " + e.getMessage());
-        }
-    }
 }
 
 
