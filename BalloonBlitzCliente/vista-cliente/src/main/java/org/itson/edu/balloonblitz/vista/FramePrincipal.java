@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import org.netbeans.lib.awtextra.AbsoluteLayout;
 
 /**
  *
@@ -29,6 +30,7 @@ public class FramePrincipal extends javax.swing.JFrame {
      * Creates new form FramePrincipal
      */
     public FramePrincipal() {
+        this.setLayout(new AbsoluteLayout());
         try {
             UIManager.setLookAndFeel(new FlatMacLightLaf());
         } catch (UnsupportedLookAndFeelException e) {
@@ -54,18 +56,7 @@ public class FramePrincipal extends javax.swing.JFrame {
         setName("framePrincipal"); // NOI18N
         setResizable(false);
         setSize(new java.awt.Dimension(1280, 680));
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1280, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 680, Short.MAX_VALUE)
-        );
-
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         getAccessibleContext().setAccessibleDescription("");
         getAccessibleContext().setAccessibleParent(this);
 
@@ -91,8 +82,7 @@ public class FramePrincipal extends javax.swing.JFrame {
      * @param panel El panel que se va a agregar a la ventana.
      */
     private void ponerEnFrame(JPanel panel) {
-        this.add(panel);
-        panel.setBounds(0, 0, 1280, 680);
+        this.add(panel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1280, 680));
         this.setLocationRelativeTo(null);
         this.pack();
     }

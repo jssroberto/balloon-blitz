@@ -32,24 +32,39 @@ public class InicioPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        btnJugar = new javax.swing.JButton();
+        fondo = new javax.swing.JLabel();
+
         setMaximumSize(new java.awt.Dimension(1280, 680));
         setMinimumSize(new java.awt.Dimension(1280, 680));
+        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1280, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 680, Short.MAX_VALUE)
-        );
+        btnJugar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/btn/jugar.png"))); // NOI18N
+        btnJugar.setBorder(null);
+        btnJugar.setBorderPainted(false);
+        btnJugar.setContentAreaFilled(false);
+        btnJugar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnJugar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnJugarActionPerformed(evt);
+            }
+        });
+        add(btnJugar, new org.netbeans.lib.awtextra.AbsoluteConstraints(523, 534, 243, 66));
+
+        fondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/panel/inicio.png"))); // NOI18N
+        fondo.setToolTipText("");
+        add(fondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         getAccessibleContext().setAccessibleName("");
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnJugarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnJugarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnJugarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnJugar;
+    private javax.swing.JLabel fondo;
     // End of variables declaration//GEN-END:variables
 }
