@@ -1,4 +1,4 @@
-package org.itson.edu.balloonblitz.controlador;
+package org.itson.edu.balloonblitz.entidades;
 
 import java.io.Serializable;
 
