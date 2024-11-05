@@ -13,34 +13,42 @@ import java.net.Socket;
  * @author elimo
  */
 public class Servidor {
-    
+
     private static Servidor instancia;
     private ServerSocket serverSocket;
-    
-    private Servidor(){
-        
+
+    private Servidor() {
+
     }
-    
-    /**
-     * Metodo que regresa una sola instancia del servidor, si no existe se crea, si existe se duelve la ya creada
-     * @return Instancia creada del servidor
-     */
-    public static synchronized Servidor obtenerInstancia(){
-        if(instancia == null){
+
+    public static synchronized Servidor obtenerInstancia() {
+        if (instancia == null) {
             instancia = new Servidor();
         }
         return instancia;
     }
-    
-    public void iniciarSocket(int puerto) throws IOException{
+
+    public void iniciarSocket(int puerto) throws IOException {
         serverSocket = new ServerSocket(puerto);
-        System.out.println("Servidor iniciado en el puerto "+puerto);
-        
-        while(true){
+        System.out.println("Servidor iniciado en el puerto " + puerto);
+
+        while (true) {
             Socket socketCliente = serverSocket.accept();
-            System.out.println("Cliente conectado: "+socketCliente.getInetAddress().getHostAddress());
+            System.out.println("Cliente conectado: " + socketCliente.getInetAddress().getHostAddress());
+
+            ClienteControlador controladorCliente = new ClienteControlador(socketCliente);
+            controladorCliente.start();  // Inicia el hilo para manejar la comunicación
         }
-        
     }
-    
+
+    public static void main(String[] args) {
+        try {
+            Servidor servidor = Servidor.obtenerInstancia();
+            servidor.iniciarSocket(12345);  // Escucha en el puerto 12345
+        } catch (IOException e) {
+            System.err.println("Error al iniciar el servidor: " + e.getMessage());
+        }
+    }
 }
+
+
