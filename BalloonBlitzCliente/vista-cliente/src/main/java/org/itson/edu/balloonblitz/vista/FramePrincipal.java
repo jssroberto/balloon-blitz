@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import org.itson.edu.balloonblitz.vista.music.MusicPlayer;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
 
 /**
@@ -38,6 +39,7 @@ public class FramePrincipal extends javax.swing.JFrame {
         }
         initComponents();
         setIcons();
+        iniciarMusica(70.0F);
     }
 
     /**
@@ -95,6 +97,12 @@ public class FramePrincipal extends javax.swing.JFrame {
         iconImages.add(new ImageIcon(FramePrincipal.class.getResource("/icons/icon128.png")).getImage());
         initComponents();
         this.setIconImages(iconImages);
+    }
+
+    private void iniciarMusica(float volume) {
+        MusicPlayer musicPlayer = new MusicPlayer("/assets/main-theme.wav");
+        musicPlayer.play();
+        musicPlayer.setVolume(volume);
     }
 
     // Métodos de aviso, confirmación, etc., sin cambios
