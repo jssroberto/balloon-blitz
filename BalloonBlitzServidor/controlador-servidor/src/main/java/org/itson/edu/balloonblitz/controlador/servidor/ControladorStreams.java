@@ -10,15 +10,25 @@ import java.io.ObjectOutputStream;
 /**
  *
  * @author elimo
+ * @param <T>
  */
-public class ControladorStreams {
+public class ControladorStreams<T> {
 
     private final ObjectOutputStream salida;
     private final ObjectInputStream entrada;
+    private T objetoRecibido;
 
     public ControladorStreams(ObjectOutputStream salida, ObjectInputStream entrada) {
         this.salida = salida;
         this.entrada = entrada;
+    }
+
+    public T getObjetoRecibido() {
+        return objetoRecibido;
+    }
+
+    public void setObjetoRecibido(T objetoRecibido) {
+        this.objetoRecibido = objetoRecibido;
     }
 
     public ObjectOutputStream getSalida() {
@@ -28,4 +38,8 @@ public class ControladorStreams {
     public ObjectInputStream getEntrada() {
         return entrada;
     }
+
+    
+
+   
 }

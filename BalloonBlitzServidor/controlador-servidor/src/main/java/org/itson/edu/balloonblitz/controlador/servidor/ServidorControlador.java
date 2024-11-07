@@ -18,6 +18,7 @@ public class ServidorControlador<T> extends Thread {
     private ObjectInputStream entrada;
     private boolean conectado;
     private T mensajeRecibido;
+    private ControladorStreams streams;
 
     public ServidorControlador() {
     }
@@ -27,6 +28,7 @@ public class ServidorControlador<T> extends Thread {
         try {
             entrada = new ObjectInputStream(socket.getInputStream());
             salida = new ObjectOutputStream(socket.getOutputStream());
+            streams = new ControladorStreams(salida, entrada);
             conectado = true;
 
         } catch (IOException e) {
@@ -41,6 +43,7 @@ public class ServidorControlador<T> extends Thread {
             while (conectado) {
 
                 mensajeRecibido = (T) entrada.readObject();
+                streams.setObjetoRecibido(mensajeRecibido);
                 System.out.println(mensajeRecibido);
             }
 
@@ -53,7 +56,7 @@ public class ServidorControlador<T> extends Thread {
 
     public void unirseALobby() {
         Lobby lobby = Lobby.getInstance();
-        lobby.agregarCliente(salida, entrada);
+        lobby.agregarCliente(streams);
     }
 
     private void desconectar() {

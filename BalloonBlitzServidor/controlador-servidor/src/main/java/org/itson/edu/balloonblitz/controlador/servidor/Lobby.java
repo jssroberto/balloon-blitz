@@ -25,8 +25,8 @@ public class Lobby {
     }
 
     
-    public synchronized void agregarCliente(ObjectOutputStream salida, ObjectInputStream entrada) {
-        clientesEnLobby.add(new ControladorStreams(salida, entrada));
+    public synchronized void agregarCliente(ControladorStreams streams) {
+        clientesEnLobby.add(streams);
         verificarYCrearPartida();
     }
 
@@ -48,19 +48,9 @@ public class Lobby {
             clientesEnLobby.removeAll(nuevaPartida);
             partidas.add(nuevaPartida);
             manejador = new ManejadorPartida(nuevaPartida);
-//            manejador.empezarPartida();
+            manejador.empezarPartida();
         }
     }
 
-    private void notificarJugadoresPartida(List<ControladorStreams> jugadores) {
-        String mensajeInicio = "¡La partida está lista! Puedes comenzar a jugar.";
-        for (ControladorStreams jugador : jugadores) {
-            try {
-                jugador.getSalida().writeObject(mensajeInicio);
-                jugador.getSalida().flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+    
 }

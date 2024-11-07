@@ -22,16 +22,11 @@ public class ManejadorPartida extends Thread {
 
     public ManejadorPartida(List<ControladorStreams> jugadores) {
         streamsJugador1 = jugadores.get(0);
-        streamsJugador1 = jugadores.get(1);
-        try {
-            if (streamsJugador1.getEntrada().readObject() instanceof Jugador && streamsJugador2.getEntrada().readObject() instanceof Jugador) {
-                jugador1 = (Jugador) streamsJugador1.getEntrada().readObject();
-                jugador2 = (Jugador) streamsJugador2.getEntrada().readObject();
-                partida = new Partida(jugador1, jugador2);
-
-            }
-        } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(ManejadorPartida.class.getName()).log(Level.SEVERE, null, ex);
+        streamsJugador2 = jugadores.get(1);
+        if (streamsJugador1.getObjetoRecibido() instanceof Jugador && streamsJugador2.getObjetoRecibido()  instanceof Jugador) {
+            jugador1 = (Jugador) streamsJugador1.getObjetoRecibido();
+            jugador2 = (Jugador) streamsJugador2.getObjetoRecibido();
+           
         }
     }
 

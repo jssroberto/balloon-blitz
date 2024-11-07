@@ -17,16 +17,14 @@ public class pruebacliente {
      */
     public static void main(String[] args) {
         Jugador jugador = new Jugador();
-        
-        jugador.setFotoPerfil("rr");
-        jugador.setNombre("rrs");
-        
-         ClienteControlador cliente = new ClienteControlador("localhost", 12345);
-         cliente.start();
+
+        jugador.setFotoPerfil("rrrr");
+        jugador.setNombre("rrrrr");
+
+        ClienteControlador cliente = new ClienteControlador("localhost", 12345);
+        cliente.start();
         cliente.enviarMensaje(jugador);
 
-
-    
     }
 
 }
