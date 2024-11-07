@@ -1,20 +1,17 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package org.itson.edu.balloonblitz.controlador;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 
 /**
  *
  * @author elimo
+ * @param <T>
  */
-public class Cliente extends Thread {
+public class Cliente<T> extends Thread {
 
     private Socket socket;
     private ObjectOutputStream salida;
@@ -36,9 +33,9 @@ public class Cliente extends Thread {
     public void run() {
         while (conectado) {
             
-            Evento mensajeRecibido;
+            T mensajeRecibido;
             try {
-                mensajeRecibido = (Evento) entrada.readObject();
+                mensajeRecibido = (T) entrada.readObject();
                 procesarMensaje(mensajeRecibido);
             } catch (IOException | ClassNotFoundException ex) {
                 ex.getMessage();
@@ -48,12 +45,12 @@ public class Cliente extends Thread {
         desconectar();
     }
 
-    private void procesarMensaje(Evento mensajeRecibido) {
+    private void procesarMensaje(T mensajeRecibido) {
        
         System.out.println("Mensaje recibido: " + mensajeRecibido);
     }
 
-    public void enviarMensaje(Evento evento) {
+    public void enviarMensaje(T evento) {
         try {
             salida.writeObject(evento);
             salida.flush(); 
@@ -62,10 +59,12 @@ public class Cliente extends Thread {
         }
     }
 
-    private Evento obtenerEvento() {
+    private T obtenerEvento() {
         
         //TO DO
-        return new Evento("Mensaje de prueba"); 
+        //return new Evento("Mensaje de prueba"); 
+        return null;
+        
     }
 
     private void desconectar() {

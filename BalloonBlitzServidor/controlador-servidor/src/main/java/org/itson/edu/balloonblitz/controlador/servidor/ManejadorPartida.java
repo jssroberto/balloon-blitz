@@ -1,13 +1,22 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package org.itson.edu.balloonblitz.controlador.servidor;
+
+import java.io.ObjectOutputStream;
+import java.util.List;
+import org.itson.edu.balloonblitz.entidades.Partida;
 
 /**
  *
  * @author elimo
  */
-public class ManejadorPartida {
+public class ManejadorPartida extends Thread{
+    
+    Partida partida;
+    
+
+    public ManejadorPartida(List<ObjectOutputStream> jugadores) {
+        partida = new Partida(jugadores.getFirst(), jugadores.getLast());
+    }
+    
     
 }
