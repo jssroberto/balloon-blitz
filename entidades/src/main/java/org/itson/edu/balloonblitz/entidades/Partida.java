@@ -12,7 +12,9 @@ import java.util.List;
  *
  * @author elimo
  */
-public class Partida implements Serializable{
+public class Partida implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     private List<Disparo> registroDisparos;
     private Jugador jugador1;
     private Jugador jugador2;
@@ -55,6 +57,5 @@ public class Partida implements Serializable{
     public void setEstadoPartida(EstadoPartida estadoPartida) {
         this.estadoPartida = estadoPartida;
     }
-    
-    
+
 }

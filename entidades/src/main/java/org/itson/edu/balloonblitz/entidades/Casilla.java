@@ -12,7 +12,7 @@ import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoCasilla;
  * @author elimo
  */
 public class Casilla implements Serializable{
-    
+    private static final long serialVersionUID = 1L;
     private EstadoCasilla estado;
     private Coordenada coordenada;
     private Nave nave;

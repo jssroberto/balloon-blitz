@@ -14,6 +14,7 @@ import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoNave;
  */
 public abstract class Nave implements Serializable{
     
+    private static final long serialVersionUID = 1L;
     protected TipoNave tipoNave;
     protected int tamaño;
     protected EstadoNave estadoNave;

@@ -11,6 +11,7 @@ import java.io.Serializable;
  * @author elimo
  */
 public class Coordenada implements Serializable{
+    private static final long serialVersionUID = 1L;
     private int fila;
     private int columna;
 

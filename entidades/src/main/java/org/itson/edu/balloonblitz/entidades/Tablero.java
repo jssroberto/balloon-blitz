@@ -10,9 +10,10 @@ import java.io.Serializable;
  *
  * @author elimo
  */
-public class Tablero implements Serializable{
-    
-     private Casilla[][] matriz;
+public class Tablero implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    private Casilla[][] matriz;
 
     public Tablero() {
         matriz = new Casilla[10][10];
@@ -26,5 +27,5 @@ public class Tablero implements Serializable{
             }
         }
     }
-    
+
 }
