@@ -13,6 +13,7 @@ import java.util.List;
  */
 public class Jugador implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     private String nombre;
     private String fotoPerfil;
     private Tablero tableroPropio;
@@ -67,7 +68,6 @@ public class Jugador implements Serializable {
     public void setNavesRestantes(int navesRestantes) {
         this.navesRestantes = navesRestantes;
     }
-    
     
 
 }

@@ -18,8 +18,8 @@ public class pruebacliente {
     public static void main(String[] args) {
         Jugador jugador = new Jugador();
         
-        jugador.setFotoPerfil("rrr");
-        jugador.setNombre("tt");
+        jugador.setFotoPerfil("gtgt");
+        jugador.setNombre("eeee");
         
          ClienteControlador cliente = new ClienteControlador("localhost", 12345);
          cliente.start();
