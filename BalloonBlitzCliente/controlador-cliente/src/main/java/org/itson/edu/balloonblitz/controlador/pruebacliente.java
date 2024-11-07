@@ -4,6 +4,8 @@
  */
 package org.itson.edu.balloonblitz.controlador;
 
+import org.itson.edu.balloonblitz.entidades.Jugador;
+
 /**
  *
  * @author elimo
@@ -14,9 +16,14 @@ public class pruebacliente {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-         Cliente cliente = new Cliente("localhost", 12345);
+        Jugador jugador = new Jugador();
         
-        cliente.start();
+        jugador.setFotoPerfil("rrr");
+        jugador.setNombre("tt");
+        
+         ClienteControlador cliente = new ClienteControlador("localhost", 12345);
+         cliente.start();
+        cliente.enviarMensaje(jugador);
 
 
     

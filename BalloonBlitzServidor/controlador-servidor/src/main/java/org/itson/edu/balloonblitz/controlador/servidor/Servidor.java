@@ -17,10 +17,6 @@ public class Servidor {
     private static Servidor instancia;
     private ServerSocket serverSocket;
 
-    private Servidor() {
-
-    }
-
     public static synchronized Servidor obtenerInstancia() {
         if (instancia == null) {
             instancia = new Servidor();
@@ -36,8 +32,9 @@ public class Servidor {
             Socket socketCliente = serverSocket.accept();
             System.out.println("Cliente conectado: " + socketCliente.getInetAddress().getHostAddress());
             
-            ClienteControlador controladorCliente = new ClienteControlador(socketCliente);
+            ServidorControlador controladorCliente = new ServidorControlador(socketCliente);
             controladorCliente.start();  // Inicia el hilo para manejar la comunicación
+            controladorCliente.unirseALobby();
         }
     }
 

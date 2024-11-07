@@ -1,32 +1,33 @@
-
 package org.itson.edu.balloonblitz.controlador.servidor;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
 /**
  *
  * @author elimo
  * @param <T>
  */
-public class ClienteControlador<T> extends Thread {
+public class ServidorControlador<T> extends Thread {
 
     private Socket socket;
     private ObjectOutputStream salida;
     private ObjectInputStream entrada;
     private boolean conectado;
+    private T mensajeRecibido;
 
-    public ClienteControlador(Socket socket) {
+    public ServidorControlador() {
+    }
+
+    public ServidorControlador(Socket socket) {
         this.socket = socket;
         try {
             entrada = new ObjectInputStream(socket.getInputStream());
             salida = new ObjectOutputStream(socket.getOutputStream());
             conectado = true;
-
-            Lobby lobby = Lobby.getInstance();
-            lobby.agregarCliente(salida);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -38,9 +39,11 @@ public class ClienteControlador<T> extends Thread {
     public void run() {
         try {
             while (conectado) {
-                T mensajeRecibido = (T) entrada.readObject();
-                procesarMensaje(mensajeRecibido);
+
+                mensajeRecibido = (T) entrada.readObject();
+                System.out.println(mensajeRecibido);
             }
+
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
@@ -48,9 +51,9 @@ public class ClienteControlador<T> extends Thread {
         }
     }
 
-    private void procesarMensaje(T mensajeRecibido) {
-        System.out.println("Mensaje recibido: " + mensajeRecibido);
-
+    public void unirseALobby() {
+        Lobby lobby = Lobby.getInstance();
+        lobby.agregarCliente(salida, entrada);
     }
 
     private void desconectar() {
