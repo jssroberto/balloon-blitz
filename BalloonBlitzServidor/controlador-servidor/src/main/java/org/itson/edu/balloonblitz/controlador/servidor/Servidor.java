@@ -33,7 +33,6 @@ public class Servidor {
             System.out.println("Cliente conectado: " + socketCliente.getInetAddress().getHostAddress());
             
             ServidorControlador controladorCliente = new ServidorControlador(socketCliente);
-            controladorCliente.start();  // Inicia el hilo para manejar la comunicación
             controladorCliente.unirseALobby();
         }
     }

@@ -5,19 +5,21 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.itson.edu.balloonblitz.entidades.Jugador;
 
 /**
  *
  * @author elimo
  * @param <T>
  */
-public class ServidorControlador<T> extends Thread {
+public class ServidorControlador{
 
     private Socket socket;
     private ObjectOutputStream salida;
     private ObjectInputStream entrada;
     private boolean conectado;
-    private T mensajeRecibido;
     private ControladorStreams streams;
 
     public ServidorControlador() {
@@ -37,20 +39,13 @@ public class ServidorControlador<T> extends Thread {
         }
     }
 
-    @Override
-    public void run() {
+    public Jugador recibirJugador() {
         try {
-            while (conectado) {
-
-                mensajeRecibido = (T) entrada.readObject();
-                streams.setObjetoRecibido(mensajeRecibido);
-                System.out.println(mensajeRecibido);
-            }
-
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        } finally {
-            desconectar();
+            Jugador jugador = (Jugador) entrada.readObject();
+            return jugador;
+        } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(ServidorControlador.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
     }
 
