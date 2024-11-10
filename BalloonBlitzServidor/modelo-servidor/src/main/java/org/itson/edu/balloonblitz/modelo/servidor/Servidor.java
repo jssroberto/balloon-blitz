@@ -9,16 +9,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.itson.edu.balloonblitz.entidades.Jugador;
-import org.itson.edu.balloonblitz.entidades.Partida;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.entidades.eventos.UnirseAServidor;
 
@@ -26,20 +22,20 @@ import org.itson.edu.balloonblitz.entidades.eventos.UnirseAServidor;
  *
  * @author elimo
  */
-public class Servidor {
+public final class Servidor {
 
-    private final List<ControladorStreams> conexiones;
     private ConexionObserver observadorConexion;
     private EventoObserver observadorEventos;
     private ControladorStreams conexion;
     private final ExecutorService executorService = Executors.newFixedThreadPool(10);
     private ServerSocket serverSocket;
-    private final int MINIMO_JUGADORES = 2;
-    private Set<Partida> partidas = new HashSet<>();
 
     public Servidor() {
-
-        this.conexiones = new ArrayList<>();
+        try {
+            aceptarClientes();
+        } catch (IOException ex) {
+            Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void setObservadorConexion(ConexionObserver observadorConexion) {
@@ -53,11 +49,9 @@ public class Servidor {
     // Método para aceptar conexiones de jugadores
     public void aceptarClientes() throws IOException {
         while (true) {
-            Socket socketCliente = serverSocket.accept();  // Acepta la conexión del cliente
-            Jugador jugador = new Jugador();  // Crear un jugador nuevo
+            Socket socketCliente = serverSocket.accept();
             conexion = new ControladorStreams(new ObjectOutputStream(socketCliente.getOutputStream()), new ObjectInputStream(socketCliente.getInputStream()));
 
-            conexiones.add(conexion);
             executorService.submit(() -> recibirDatosCiente(conexion.getEntrada()));
             executorService.submit(() -> mandarDatosCliente(conexion.getSalida(), new UnirseAServidor()));
             if (observadorConexion != null) {
