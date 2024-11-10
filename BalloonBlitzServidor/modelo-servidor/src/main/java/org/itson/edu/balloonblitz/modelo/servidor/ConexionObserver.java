@@ -4,14 +4,16 @@
  */
 package org.itson.edu.balloonblitz.modelo.servidor;
 
-import org.itson.edu.balloonblitz.entidades.eventos.Evento;
-
 /**
- *
+ * Interfaz para los suscriptores de la conexion
  * @author elimo
  */
 public interface ConexionObserver {
     
+    /**
+     * Metodo que obtiene los I/O de cada cliente para su manejo por parte de los suscriptores
+     * @param streams Streams del cliente
+     */
     void clienteConectado(ControladorStreams streams);
     
    

@@ -9,10 +9,9 @@ import org.itson.edu.balloonblitz.modelo.servidor.ControladorStreams;
 import org.itson.edu.balloonblitz.modelo.servidor.EventoObserver;
 
 /**
- *
+ * Clase que representa el manejador de la partida
  * @author elimo
  */
-
 public class ManejadorPartida extends Thread implements EventoObserver{
 
     Partida partida;
@@ -21,12 +20,20 @@ public class ManejadorPartida extends Thread implements EventoObserver{
     Jugador jugador1;
     Jugador jugador2;
 
+    /**
+     * Cosntructor que agrega los I/O de los jugadores
+     * @param jugadores 
+     */
     public ManejadorPartida(List<ControladorStreams> jugadores) {
         
         streamsJugador1 = jugadores.get(0);
         streamsJugador2 = jugadores.get(1);
     }
 
+    /**
+     * Metodo suscriptor que maneja el evento obtenido del servidor
+     * @param evento Evento enviado por el cliente
+     */
     @Override
     public void manejarEvento(Evento evento) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody

@@ -8,30 +8,41 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 /**
- *
+ * Clase para trabsportar los I/O del cliente
  * @author elimo
- * @param <T>
  */
-public class ControladorStreams<T> {
+public class ControladorStreams {
 
     private final ObjectOutputStream salida;
     private final ObjectInputStream entrada;
 
+    /**
+     * Constructor que obtiene los I/O del cliente
+     *
+     * @param salida ObjectOutputStream del cliente
+     * @param entrada ObjectInputStream del cliente
+     */
     public ControladorStreams(ObjectOutputStream salida, ObjectInputStream entrada) {
         this.salida = salida;
         this.entrada = entrada;
     }
 
-
+    /**
+     * Metodo para obtener el output del cliente
+     *
+     * @return Output del cliente
+     */
     public ObjectOutputStream getSalida() {
         return salida;
     }
 
+    /**
+     * Metodo para obtener el input del cliente
+     *
+     * @return Input del cliente
+     */
     public ObjectInputStream getEntrada() {
         return entrada;
     }
 
-    
-
-   
 }
