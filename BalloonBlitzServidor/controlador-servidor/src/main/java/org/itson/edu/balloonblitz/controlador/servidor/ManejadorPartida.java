@@ -46,7 +46,7 @@ public class ManejadorPartida extends Thread implements EventoObserver {
      * Manda a enviar el evento enviado por el jugador2
      */
     public void obtenerEventoJugador2() {
-        servidor.recibirDatosCiente(streamsJugador1.getEntrada());
+        servidor.recibirDatosCiente(streamsJugador2.getEntrada());
     }
 
     /**
@@ -57,7 +57,8 @@ public class ManejadorPartida extends Thread implements EventoObserver {
      * @param evento Resultado de un evento
      */
     public void enviarEventoAJugadores(ObjectOutputStream salida1, ObjectOutputStream salida2, Evento evento) {
-        servidor.mandarDatosCliente(salida1, salida2, evento);
+        servidor.mandarDatosCliente(salida1, evento);
+        servidor.mandarDatosCliente(salida2, evento);
     }
 
     /**

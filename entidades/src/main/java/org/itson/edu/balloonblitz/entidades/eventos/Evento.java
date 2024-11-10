@@ -10,4 +10,5 @@ package org.itson.edu.balloonblitz.entidades.eventos;
  */
 public interface Evento {
     
+    void  manejarEvento();
 }
