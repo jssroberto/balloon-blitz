@@ -1,5 +1,6 @@
 package org.itson.edu.balloonblitz.controlador.servidor;
 
+import org.itson.edu.balloonblitz.modelo.servidor.ConexionObserver;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import org.itson.edu.balloonblitz.modelo.servidor.ControladorStreams;
 
-public class Lobby {
+public class Lobby implements ConexionObserver{
 
     private static final int NUMERO_JUGADORES_NECESARIOS = 2;
     private static final Set<ControladorStreams> clientesEnLobby = ConcurrentHashMap.newKeySet();
@@ -50,6 +51,11 @@ public class Lobby {
             
             // Metodo a implementar manejador.empezarPartida();
         }
+    }
+
+    @Override
+    public void clienteConectado(ControladorStreams streams) {
+        agregarCliente(streams);
     }
 
     

@@ -17,10 +17,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.itson.edu.balloonblitz.controlador.servidor.Lobby;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.Partida;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
+import org.itson.edu.balloonblitz.entidades.eventos.UnirseAServidor;
 
 /**
  *
@@ -29,6 +29,8 @@ import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 public class Servidor {
 
     private final List<ControladorStreams> conexiones;
+    private ConexionObserver observadorConexion;
+    private EventoObserver observadorEventos;
     private ControladorStreams conexion;
     private final ExecutorService executorService = Executors.newFixedThreadPool(10);
     private ServerSocket serverSocket;
@@ -40,6 +42,14 @@ public class Servidor {
         this.conexiones = new ArrayList<>();
     }
 
+    public void setObservadorConexion(ConexionObserver observadorConexion) {
+        this.observadorConexion = observadorConexion;
+    }
+
+    public void setObservadorEventos(EventoObserver observadorEventos) {
+        this.observadorEventos = observadorEventos;
+    }
+
     // Método para aceptar conexiones de jugadores
     public void aceptarClientes() throws IOException {
         while (true) {
@@ -49,21 +59,25 @@ public class Servidor {
 
             conexiones.add(conexion);
             executorService.submit(() -> recibirDatosCiente(conexion.getEntrada()));
-           //Metodo a implementar executorService.submit(() -> mandarDatosCliente(conexion.getSalida(), new UnirseServidor()));
+            executorService.submit(() -> mandarDatosCliente(conexion.getSalida(), new UnirseAServidor()));
+            if (observadorConexion != null) {
+                observadorConexion.clienteConectado(conexion);
+            }
 
         }
     }
 
-    public Evento recibirDatosCiente(ObjectInputStream entrada) {
+    public void recibirDatosCiente(ObjectInputStream entrada) {
 
         try {
             Evento evento = (Evento) entrada.readObject();
-           // Metodo a implementar return procesarEvento(evento);
+            if (observadorEventos != null) {
+                observadorEventos.manejarEvento(evento);
+            }
         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+
         }
-        return null;
 
     }
 
@@ -77,15 +91,6 @@ public class Servidor {
             Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-    }
-
-    private void procesarEvento(Evento evento) {
-
-    }
-
-    private void emparejarJugadores() {
-        Lobby lobby = Lobby.getInstance();
-        lobby.agregarCliente(conexion);
     }
 
 }
