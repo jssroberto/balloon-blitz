@@ -14,7 +14,7 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
-import org.itson.edu.balloonblitz.entidades.eventos.UnirseAServidor;
+import org.itson.edu.balloonblitz.entidades.eventos.conexion.UnirseAServidor;
 
 /**
  * Clase que representa el servidor

@@ -3,11 +3,17 @@ package org.itson.edu.balloonblitz.controlador.servidor;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.Partida;
 import org.itson.edu.balloonblitz.entidades.Tablero;
-import org.itson.edu.balloonblitz.entidades.eventos.EnviarJugador;
+import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoPartida;
+import org.itson.edu.balloonblitz.entidades.eventos.conexion.EnviarJugador;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
+import org.itson.edu.balloonblitz.entidades.eventos.TurnoEvento;
 import org.itson.edu.balloonblitz.modelo.servidor.ControladorStreams;
 import org.itson.edu.balloonblitz.modelo.servidor.EventoObserver;
 import org.itson.edu.balloonblitz.modelo.servidor.Servidor;
@@ -18,16 +24,17 @@ import org.itson.edu.balloonblitz.modelo.servidor.Servidor;
  * @author elimo
  */
 public class ManejadorPartida extends Thread implements EventoObserver {
-    
-    ControladorStreams streamsJugador1;
-    ControladorStreams streamsJugador2;
-    Servidor servidor;
-    Jugador jugador1;
-    Jugador jugador2;
-    Partida partida;
-    Tablero tableroJugador1;
-    Tablero tableroJugador2;
 
+    private final ControladorStreams streamsJugador1;
+    private final ControladorStreams streamsJugador2;
+    private final Servidor servidor;
+    private Jugador jugador1;
+    private Jugador jugador2;
+    private Jugador jugadorActual;
+    private Partida partida;
+    private Tablero tableroJugador1;
+    private Tablero tableroJugador2;
+    
     /**
      * Constructor que agrega los I/O de los jugadores
      *
@@ -57,11 +64,13 @@ public class ManejadorPartida extends Thread implements EventoObserver {
      * Manda a enviar el resultado de los eventos a los jugadores
      *
      * @param salida1 Output del jugador 1
-     * @param salida2 Output del jugador 2
      * @param evento Resultado de un evento
      */
-    public void enviarEventoAJugadores(ObjectOutputStream salida1, ObjectOutputStream salida2, Evento evento) {
+    public void enviarEventoAJugador1(ObjectOutputStream salida1, Evento evento) {
         servidor.mandarDatosCliente(salida1, evento);
+    }
+
+    public void enviarEventoAJugador2(ObjectOutputStream salida2, Evento evento) {
         servidor.mandarDatosCliente(salida2, evento);
     }
 
@@ -77,30 +86,38 @@ public class ManejadorPartida extends Thread implements EventoObserver {
         if (entrada.equals(streamsJugador1.getEntrada())) {
             if (evento instanceof EnviarJugador) {
                 jugador1 = (Jugador) evento.manejarEvento();
+            } else {
+
+                evento = manejarPartida(evento, entrada);
+                partida = evento.getPartida();
+                enviarEventoAJugador2(streamsJugador2.getSalida(), evento);
             }
         } else if (entrada.equals(streamsJugador2.getEntrada())) {
             if (evento instanceof EnviarJugador) {
                 jugador2 = (Jugador) evento.manejarEvento();
+            } else {
+                evento = manejarPartida(evento, entrada);
+                enviarEventoAJugador1(streamsJugador1.getSalida(), evento);
             }
         }
-        evento = manejarPartida(evento, entrada);
-        enviarEventoAJugadores(streamsJugador1.getSalida(), streamsJugador2.getSalida(), evento.manejarEvento());
-        
+
         return null;
     }
-    
+
     @Override
     public void run() {
         obtenerEventoJugador1();
         obtenerEventoJugador2();
     }
-    
+
     public void crearPartida() {
         partida = new Partida(jugador1, jugador2);
         partida.setTableroJugador1(tableroJugador1);
         partida.setTableroJugador2(tableroJugador2);
+        partida.setEstadoPartida(EstadoPartida.ACTIVA);
+
     }
-    
+
     public Evento manejarPartida(Evento evento, ObjectInputStream entrada) {
         if (entrada.equals(streamsJugador1.getEntrada())) {
             evento.setEmisor(jugador1);
@@ -109,9 +126,9 @@ public class ManejadorPartida extends Thread implements EventoObserver {
         }
         evento.setPartida(partida);
         evento = evento.manejarEvento();
-        manejarEvento(evento, entrada);
-        return null;
-        
+        return evento;
     }
+
     
+
 }

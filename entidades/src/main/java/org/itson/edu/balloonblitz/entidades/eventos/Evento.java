@@ -18,4 +18,6 @@ public interface Evento {
     void setEmisor(Jugador salida);
 
     void setPartida(Partida partida);
+
+    Partida getPartida();
 }

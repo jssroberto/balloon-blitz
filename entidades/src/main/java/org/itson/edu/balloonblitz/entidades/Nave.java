@@ -35,5 +35,39 @@ public abstract class Nave implements Serializable{
             estadoNave = EstadoNave.HUNDIDA;
         }
     }
+
+    public TipoNave getTipoNave() {
+        return tipoNave;
+    }
+
+    public void setTipoNave(TipoNave tipoNave) {
+        this.tipoNave = tipoNave;
+    }
+
+    public int getTamaño() {
+        return tamaño;
+    }
+
+    public void setTamaño(int tamaño) {
+        this.tamaño = tamaño;
+    }
+
+    public EstadoNave getEstadoNave() {
+        return estadoNave;
+    }
+
+    public void setEstadoNave(EstadoNave estadoNave) {
+        this.estadoNave = estadoNave;
+    }
+
+    public int getImpactos() {
+        return impactos;
+    }
+
+    public void setImpactos(int impactos) {
+        this.impactos = impactos;
+    }
+    
+    
     
 }

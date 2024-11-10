@@ -28,4 +28,12 @@ public class Tablero implements Serializable {
         }
     }
 
+    public Casilla[][] getMatriz() {
+        return matriz;
+    }
+
+    public void setMatriz(Casilla[][] matriz) {
+        this.matriz = matriz;
+    }
+
 }

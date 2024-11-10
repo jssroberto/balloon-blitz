@@ -5,6 +5,7 @@
 package org.itson.edu.balloonblitz.entidades.eventos;
 
 import java.io.Serializable;
+import org.itson.edu.balloonblitz.entidades.Casilla;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.Partida;
 import org.itson.edu.balloonblitz.entidades.Tablero;
@@ -16,23 +17,27 @@ import org.itson.edu.balloonblitz.entidades.Tablero;
 public class PosicionarNaves implements Serializable, Evento {
 
     Partida partida;
-    Tablero tableroJugador1;
-    Tablero tableroJugador2;
+    Tablero tablero;
+    Jugador jugadorActual;
+    Casilla casilla;
 
-    public PosicionarNaves(Partida partida) {
-        this.partida = partida;
-        this.tableroJugador1 = partida.getTableroJugador1();
-        this.tableroJugador2 = partida.getTableroJugador2();
+    public PosicionarNaves() {
+        if (jugadorActual.equals(partida.getJugador1())) {
+            tablero = partida.getTableroJugador1();
+        } else {
+            tablero = partida.getTableroJugador2();
+        }
+        
     }
 
     @Override
     public Evento manejarEvento() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return this;
     }
 
     @Override
     public void setEmisor(Jugador salida) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        salida = jugadorActual;
     }
 
     @Override
@@ -40,8 +45,33 @@ public class PosicionarNaves implements Serializable, Evento {
         this.partida = partida;
     }
 
+    @Override
     public Partida getPartida() {
         return partida;
+    }
+
+    public Tablero getTablero() {
+        return tablero;
+    }
+
+    public void setTablero(Tablero tablero) {
+        this.tablero = tablero;
+    }
+
+    public Jugador getJugadorActual() {
+        return jugadorActual;
+    }
+
+    public void setJugadorActual(Jugador jugadorActual) {
+        this.jugadorActual = jugadorActual;
+    }
+
+    public Casilla getCasilla() {
+        return casilla;
+    }
+
+    public void setCasilla(Casilla casilla) {
+        this.casilla = casilla;
     }
 
 }
