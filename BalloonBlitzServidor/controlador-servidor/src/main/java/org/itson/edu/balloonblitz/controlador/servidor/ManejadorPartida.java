@@ -5,6 +5,8 @@ import java.io.ObjectOutputStream;
 import java.util.List;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.Partida;
+import org.itson.edu.balloonblitz.entidades.Tablero;
+import org.itson.edu.balloonblitz.entidades.eventos.EnviarJugador;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.modelo.servidor.ControladorStreams;
 import org.itson.edu.balloonblitz.modelo.servidor.EventoObserver;
@@ -16,13 +18,15 @@ import org.itson.edu.balloonblitz.modelo.servidor.Servidor;
  * @author elimo
  */
 public class ManejadorPartida extends Thread implements EventoObserver {
-
-    Partida partida;
+    
     ControladorStreams streamsJugador1;
     ControladorStreams streamsJugador2;
     Servidor servidor;
     Jugador jugador1;
     Jugador jugador2;
+    Partida partida;
+    Tablero tableroJugador1;
+    Tablero tableroJugador2;
 
     /**
      * Constructor que agrega los I/O de los jugadores
@@ -65,10 +69,49 @@ public class ManejadorPartida extends Thread implements EventoObserver {
      * Metodo suscriptor que maneja el evento obtenido del servidor
      *
      * @param evento Evento enviado por el cliente
+     * @param entrada
+     * @return
      */
     @Override
-    public void manejarEvento(Evento evento) {
-
+    public Evento manejarEvento(Evento evento, ObjectInputStream entrada) {
+        if (entrada.equals(streamsJugador1.getEntrada())) {
+            if (evento instanceof EnviarJugador) {
+                jugador1 = (Jugador) evento.manejarEvento();
+            }
+        } else if (entrada.equals(streamsJugador2.getEntrada())) {
+            if (evento instanceof EnviarJugador) {
+                jugador2 = (Jugador) evento.manejarEvento();
+            }
+        }
+        evento = manejarPartida(evento, entrada);
+        enviarEventoAJugadores(streamsJugador1.getSalida(), streamsJugador2.getSalida(), evento.manejarEvento());
+        
+        return null;
     }
-
+    
+    @Override
+    public void run() {
+        obtenerEventoJugador1();
+        obtenerEventoJugador2();
+    }
+    
+    public void crearPartida() {
+        partida = new Partida(jugador1, jugador2);
+        partida.setTableroJugador1(tableroJugador1);
+        partida.setTableroJugador2(tableroJugador2);
+    }
+    
+    public Evento manejarPartida(Evento evento, ObjectInputStream entrada) {
+        if (entrada.equals(streamsJugador1.getEntrada())) {
+            evento.setEmisor(jugador1);
+        } else if (entrada.equals(streamsJugador2.getEntrada())) {
+            evento.setEmisor(jugador2);
+        }
+        evento.setPartida(partida);
+        evento = evento.manejarEvento();
+        manejarEvento(evento, entrada);
+        return null;
+        
+    }
+    
 }

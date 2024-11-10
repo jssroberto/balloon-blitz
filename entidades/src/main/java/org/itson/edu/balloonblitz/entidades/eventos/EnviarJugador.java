@@ -4,7 +4,6 @@
  */
 package org.itson.edu.balloonblitz.entidades.eventos;
 
-import java.io.Serializable;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.Partida;
 
@@ -12,25 +11,31 @@ import org.itson.edu.balloonblitz.entidades.Partida;
  *
  * @author elimo
  */
-public class DisparoEvento implements Serializable, Evento{
-    Partida partida;
-    
-    
+public class EnviarJugador implements Evento {
+
+    Jugador jugador;
+
+    public EnviarJugador(Jugador jugador) {
+    }
+
+   
+    public Jugador getJugadorEmisor() {
+        return jugador;
+    }
 
     @Override
     public Evento manejarEvento() {
-        
-        return null;
-        
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void setEmisor(Jugador salida) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void setPartida(Partida partida) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
+
 }

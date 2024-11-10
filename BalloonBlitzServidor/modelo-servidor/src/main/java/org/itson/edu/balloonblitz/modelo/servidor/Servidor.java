@@ -110,7 +110,7 @@ public final class Servidor {
         try {
             Evento evento = (Evento) entrada.readObject();
             if (observadorEventos != null) {
-                observadorEventos.manejarEvento(evento);
+                observadorEventos.manejarEvento(evento, entrada);
             }
         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);

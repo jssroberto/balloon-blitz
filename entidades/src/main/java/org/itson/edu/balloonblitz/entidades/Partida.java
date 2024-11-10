@@ -19,6 +19,8 @@ public class Partida implements Serializable {
     private Jugador jugador1;
     private Jugador jugador2;
     private EstadoPartida estadoPartida;
+    private Tablero tableroJugador1;
+    private Tablero tableroJugador2;
 
     public Partida(Jugador jugador1, Jugador jugador2) {
         this.jugador1 = jugador1;
@@ -56,6 +58,22 @@ public class Partida implements Serializable {
 
     public void setEstadoPartida(EstadoPartida estadoPartida) {
         this.estadoPartida = estadoPartida;
+    }
+
+    public Tablero getTableroJugador1() {
+        return tableroJugador1;
+    }
+
+    public void setTableroJugador1(Tablero tableroJugador1) {
+        this.tableroJugador1 = tableroJugador1;
+    }
+
+    public Tablero getTableroJugador2() {
+        return tableroJugador2;
+    }
+
+    public void setTableroJugador2(Tablero tableroJugador2) {
+        this.tableroJugador2 = tableroJugador2;
     }
 
 }

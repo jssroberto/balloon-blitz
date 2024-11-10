@@ -4,11 +4,18 @@
  */
 package org.itson.edu.balloonblitz.entidades.eventos;
 
+import org.itson.edu.balloonblitz.entidades.Jugador;
+import org.itson.edu.balloonblitz.entidades.Partida;
+
 /**
  *
  * @author elimo
  */
 public interface Evento {
-    
-    void  manejarEvento();
+
+    Evento manejarEvento();
+
+    void setEmisor(Jugador salida);
+
+    void setPartida(Partida partida);
 }
