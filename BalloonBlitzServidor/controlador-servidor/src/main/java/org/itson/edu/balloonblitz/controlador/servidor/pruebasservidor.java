@@ -16,12 +16,7 @@ public class pruebasservidor {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-      try {
-            Servidor servidor = Servidor.obtenerInstancia();
-            servidor.iniciarSocket(12345);  // Escucha en el puerto 12345
-        } catch (IOException e) {
-            System.err.println("Error al iniciar el servidor: " + e.getMessage());
-        }
+      
     }
     
 }

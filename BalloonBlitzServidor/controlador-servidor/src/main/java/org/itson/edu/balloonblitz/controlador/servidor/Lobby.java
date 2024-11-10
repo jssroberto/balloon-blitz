@@ -1,12 +1,11 @@
 package org.itson.edu.balloonblitz.controlador.servidor;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import org.itson.edu.balloonblitz.modelo.servidor.ControladorStreams;
 
 public class Lobby {
 
@@ -48,7 +47,8 @@ public class Lobby {
             clientesEnLobby.removeAll(nuevaPartida);
             partidas.add(nuevaPartida);
             manejador = new ManejadorPartida(nuevaPartida);
-            manejador.empezarPartida();
+            
+            // Metodo a implementar manejador.empezarPartida();
         }
     }
 

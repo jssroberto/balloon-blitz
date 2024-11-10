@@ -5,12 +5,24 @@
     <artifactId>modelo-servidor</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-     <parent>
+    <parent>
         <groupId>org.itson.edu.balloonblitz</groupId>
         <artifactId>balloonblitzservidor</artifactId>
         <version>1.0-SNAPSHOT</version>
         <relativePath>../BalloonBlitzServidor/pom.xml</relativePath> <!-- Ajustar esta ruta -->
     </parent>
+    <dependencies>
+        <dependency>
+            <groupId>org.itson.edu.balloonblitz</groupId>
+            <artifactId>controlador-servidor</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.itson.edu.balloonblitz</groupId>
+            <artifactId>entidades</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>21</maven.compiler.release>
