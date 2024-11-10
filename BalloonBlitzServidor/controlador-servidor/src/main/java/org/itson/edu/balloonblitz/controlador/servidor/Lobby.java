@@ -68,7 +68,7 @@ public class Lobby implements ConexionObserver {
             partidas.add(nuevaPartida);
             manejador = new ManejadorPartida(nuevaPartida);
 
-            // Metodo a implementar manejador.empezarPartida();
+//            manejador.empezarPartida();
         }
     }
 
