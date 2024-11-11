@@ -56,6 +56,8 @@ public class ClienteControlador extends Thread {
             timeOut = (TimeOutEvento) mensajeRecibido;
             timeOut.iniciarTemporizador(1);
             System.out.println("bailaste");
+        }else if(mensajeRecibido.getTipoEvento() == TipoEvento.ENVIAR_JUGADOR){
+            System.out.println(mensajeRecibido.getEmisor());
         }
     }
 

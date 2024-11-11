@@ -72,14 +72,13 @@ public class Lobby implements ConexionObserver {
             EventoObserver evento = new ManejadorPartida(nuevaPartida);
             Servidor.getInstance().setObservadorEventos(evento);
 
-//            manejador.empezarPartida();
         }
     }
 
     /**
      * Metodo de escuchador que agrega clientes al lobby
      *
-     * @param streams I/O dl cliente
+     * @param streams I/O del cliente
      */
     @Override
     public void clienteConectado(ControladorStreams streams) {

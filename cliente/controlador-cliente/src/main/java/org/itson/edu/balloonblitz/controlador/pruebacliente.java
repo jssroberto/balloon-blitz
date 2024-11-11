@@ -4,6 +4,7 @@
  */
 package org.itson.edu.balloonblitz.controlador;
 
+import java.util.Scanner;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.entidades.eventos.conexion.EnviarJugador;
@@ -18,20 +19,38 @@ public class pruebacliente {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Jugador jugador = new Jugador();
+        Scanner scanner = new Scanner(System.in);
 
-        jugador.setFotoPerfil("eeee");
-        jugador.setNombre("eeeee");
-
-        Evento jugador2 = new EnviarJugador();
-        jugador2.setEmisor(jugador);
-        jugador2.getEmisor();
-        
         ClienteControlador cliente = new ClienteControlador("localhost", 1234);
         cliente.start();
-        cliente.enviarMensaje(jugador2);
-        
 
+        System.out.println("Ingrese un número: ");
+        int numero = scanner.nextInt();
+        if (numero == 6) {
+            // Inicializar el objeto Jugador y asignarle valores
+            Jugador jugador = new Jugador();
+            jugador.setFotoPerfil("yyy");
+            jugador.setNombre("yyy");
+
+            // Crear un evento de tipo EnviarJugador y asignarle el emisor
+            Evento jugador2 = new EnviarJugador();
+            jugador2.setEmisor(jugador);
+
+            // Imprimir el emisor para verificar antes de enviar
+            System.out.println("Emisor antes de enviar: " + jugador2.getEmisor().getNombre());
+
+            // Inicializar el cliente y enviar el mensaje al servidor
+            // Este método inicia la conexión del cliente con el servidor
+            cliente.enviarMensaje(jugador2); // Enviar el evento al servidor
+            
+            
+
+            System.out.println("Evento enviado al servidor.");
+        } else {
+            System.out.println("Número ingresado no es 6. No se enviará ningún mensaje.");
+        }
+
+        scanner.close();
     }
 
 }

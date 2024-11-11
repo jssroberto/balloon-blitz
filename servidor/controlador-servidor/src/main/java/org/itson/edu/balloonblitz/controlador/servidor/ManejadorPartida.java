@@ -11,11 +11,12 @@ import org.itson.edu.balloonblitz.entidades.Tablero;
 import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoPartida;
 import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
-import org.itson.edu.balloonblitz.entidades.eventos.PosicionNaves;
 import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
+import org.itson.edu.balloonblitz.entidades.eventos.conexion.EnviarJugador;
 import org.itson.edu.balloonblitz.modelo.servidor.ControladorStreams;
 import org.itson.edu.balloonblitz.modelo.servidor.EventoObserver;
 import org.itson.edu.balloonblitz.modelo.servidor.Servidor;
+
 
 /**
  * Clase que representa el manejador de la partida
@@ -44,7 +45,11 @@ public class ManejadorPartida extends Thread implements EventoObserver {
         servidor = Servidor.getInstance();
         streamsJugador1 = jugadores.get(0);
         streamsJugador2 = jugadores.get(1);
-      
+        executorService.submit(() -> servidor.recibirDatosCiente(streamsJugador1.getEntrada()));
+        executorService.submit(() -> servidor.recibirDatosCiente(streamsJugador2.getEntrada()));
+        executorService.submit(() -> servidor.mandarDatosCliente(streamsJugador1.getSalida(), new EnviarJugador()));
+        executorService.submit(() -> servidor.mandarDatosCliente(streamsJugador2.getSalida(), new EnviarJugador()));
+
     }
 
     /**
@@ -83,27 +88,22 @@ public class ManejadorPartida extends Thread implements EventoObserver {
      * @return
      */
     @Override
-    public Evento manejarEvento(Evento evento, ObjectInputStream entrada) {
+    public void manejarEvento(Evento evento, ObjectInputStream entrada) {
         if (entrada.equals(streamsJugador1.getEntrada())) {
             if (evento.getTipoEvento() == TipoEvento.ENVIO_JUGADOR) {
                 jugador1 = evento.getEmisor();
-            } else {
-                evento = manejarPartida(evento, entrada);
-                enviarEventoAJugador2(streamsJugador2.getSalida(), evento);
             }
         } else if (entrada.equals(streamsJugador2.getEntrada())) {
             if (evento.getTipoEvento() == TipoEvento.ENVIO_JUGADOR) {
                 jugador2 = evento.getEmisor();
-                if(jugador1!=null){
+                if (jugador1 != null) {
                     crearPartida();
                 }
-            } else {
-                evento = manejarPartida(evento, entrada);
-                enviarEventoAJugador1(streamsJugador1.getSalida(), evento);
             }
         }
-
-        return null;
+//            evento = manejarPartida(evento, entrada);
+//            enviarEventoAJugador2(streamsJugador2.getSalida(), evento);
+//            enviarEventoAJugador1(streamsJugador1.getSalida(), evento);
     }
 
     @Override
@@ -124,7 +124,6 @@ public class ManejadorPartida extends Thread implements EventoObserver {
 
     public Evento manejarPartida(Evento evento, ObjectInputStream entrada) {
 
-        
         if (entrada.equals(streamsJugador1.getEntrada())) {
             evento.setEmisor(jugador1);
         } else if (entrada.equals(streamsJugador2.getEntrada())) {

@@ -14,8 +14,6 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
-import org.itson.edu.balloonblitz.entidades.eventos.PosicionNaves;
-import org.itson.edu.balloonblitz.entidades.eventos.conexion.EnviarJugador;
 
 /**
  * Clase que representa el servidor
@@ -103,8 +101,6 @@ public final class Servidor {
                         new ObjectOutputStream(socketCliente.getOutputStream()),
                         new ObjectInputStream(socketCliente.getInputStream())
                 );
-                executorService.submit(() -> recibirDatosCiente(streams.getEntrada()));
-                executorService.submit(() -> mandarDatosCliente(streams.getSalida(), new EnviarJugador()));
 
                 System.out.println("Cliente conectado con éxito: " + socketCliente.getInetAddress());
 
@@ -135,14 +131,33 @@ public final class Servidor {
     public void recibirDatosCiente(ObjectInputStream entrada) {
 
         try {
-            Evento evento = (Evento) entrada.readObject(); // Esto bloqueará hasta que llegue un objeto.
-            if (observadorEventos != null) {
-                observadorEventos.manejarEvento(evento, entrada);
-            }
-        } catch (IOException | ClassNotFoundException ex) {
-            System.err.println("Error al recibir el evento: " + ex.getMessage());
-        }
+            while (true) { // Bucle infinito para mantener la escucha
+                try {
+                    // Leer el objeto enviado por el cliente
+                    Evento evento = (Evento) entrada.readObject(); // Esto bloqueará hasta que llegue un objeto
 
+                    if (observadorEventos != null) {
+                        observadorEventos.manejarEvento(evento, entrada);
+                    }
+
+                } catch (IOException e) {
+                    System.err.println("Error al recibir datos del cliente: " + e.getMessage());
+                    e.printStackTrace();
+                    break; // Salir del bucle si hay un error de conexión o I/O
+                } catch (ClassNotFoundException e) {
+                    System.err.println("Clase de evento desconocida: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        } finally {
+            // Cerrar el ObjectInputStream al salir del bucle
+            try {
+                entrada.close();
+            } catch (IOException e) {
+                System.err.println("Error al cerrar el flujo de entrada: " + e.getMessage());
+            }
+
+        }
     }
 
     /**
@@ -153,8 +168,11 @@ public final class Servidor {
      */
     public void mandarDatosCliente(ObjectOutputStream salida, Evento evento) {
         try {
-            salida.writeObject(evento);
-            salida.flush();
+            while (evento != null) {
+
+                salida.writeObject(evento);
+                salida.flush();
+            }
         } catch (IOException ex) {
             Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
         }
