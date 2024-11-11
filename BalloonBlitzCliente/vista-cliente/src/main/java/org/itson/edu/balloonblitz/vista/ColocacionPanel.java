@@ -26,6 +26,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.TransferHandler;
+import org.itson.edu.balloonblitz.auxiliar.GridDragDropHandler;
 
 /**
  *
@@ -33,6 +34,7 @@ import javax.swing.TransferHandler;
  */
 public class ColocacionPanel extends javax.swing.JPanel {
 
+    private int[][] tablero = new int[10][10];
     private static final Logger logger = Logger.getLogger(InicioPanel.class.getName());
     private final FramePrincipal framePrincipal;
 
@@ -47,10 +49,10 @@ public class ColocacionPanel extends javax.swing.JPanel {
         try {
             setFuentes();
             setGlobos();
+            enableDrop();
         } catch (FontFormatException | IOException e) {
             logger.log(Level.SEVERE, "Error al cargar fuentes: ", e);
         }
-        enableDrop(panelTablero);
     }
 
     private void setFuentes() throws FontFormatException, IOException {
@@ -129,59 +131,63 @@ public class ColocacionPanel extends javax.swing.JPanel {
         panelContenedorGlobos.repaint();
     }
 
-    private void enableDrop(JComponent jc) {
-        DropTarget dropTarget = new DropTarget(jc, DnDConstants.ACTION_COPY, new DropTargetAdapter() {
-            @Override
-            public void drop(DropTargetDropEvent dtde) {
-                try {
-                    Transferable transferable = dtde.getTransferable();
-
-                    if (transferable.isDataFlavorSupported(DataFlavor.imageFlavor)) {
-                        dtde.acceptDrop(DnDConstants.ACTION_COPY);
-                        Image image = (Image) transferable.getTransferData(DataFlavor.imageFlavor);
-                        ImageIcon icon = new ImageIcon(image);
-
-                        Point dropPoint = dtde.getLocation();
-
-                        // Imprimir las coordenadas de donde se soltó el objeto
-                        System.out.println("Coordenadas de drop: " + dropPoint.x + ", " + dropPoint.y);
-
-                        JLabel newBalloon = new JLabel(icon);
-
-                        // Ajustar la posición para centrar el globo en el punto de drop
-                        int balloonWidth = icon.getIconWidth();
-                        int balloonHeight = icon.getIconHeight();
-                        newBalloon.setBounds(
-                                dropPoint.x - (balloonWidth / 2),
-                                dropPoint.y - (balloonHeight / 2),
-                                balloonWidth,
-                                balloonHeight
-                        );
-
-                        // Añadir un listener de clic derecho para rotación si es necesario
-                        newBalloon.addMouseListener(new java.awt.event.MouseAdapter() {
-                            @Override
-                            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                                if (evt.getButton() == java.awt.event.MouseEvent.BUTTON3) {
-                                    // Implementar lógica de rotación si se necesita
-                                }
-                            }
-                        });
-
-                        panelTablero.add(newBalloon);
-                        panelTablero.repaint();
-                        dtde.dropComplete(true);
-                    } else {
-                        dtde.rejectDrop();
-                    }
-                } catch (Exception e) {
-                    dtde.rejectDrop();
-                    logger.log(Level.SEVERE, "Error al procesar el drop: ", e);
-                }
-            }
-        });
+    private void enableDrop() {
+        GridDragDropHandler gridDragDropHandler = new GridDragDropHandler(panelTablero);
     }
 
+//    private void enableDrop(JComponent jc) {
+//        
+//        DropTarget dropTarget = new DropTarget(jc, DnDConstants.ACTION_COPY, new DropTargetAdapter() {
+//            @Override
+//            public void drop(DropTargetDropEvent dtde) {
+//                try {
+//                    Transferable transferable = dtde.getTransferable();
+//
+//                    if (transferable.isDataFlavorSupported(DataFlavor.imageFlavor)) {
+//                        dtde.acceptDrop(DnDConstants.ACTION_COPY);
+//                        Image image = (Image) transferable.getTransferData(DataFlavor.imageFlavor);
+//                        ImageIcon icon = new ImageIcon(image);
+//
+//                        Point dropPoint = dtde.getLocation();
+//
+//                         Imprimir las coordenadas de donde se soltó el objeto
+//                        System.out.println("Coordenadas de drop: " + dropPoint.x + ", " + dropPoint.y);
+//
+//                        JLabel newBalloon = new JLabel(icon);
+//
+//                         Ajustar la posición para centrar el globo en el punto de drop
+//                        int balloonWidth = icon.getIconWidth();
+//                        int balloonHeight = icon.getIconHeight();
+//                        newBalloon.setBounds(
+//                                dropPoint.x - (balloonWidth / 2),
+//                                dropPoint.y - (balloonHeight / 2),
+//                                balloonWidth,
+//                                balloonHeight
+//                        );
+//
+//                         Añadir un listener de clic derecho para rotación si es necesario
+//                        newBalloon.addMouseListener(new java.awt.event.MouseAdapter() {
+//                            @Override
+//                            public void mouseClicked(java.awt.event.MouseEvent evt) {
+//                                if (evt.getButton() == java.awt.event.MouseEvent.BUTTON3) {
+//                                     Implementar lógica de rotación si se necesita
+//                                }
+//                            }
+//                        });
+//
+//                        panelTablero.add(newBalloon);
+//                        panelTablero.repaint();
+//                        dtde.dropComplete(true);
+//                    } else {
+//                        dtde.rejectDrop();
+//                    }
+//                } catch (Exception e) {
+//                    dtde.rejectDrop();
+//                    logger.log(Level.SEVERE, "Error al procesar el drop: ", e);
+//                }
+//            }
+//        });
+//    }
     /**
      * This method is called from within the constructor to initialize the form. WARNING: Do NOT modify this code. The content of this method is always regenerated by the Form Editor.
      */
