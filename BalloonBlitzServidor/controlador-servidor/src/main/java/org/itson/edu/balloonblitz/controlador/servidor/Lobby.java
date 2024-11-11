@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import org.itson.edu.balloonblitz.modelo.servidor.ControladorStreams;
+import org.itson.edu.balloonblitz.modelo.servidor.EventoObserver;
+import org.itson.edu.balloonblitz.modelo.servidor.Servidor;
 
 /**
  * Clase que representa un lobby para emparejamiento
@@ -44,6 +46,7 @@ public class Lobby implements ConexionObserver {
 
     /**
      * Metodo que elimina un cliente del lobby
+     *
      * @param streams Streams del cliente a eliminar
      */
     public synchronized void eliminarCliente(ControladorStreams streams) {
@@ -63,10 +66,11 @@ public class Lobby implements ConexionObserver {
                     break;
                 }
             }
-
             clientesEnLobby.removeAll(nuevaPartida);
             partidas.add(nuevaPartida);
             manejador = new ManejadorPartida(nuevaPartida);
+            EventoObserver evento = new ManejadorPartida(nuevaPartida);
+            Servidor.getInstance().setObservadorEventos(evento);
 
 //            manejador.empezarPartida();
         }
@@ -74,6 +78,7 @@ public class Lobby implements ConexionObserver {
 
     /**
      * Metodo de escuchador que agrega clientes al lobby
+     *
      * @param streams I/O dl cliente
      */
     @Override

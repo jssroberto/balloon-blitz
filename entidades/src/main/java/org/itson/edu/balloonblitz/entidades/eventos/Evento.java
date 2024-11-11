@@ -4,20 +4,34 @@
  */
 package org.itson.edu.balloonblitz.entidades.eventos;
 
+import java.io.Serializable;
 import org.itson.edu.balloonblitz.entidades.Jugador;
-import org.itson.edu.balloonblitz.entidades.Partida;
+import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
 
 /**
  *
  * @author elimo
  */
-public interface Evento {
+public abstract class Evento implements Serializable{
 
-    Evento manejarEvento();
+    private static final long serialVersionUID = 1L;
+    protected Jugador emisor;
+    protected TipoEvento tipoEvento;
 
-    void setEmisor(Jugador salida);
+    public Evento(TipoEvento tipoEvento) {
+        this.tipoEvento = tipoEvento;
+    }
 
-    void setPartida(Partida partida);
+    public void setEmisor(Jugador emisor) {
+        this.emisor = emisor;
+    }
 
-    Partida getPartida();
+    public TipoEvento getTipoEvento() {
+        return tipoEvento;
+    }
+
+    public Jugador getEmisor() {
+        return emisor;
+    }
+
 }

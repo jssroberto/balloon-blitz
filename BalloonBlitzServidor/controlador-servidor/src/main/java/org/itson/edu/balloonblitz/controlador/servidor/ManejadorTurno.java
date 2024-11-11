@@ -16,7 +16,7 @@ import org.itson.edu.balloonblitz.entidades.Partida;
  * @author elimo
  */
 public class ManejadorTurno {
-    
+
     Partida partida;
     private static final int LIMITE_TIEMPO_TURNO = 3; // minutos
     private final ScheduledExecutorService temporizadorTurno = Executors.newSingleThreadScheduledExecutor();
@@ -24,10 +24,9 @@ public class ManejadorTurno {
     private Jugador jugadorActual;
     private Jugador jugador1;
     private Jugador jugador2;
-    
+
     public void iniciarTurno(Jugador jugador) {
         jugadorActual = jugador;
-
         temporizadorActual = temporizadorTurno.schedule(() -> {
             System.out.println("El tiempo de turno ha expirado para " + jugadorActual.getNombre());
             cambiarTurno();
@@ -44,6 +43,5 @@ public class ManejadorTurno {
 
         iniciarTurno(jugadorActual);
     }
-    
-    
+
 }

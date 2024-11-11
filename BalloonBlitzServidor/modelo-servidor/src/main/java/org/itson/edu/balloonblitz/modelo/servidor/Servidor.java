@@ -14,7 +14,8 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
-import org.itson.edu.balloonblitz.entidades.eventos.conexion.UnirseAServidor;
+import org.itson.edu.balloonblitz.entidades.eventos.PosicionarNaves;
+import org.itson.edu.balloonblitz.entidades.eventos.conexion.EnviarJugador;
 
 /**
  * Clase que representa el servidor
@@ -38,6 +39,7 @@ public final class Servidor {
 
         try {
             serverSocket = new ServerSocket(1234);
+
             iniciarHiloDeAceptacion();
         } catch (IOException ex) {
             Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
@@ -81,11 +83,7 @@ public final class Servidor {
      */
     private void iniciarHiloDeAceptacion() {
         executorService.submit(() -> {
-            try {
-                aceptarClientes();
-            } catch (IOException e) {
-                System.err.println("Error en el hilo de aceptación de clientes: " + e.getMessage());
-            }
+            aceptarClientes(); // Puedes decidir si quieres reiniciar el hilo o detenerlo completamente
         });
     }
 
@@ -95,15 +93,39 @@ public final class Servidor {
      *
      * @throws IOException Si algo salio mal durante la aceptación de sockets
      */
-    public void aceptarClientes() throws IOException {
+    public void aceptarClientes() {
         while (true) {
-            Socket socketCliente = serverSocket.accept();
-            streams = new ControladorStreams(new ObjectOutputStream(socketCliente.getOutputStream()), new ObjectInputStream(socketCliente.getInputStream()));
+            try {
+                // Esperamos por una nueva conexión
+                Socket socketCliente = serverSocket.accept();
 
-            if (observadorConexion != null) {
-                observadorConexion.clienteConectado(streams);
+                // Crear flujos de entrada y salida para el cliente
+                streams = new ControladorStreams(
+                        new ObjectOutputStream(socketCliente.getOutputStream()),
+                        new ObjectInputStream(socketCliente.getInputStream())
+                );
+                executorService.submit(() -> recibirDatosCiente(streams.getEntrada()));
+                executorService.submit(() -> mandarDatosCliente(streams.getSalida(), new EnviarJugador()));
+
+                System.out.println("Cliente conectado con éxito: " + socketCliente.getInetAddress());
+
+                // Notificar al observador de conexión
+                if (observadorConexion != null) {
+                    observadorConexion.clienteConectado(streams);
+                }
+
+            } catch (IOException e) {
+                System.err.println("Error aceptando clientes: " + e.getMessage());
+
+                // Verificamos si el ServerSocket está cerrado
+                if (serverSocket.isClosed()) {
+                    System.err.println("El ServerSocket está cerrado, no se pueden aceptar más conexiones.");
+                    break;  // Romper el bucle si el ServerSocket se cierra
+                }
+
+                // Si no es un error fatal, continuamos aceptando conexiones
+                continue;
             }
-
         }
     }
 
@@ -116,13 +138,13 @@ public final class Servidor {
     public void recibirDatosCiente(ObjectInputStream entrada) {
 
         try {
-            Evento evento = (Evento) entrada.readObject();
+            Evento evento = (Evento) entrada.readObject(); // Esto bloqueará hasta que llegue un objeto.
             if (observadorEventos != null) {
                 observadorEventos.manejarEvento(evento, entrada);
             }
         } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
-
+            System.err.println("Error al recibir el evento: " + ex.getMessage());
+            ex.printStackTrace();
         }
 
     }

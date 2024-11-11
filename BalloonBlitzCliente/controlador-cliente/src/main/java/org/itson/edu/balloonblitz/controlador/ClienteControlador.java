@@ -4,19 +4,24 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
+import org.itson.edu.balloonblitz.entidades.eventos.Evento;
+import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
 
 /**
  *
  * @author elimo
- * @param <T>
+ *
  */
-public class ClienteControlador<T> extends Thread {
+public class ClienteControlador extends Thread {
 
     private static ClienteControlador instancia;
     private Socket socket;
     private ObjectOutputStream salida;
     private ObjectInputStream entrada;
+    private TimeOutEvento timeOut;
     private boolean conectado;
+    Evento mensajeRecibido;
 
     public ClienteControlador(String host, int puerto) {
         try {
@@ -25,6 +30,7 @@ public class ClienteControlador<T> extends Thread {
             entrada = new ObjectInputStream(socket.getInputStream());
             salida.flush();
             conectado = true;
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -34,9 +40,8 @@ public class ClienteControlador<T> extends Thread {
     public void run() {
         while (conectado) {
 
-            T mensajeRecibido;
             try {
-                mensajeRecibido = (T) entrada.readObject();
+                mensajeRecibido = (Evento) entrada.readObject();
                 procesarMensaje(mensajeRecibido);
             } catch (IOException | ClassNotFoundException ex) {
                 ex.getMessage();
@@ -46,13 +51,17 @@ public class ClienteControlador<T> extends Thread {
         desconectar();
     }
 
-    private void procesarMensaje(T mensajeRecibido) {
-
-        System.out.println("Mensaje recibido: " + mensajeRecibido);
+    private void procesarMensaje(Evento mensajeRecibido) {
+        if (mensajeRecibido.getTipoEvento() == TipoEvento.TIMEOUT) {
+            timeOut = (TimeOutEvento) mensajeRecibido;
+            timeOut.iniciarTemporizador(1);
+            System.out.println("bailaste");
+        }
     }
 
-    public void enviarMensaje(T evento) {
+    public void enviarMensaje(Evento evento) {
         try {
+            System.out.println(evento.getTipoEvento());
             salida.writeObject(evento);
             salida.flush();
         } catch (IOException e) {
@@ -60,11 +69,9 @@ public class ClienteControlador<T> extends Thread {
         }
     }
 
-    private T obtenerEvento() {
+    private Evento obtenerEvento() {
 
-        //TO DO
-        //return new Evento("Mensaje de prueba"); 
-        return null;
+        return mensajeRecibido;
 
     }
 

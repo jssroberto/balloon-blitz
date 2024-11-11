@@ -4,7 +4,8 @@
  */
 package org.itson.edu.balloonblitz.controlador.servidor;
 
-import java.io.IOException;
+import org.itson.edu.balloonblitz.modelo.servidor.ConexionObserver;
+import org.itson.edu.balloonblitz.modelo.servidor.Servidor;
 
 /**
  *
@@ -16,6 +17,9 @@ public class pruebasservidor {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        Servidor.getInstance();
+        ConexionObserver conexion = new Lobby();
+        Servidor.getInstance().setObservadorConexion(conexion);
       
     }
     

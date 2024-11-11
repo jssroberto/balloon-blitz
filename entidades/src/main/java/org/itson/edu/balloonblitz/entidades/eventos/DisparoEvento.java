@@ -5,37 +5,28 @@
 package org.itson.edu.balloonblitz.entidades.eventos;
 
 import java.io.Serializable;
+import org.itson.edu.balloonblitz.entidades.Coordenada;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.Partida;
+import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
 
 /**
  *
  * @author elimo
  */
-public class DisparoEvento implements Serializable, Evento{
-    Partida partida;
+public class DisparoEvento extends Evento implements Serializable {
     
-    
+    Coordenada coordenada;
 
-    @Override
-    public Evento manejarEvento() {
-        
-        return null;
-        
+    public DisparoEvento(Coordenada coordenada) {
+        super(TipoEvento.DISPARO);
+        this.coordenada = coordenada;
     }
+
 
     @Override
     public void setEmisor(Jugador salida) {
     }
 
-    @Override
-    public void setPartida(Partida partida) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 
-    @Override
-    public Partida getPartida() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-    
 }

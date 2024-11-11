@@ -2,21 +2,31 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package org.itson.edu.balloonblitz.entidades.eventos.conexion;
+package org.itson.edu.balloonblitz.controlador.servidor;
 
-import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 
 /**
  *
  * @author elimo
  */
-public class EnviarJugador extends Evento {
+public class ManejadorPosicionNaves {
 
-    private static final long serialVersionUID = 1L;
 
-    public EnviarJugador() {
-        super(TipoEvento.ENVIAR_JUGADOR);
+    public ManejadorPosicionNaves() {
     }
+
+    
+    public ManejadorPosicionNaves(Evento evento) {
+        
+    }
+    
+    
+    public Evento obtenerEvento(){
+        
+        return null;
+        
+    }
+    
 
 }

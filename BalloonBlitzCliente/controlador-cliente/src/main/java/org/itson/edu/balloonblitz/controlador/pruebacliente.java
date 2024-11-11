@@ -5,6 +5,8 @@
 package org.itson.edu.balloonblitz.controlador;
 
 import org.itson.edu.balloonblitz.entidades.Jugador;
+import org.itson.edu.balloonblitz.entidades.eventos.Evento;
+import org.itson.edu.balloonblitz.entidades.eventos.conexion.EnviarJugador;
 
 /**
  *
@@ -18,12 +20,17 @@ public class pruebacliente {
     public static void main(String[] args) {
         Jugador jugador = new Jugador();
 
-        jugador.setFotoPerfil("rrrr");
-        jugador.setNombre("rrrrr");
+        jugador.setFotoPerfil("eeee");
+        jugador.setNombre("eeeee");
 
-        ClienteControlador cliente = new ClienteControlador("localhost", 12345);
+        Evento jugador2 = new EnviarJugador();
+        jugador2.setEmisor(jugador);
+        jugador2.getEmisor();
+        
+        ClienteControlador cliente = new ClienteControlador("localhost", 1234);
         cliente.start();
-        cliente.enviarMensaje(jugador);
+        cliente.enviarMensaje(jugador2);
+        
 
     }
 
