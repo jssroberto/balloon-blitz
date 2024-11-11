@@ -13,7 +13,7 @@ import java.io.Serializable;
 public class Tablero implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private Casilla[][] matriz;
+    private final Casilla[][] matriz;
 
     public Tablero() {
         matriz = new Casilla[10][10];
@@ -31,9 +31,4 @@ public class Tablero implements Serializable {
     public Casilla[][] getMatriz() {
         return matriz;
     }
-
-    public void setMatriz(Casilla[][] matriz) {
-        this.matriz = matriz;
-    }
-
 }
