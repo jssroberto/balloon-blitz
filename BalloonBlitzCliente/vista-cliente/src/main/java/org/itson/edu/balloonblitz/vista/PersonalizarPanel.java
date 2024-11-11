@@ -113,6 +113,16 @@ public class PersonalizarPanel extends javax.swing.JPanel {
         lblContinuar = new javax.swing.JLabel();
         pfpGwendolin = new javax.swing.JLabel();
         pfpFat = new javax.swing.JLabel();
+        globoRojo = new javax.swing.JLabel();
+        globoAzul = new javax.swing.JLabel();
+        globoVerde = new javax.swing.JLabel();
+        globoAmarillo = new javax.swing.JLabel();
+        globoRosa = new javax.swing.JLabel();
+        globoRojoOP = new javax.swing.JLabel();
+        globoAzulOP = new javax.swing.JLabel();
+        globoVerdeOP = new javax.swing.JLabel();
+        globoAmarilloOP = new javax.swing.JLabel();
+        globoRosaOP = new javax.swing.JLabel();
         lblFondo = new javax.swing.JLabel();
 
         setMaximumSize(new java.awt.Dimension(1280, 680));
@@ -123,7 +133,7 @@ public class PersonalizarPanel extends javax.swing.JPanel {
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         lblNavesPropias.setText("COLOR NAVES PROPIAS");
-        jPanel1.add(lblNavesPropias, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 290, 380, 40));
+        jPanel1.add(lblNavesPropias, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 280, 380, 40));
 
         pfpQuincy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/quincy.png"))); // NOI18N
         pfpQuincy.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -192,9 +202,51 @@ public class PersonalizarPanel extends javax.swing.JPanel {
         jPanel1.add(pfpGwendolin, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 310, -1, -1));
 
         pfpFat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/patFusty.png"))); // NOI18N
+        pfpFat.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jPanel1.add(pfpFat, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 310, -1, -1));
 
+        globoRojo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ballons/59x73/rojo.png"))); // NOI18N
+        globoRojo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel1.add(globoRojo, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 330, -1, -1));
+
+        globoAzul.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ballons/59x73/azul.png"))); // NOI18N
+        globoAzul.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel1.add(globoAzul, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 330, -1, -1));
+
+        globoVerde.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ballons/59x73/verde.png"))); // NOI18N
+        globoVerde.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel1.add(globoVerde, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 330, -1, -1));
+
+        globoAmarillo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ballons/59x73/amarillo.png"))); // NOI18N
+        globoAmarillo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel1.add(globoAmarillo, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 330, -1, -1));
+
+        globoRosa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ballons/59x73/rosa.png"))); // NOI18N
+        globoRosa.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel1.add(globoRosa, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 330, -1, -1));
+
+        globoRojoOP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ballons/59x73/rojo.png"))); // NOI18N
+        globoRojoOP.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel1.add(globoRojoOP, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 490, -1, -1));
+
+        globoAzulOP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ballons/59x73/azul.png"))); // NOI18N
+        globoAzulOP.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel1.add(globoAzulOP, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 490, -1, -1));
+
+        globoVerdeOP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ballons/59x73/verde.png"))); // NOI18N
+        globoVerdeOP.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel1.add(globoVerdeOP, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 490, -1, -1));
+
+        globoAmarilloOP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ballons/59x73/amarillo.png"))); // NOI18N
+        globoAmarilloOP.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel1.add(globoAmarilloOP, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 490, -1, -1));
+
+        globoRosaOP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ballons/59x73/rosa.png"))); // NOI18N
+        globoRosaOP.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel1.add(globoRosaOP, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 490, -1, -1));
+
         lblFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/personalizar.png"))); // NOI18N
+        lblFondo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jPanel1.add(lblFondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1280, 680));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -239,6 +291,16 @@ public class PersonalizarPanel extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel globoAmarillo;
+    private javax.swing.JLabel globoAmarilloOP;
+    private javax.swing.JLabel globoAzul;
+    private javax.swing.JLabel globoAzulOP;
+    private javax.swing.JLabel globoRojo;
+    private javax.swing.JLabel globoRojoOP;
+    private javax.swing.JLabel globoRosa;
+    private javax.swing.JLabel globoRosaOP;
+    private javax.swing.JLabel globoVerde;
+    private javax.swing.JLabel globoVerdeOP;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblContinuar;
     private javax.swing.JLabel lblFondo;
