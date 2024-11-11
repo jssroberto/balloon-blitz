@@ -18,6 +18,7 @@ import org.itson.edu.balloonblitz.entidades.eventos.conexion.UnirseAServidor;
 
 /**
  * Clase que representa el servidor
+ *
  * @author elimo
  */
 public final class Servidor {
@@ -25,12 +26,13 @@ public final class Servidor {
     private static Servidor instancia;
     private ConexionObserver observadorConexion;
     private EventoObserver observadorEventos;
-    private ControladorStreams conexion;
+    private ControladorStreams streams;
     private final ExecutorService executorService = Executors.newFixedThreadPool(10);
     private ServerSocket serverSocket;
 
     /**
-     * Constructor que inicializa el puerto del socket y llama al hilo de aceptacion de clientes
+     * Constructor que inicializa el puerto del socket y llama al hilo de
+     * aceptacion de clientes
      */
     public Servidor() {
 
@@ -45,7 +47,9 @@ public final class Servidor {
 
     /**
      * Singleton del servidor
-     * @return Nueva instancia si no se ha creado o la instancia existente si ya se creó
+     *
+     * @return Nueva instancia si no se ha creado o la instancia existente si ya
+     * se creó
      */
     public static Servidor getInstance() {
         if (instancia == null) {
@@ -56,6 +60,7 @@ public final class Servidor {
 
     /**
      * Metodo que establece el observador de la conexion
+     *
      * @param observadorConexion Observador de la conexion
      */
     public void setObservadorConexion(ConexionObserver observadorConexion) {
@@ -64,6 +69,7 @@ public final class Servidor {
 
     /**
      * Metodo que establece el observador de eventos
+     *
      * @param observadorEventos Observador de los eventos
      */
     public void setObservadorEventos(EventoObserver observadorEventos) {
@@ -84,25 +90,27 @@ public final class Servidor {
     }
 
     /**
-     * Metodo que acepta sockets de clientes continuamente, de igual forma crea hilos para recepcion y envio de datos
+     * Metodo que acepta sockets de clientes continuamente, de igual forma crea
+     * hilos para recepcion y envio de datos
+     *
      * @throws IOException Si algo salio mal durante la aceptación de sockets
      */
     public void aceptarClientes() throws IOException {
         while (true) {
             Socket socketCliente = serverSocket.accept();
-            conexion = new ControladorStreams(new ObjectOutputStream(socketCliente.getOutputStream()), new ObjectInputStream(socketCliente.getInputStream()));
+            streams = new ControladorStreams(new ObjectOutputStream(socketCliente.getOutputStream()), new ObjectInputStream(socketCliente.getInputStream()));
 
-            executorService.submit(() -> recibirDatosCiente(conexion.getEntrada()));
-            executorService.submit(() -> mandarDatosCliente(conexion.getSalida(), new UnirseAServidor()));
             if (observadorConexion != null) {
-                observadorConexion.clienteConectado(conexion);
+                observadorConexion.clienteConectado(streams);
             }
 
         }
     }
 
     /**
-     * Metodo que recibe eventos de los clientes y manda al observador de eventos para su manejo
+     * Metodo que recibe eventos de los clientes y manda al observador de
+     * eventos para su manejo
+     *
      * @param entrada Input del usuario a recibir datos
      */
     public void recibirDatosCiente(ObjectInputStream entrada) {
@@ -121,6 +129,7 @@ public final class Servidor {
 
     /**
      * Metodo que envia eventos a socket proporcionado
+     *
      * @param salida ObjectOutputStream del jugador a enviar
      * @param evento Evento a enviar
      */
