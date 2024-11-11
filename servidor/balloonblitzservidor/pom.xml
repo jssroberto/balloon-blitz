@@ -9,7 +9,6 @@
     <modules>
         <module>../modelo-servidor</module>
         <module>../controlador-servidor</module>
-        <module>../eventos-servidor</module>
     </modules>
     
     

@@ -29,11 +29,6 @@ public abstract class Nave implements Serializable{
 
     public void recibirImpacto() {
         impactos++;
-        if (impactos < tamaño) {
-            estadoNave = EstadoNave.AVERIADA;
-        } else {
-            estadoNave = EstadoNave.HUNDIDA;
-        }
     }
 
     public TipoNave getTipoNave() {
@@ -67,7 +62,4 @@ public abstract class Nave implements Serializable{
     public void setImpactos(int impactos) {
         this.impactos = impactos;
     }
-    
-    
-    
 }

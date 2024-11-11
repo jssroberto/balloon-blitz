@@ -13,7 +13,6 @@ import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoCasilla;
  */
 public class Casilla implements Serializable{
     private static final long serialVersionUID = 1L;
-    private boolean visible;
     private EstadoCasilla estado;
     private Coordenada coordenada;
     private Nave nave;
@@ -21,21 +20,6 @@ public class Casilla implements Serializable{
     public Casilla(Coordenada coordenada) {
         this.coordenada = coordenada;
         this.estado = EstadoCasilla.INTACTA;
-    }
-
-    public void recibirImpacto() {
-        estado = EstadoCasilla.GOLPEADA;
-        if (nave != null) {
-            nave.recibirImpacto();
-        }
-    }
-
-    public boolean isVisible() {
-        return visible;
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
     }
 
     public EstadoCasilla getEstado() {
@@ -61,5 +45,4 @@ public class Casilla implements Serializable{
     public void setNave(Nave nave) {
         this.nave = nave;
     }
-    
 }
