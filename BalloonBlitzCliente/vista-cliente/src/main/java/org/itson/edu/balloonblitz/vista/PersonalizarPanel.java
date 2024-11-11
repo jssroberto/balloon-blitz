@@ -15,6 +15,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import org.itson.edu.balloonblitz.entidades.Jugador;
+import org.itson.edu.balloonblitz.entidades.Partida;
 
 /**
  *
@@ -91,6 +93,14 @@ public class PersonalizarPanel extends javax.swing.JPanel {
                 g2d.dispose();
             }
         });
+    }
+
+    
+    // IDK what im cooking
+    private void crearJugador() {
+        Jugador jugador = new Jugador();
+        jugador.setFotoPerfil("benjamin");
+        jugador.setNombre(txtNombre.getText());
     }
 
     /**
@@ -274,6 +284,7 @@ public class PersonalizarPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_pfpQuincyMouseClicked
 
     private void lblContinuarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblContinuarMouseClicked
+        crearJugador();
         framePrincipal.cambiarPanel(new EsperandoJugador(framePrincipal));
     }//GEN-LAST:event_lblContinuarMouseClicked
 
