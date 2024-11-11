@@ -14,7 +14,7 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
-import org.itson.edu.balloonblitz.entidades.eventos.PosicionarNaves;
+import org.itson.edu.balloonblitz.entidades.eventos.PosicionNaves;
 import org.itson.edu.balloonblitz.entidades.eventos.conexion.EnviarJugador;
 
 /**
@@ -91,7 +91,6 @@ public final class Servidor {
      * Metodo que acepta sockets de clientes continuamente, de igual forma crea
      * hilos para recepcion y envio de datos
      *
-     * @throws IOException Si algo salio mal durante la aceptación de sockets
      */
     public void aceptarClientes() {
         while (true) {
@@ -123,8 +122,6 @@ public final class Servidor {
                     break;  // Romper el bucle si el ServerSocket se cierra
                 }
 
-                // Si no es un error fatal, continuamos aceptando conexiones
-                continue;
             }
         }
     }
@@ -144,7 +141,6 @@ public final class Servidor {
             }
         } catch (IOException | ClassNotFoundException ex) {
             System.err.println("Error al recibir el evento: " + ex.getMessage());
-            ex.printStackTrace();
         }
 
     }

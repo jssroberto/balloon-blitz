@@ -11,7 +11,7 @@ import org.itson.edu.balloonblitz.entidades.Tablero;
 import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoPartida;
 import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
-import org.itson.edu.balloonblitz.entidades.eventos.PosicionarNaves;
+import org.itson.edu.balloonblitz.entidades.eventos.PosicionNaves;
 import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
 import org.itson.edu.balloonblitz.modelo.servidor.ControladorStreams;
 import org.itson.edu.balloonblitz.modelo.servidor.EventoObserver;
@@ -85,14 +85,14 @@ public class ManejadorPartida extends Thread implements EventoObserver {
     @Override
     public Evento manejarEvento(Evento evento, ObjectInputStream entrada) {
         if (entrada.equals(streamsJugador1.getEntrada())) {
-            if (evento.getTipoEvento() == TipoEvento.ENVIAR_JUGADOR) {
+            if (evento.getTipoEvento() == TipoEvento.ENVIO_JUGADOR) {
                 jugador1 = evento.getEmisor();
             } else {
                 evento = manejarPartida(evento, entrada);
                 enviarEventoAJugador2(streamsJugador2.getSalida(), evento);
             }
         } else if (entrada.equals(streamsJugador2.getEntrada())) {
-            if (evento.getTipoEvento() == TipoEvento.ENVIAR_JUGADOR) {
+            if (evento.getTipoEvento() == TipoEvento.ENVIO_JUGADOR) {
                 jugador2 = evento.getEmisor();
                 if(jugador1!=null){
                     crearPartida();

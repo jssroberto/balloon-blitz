@@ -16,7 +16,7 @@ public class EnviarJugador extends Evento {
     private static final long serialVersionUID = 1L;
 
     public EnviarJugador() {
-        super(TipoEvento.ENVIAR_JUGADOR);
+        super(TipoEvento.ENVIO_JUGADOR);
     }
 
 }

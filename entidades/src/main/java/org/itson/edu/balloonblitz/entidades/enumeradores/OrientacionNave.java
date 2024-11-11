@@ -6,8 +6,13 @@ package org.itson.edu.balloonblitz.entidades.enumeradores;
 
 /**
  *
- * @author elimo
+ * @author rover
  */
-public enum TipoEvento {
-    POSICION_NAVES, DISPARO, ENVIO_JUGADOR, TIMEOUT;
+public enum OrientacionNave {
+    VERTICAL, HORIZONTAL;
+    
+    // Método para invertir la orientación
+    public OrientacionNave invertir() {
+        return this == VERTICAL ? HORIZONTAL : VERTICAL;
+    }
 }
