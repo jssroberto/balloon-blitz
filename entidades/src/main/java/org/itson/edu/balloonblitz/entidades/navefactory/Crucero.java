@@ -11,7 +11,7 @@ import org.itson.edu.balloonblitz.entidades.enumeradores.TipoNave;
 public class Crucero extends Nave{
     
     public Crucero() {
-        super(TipoNave.CRUCERO, 4);
+        super(TipoNave.CRUCERO, 3);
     }
     
 }

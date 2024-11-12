@@ -11,7 +11,7 @@ import org.itson.edu.balloonblitz.entidades.enumeradores.TipoNave;
 public class Submarino extends Nave{
     
     public Submarino() {
-        super(TipoNave.SUBMARINO, 3);
+        super(TipoNave.SUBMARINO, 2);
     }
     
 }

@@ -8,6 +8,6 @@ package org.itson.edu.balloonblitz.entidades.enumeradores;
  *
  * @author rover
  */
-public enum OrientacionNave {
-    VERTICAL, HORIZONTAL;
+public enum ColorNaves {
+    ROJO, AZUL, VERDE, AMARILLO, ROSA;
 }

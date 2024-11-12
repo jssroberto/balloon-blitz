@@ -4,8 +4,6 @@
  */
 package org.itson.edu.balloonblitz.entidades;
 
-import java.io.Serializable;
-import java.util.List;
 
 /**
  *
@@ -13,6 +11,7 @@ import java.util.List;
  */
 import java.io.Serializable;
 import java.util.List;
+import org.itson.edu.balloonblitz.entidades.enumeradores.ColorNaves;
 
 public class Jugador implements Serializable {
 
@@ -22,6 +21,8 @@ public class Jugador implements Serializable {
     private final Tablero tableroPropio;
     private final Tablero tableroContrincante;
     private final List<Nave> naves;
+    private final ColorNaves colorPropio;
+    private final ColorNaves colorRival;
     private final int navesRestantes;
 
     // Constructor privado que recibe el builder
@@ -31,6 +32,8 @@ public class Jugador implements Serializable {
         this.tableroPropio = builder.tableroPropio;
         this.tableroContrincante = builder.tableroContrincante;
         this.naves = builder.naves;
+        this.colorPropio = builder.colorPropio;
+        this.colorRival = builder.colorRival;
         this.navesRestantes = builder.navesRestantes;
     }
 
@@ -54,17 +57,26 @@ public class Jugador implements Serializable {
         return naves;
     }
 
+    public ColorNaves getColorPropio() {
+        return colorPropio;
+    }
+
+    public ColorNaves getColorRival() {
+        return colorRival;
+    }
+
     public int getNavesRestantes() {
         return navesRestantes;
     }
 
-    
     public static class Builder {
         private String nombre;
         private String fotoPerfil;
         private Tablero tableroPropio;
         private Tablero tableroContrincante;
         private List<Nave> naves;
+        private ColorNaves colorPropio;
+        private ColorNaves colorRival;
         private int navesRestantes;
 
         public Builder nombre(String nombre) {
@@ -92,6 +104,16 @@ public class Jugador implements Serializable {
             return this;
         }
 
+        public Builder colorPropio(ColorNaves colorPropio) {
+            this.colorPropio = colorPropio;
+            return this;
+        }
+
+        public Builder colorRival(ColorNaves colorRival) {
+            this.colorRival = colorRival;
+            return this;
+        }
+
         public Builder navesRestantes(int navesRestantes) {
             this.navesRestantes = navesRestantes;
             return this;
@@ -103,4 +125,3 @@ public class Jugador implements Serializable {
         }
     }
 }
-

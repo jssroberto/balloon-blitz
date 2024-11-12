@@ -11,7 +11,7 @@ import org.itson.edu.balloonblitz.entidades.enumeradores.TipoNave;
 public class PortaAviones extends Nave{
     
     public PortaAviones() {
-        super(TipoNave.PORTAAVIONES, 5);
+        super(TipoNave.PORTAAVIONES, 4);
     }
     
 }
