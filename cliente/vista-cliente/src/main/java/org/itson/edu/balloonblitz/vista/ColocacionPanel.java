@@ -60,26 +60,23 @@ public class ColocacionPanel extends javax.swing.JPanel {
         addTextBorder(lblTitulo2);
     }
 
-    // Método para añadir borde al texto en JLabel
+    // Le agrega bordo a todo
     private void addTextBorder(JLabel label) {
-        label.setForeground(Color.WHITE); // Color principal del texto
+        label.setForeground(Color.WHITE);
         label.setUI(new javax.swing.plaf.basic.BasicLabelUI() {
             @Override
             public void paint(Graphics g, JComponent c) {
                 Graphics2D g2d = (Graphics2D) g.create();
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-                // Definir el grosor del borde y color
                 int borderThickness = 2;
                 Color borderColor = Color.BLACK;
 
-                // Posición del texto
                 String text = label.getText();
                 FontMetrics metrics = g2d.getFontMetrics(label.getFont());
                 int x = (label.getWidth() - metrics.stringWidth(text)) / 2;
                 int y = (label.getHeight() - metrics.getHeight()) / 2 + metrics.getAscent();
 
-                // Dibujar borde en varias direcciones alrededor del texto
                 g2d.setColor(borderColor);
                 for (int i = -borderThickness; i <= borderThickness; i++) {
                     for (int j = -borderThickness; j <= borderThickness; j++) {
@@ -87,7 +84,6 @@ public class ColocacionPanel extends javax.swing.JPanel {
                     }
                 }
 
-                // Dibujar el texto principal encima del borde
                 g2d.setColor(label.getForeground());
                 g2d.drawString(text, x, y);
 
@@ -97,18 +93,28 @@ public class ColocacionPanel extends javax.swing.JPanel {
     }
 
     private void setGlobos() throws FontFormatException, IOException {
+        // Globo de una casilla
         ImageIcon iconRojo = new ImageIcon(getClass().getResource("/images/ballons/rojo/rojo-1.png"));
         JLabel globoRojo = new JLabel(iconRojo);
-        globoRojo.setTransferHandler(new BalloonTransferHandler(globoRojo));
+        globoRojo.setTransferHandler(new BalloonTransferHandler(globoRojo, "single"));
 
-        ImageIcon iconCamo = new ImageIcon(getClass().getResource("/images/ballons/rojo/rojo-2.png"));
-        JLabel globoCamo = new JLabel(iconCamo);
-        globoCamo.setTransferHandler(new BalloonTransferHandler(globoCamo));
+        // Globo de dos casillas
+        ImageIcon iconDoble = new ImageIcon(getClass().getResource("/images/ballons/rojo/rojo-2.png"));
+        JLabel globoDoble = new JLabel(iconDoble);
+        globoDoble.setTransferHandler(new BalloonTransferHandler(globoDoble, "double"));
+
+        // Globo de tres casillas
+        ImageIcon iconTriple = new ImageIcon(getClass().getResource("/images/ballons/rojo/rojo-3.png"));
+        JLabel globoTriple = new JLabel(iconTriple);
+        globoTriple.setTransferHandler(new BalloonTransferHandler(globoTriple, "triple"));
+
+        // Globo de cuatro casillas
+        ImageIcon iconQuad = new ImageIcon(getClass().getResource("/images/ballons/rojo/rojo-4.png"));
+        JLabel globoQuad = new JLabel(iconQuad);
+        globoQuad.setTransferHandler(new BalloonTransferHandler(globoQuad, "quadruple"));
 
         panelContenedorGlobos.setLayout(null);
 
-        // Especificamos las coordenadas exactas donde queremos que aparezca el globo
-        // Estos valores los puedes ajustar según necesites
         int x = 150; // posición x dentro del contenedor
         int y = 25; // posición y dentro del contenedor
         int width = iconRojo.getIconWidth();
@@ -119,8 +125,18 @@ public class ColocacionPanel extends javax.swing.JPanel {
                 width,
                 height);
 
-        globoCamo.setBounds(x - panelContenedorGlobos.getX(),
+        globoDoble.setBounds(x - panelContenedorGlobos.getX(),
+                y + 50 - panelContenedorGlobos.getY(),
+                width,
+                height);
+
+        globoTriple.setBounds(x - panelContenedorGlobos.getX(),
                 y + 100 - panelContenedorGlobos.getY(),
+                width,
+                height);
+
+        globoQuad.setBounds(x - panelContenedorGlobos.getX(),
+                y + 150 - panelContenedorGlobos.getY(),
                 width,
                 height);
 
@@ -133,7 +149,25 @@ public class ColocacionPanel extends javax.swing.JPanel {
             }
         });
 
-        globoCamo.addMouseListener(new java.awt.event.MouseAdapter() {
+        globoDoble.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                JLabel source = (JLabel) evt.getSource();
+                TransferHandler handler = source.getTransferHandler();
+                handler.exportAsDrag(source, evt, TransferHandler.COPY);
+            }
+        });
+
+        globoTriple.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                JLabel source = (JLabel) evt.getSource();
+                TransferHandler handler = source.getTransferHandler();
+                handler.exportAsDrag(source, evt, TransferHandler.COPY);
+            }
+        });
+
+        globoQuad.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 JLabel source = (JLabel) evt.getSource();
@@ -143,12 +177,14 @@ public class ColocacionPanel extends javax.swing.JPanel {
         });
 
         panelContenedorGlobos.add(globoRojo);
-        panelContenedorGlobos.add(globoCamo);
+        panelContenedorGlobos.add(globoDoble);
+        panelContenedorGlobos.add(globoTriple);
+        panelContenedorGlobos.add(globoQuad);
         panelContenedorGlobos.repaint();
     }
 
     private void enableDrop() {
-        GridDragDropHandler gridDragDropHandler = new GridDragDropHandler(panelTablero);
+        new GridDragDropHandler(panelTablero);
     }
 
     private void construirJugador() {
@@ -176,9 +212,6 @@ public class ColocacionPanel extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         lblTitulo2 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
         panelTablero = new javax.swing.JLabel();
         panelContenedorGlobos = new javax.swing.JLabel();
         btnConfirmar = new javax.swing.JLabel();
@@ -212,15 +245,6 @@ public class ColocacionPanel extends javax.swing.JPanel {
 
         lblTitulo2.setText("derecho para rotarlas.");
         jPanel1.add(lblTitulo2, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 50, -1, 40));
-
-        jLabel6.setText("jLabel6");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 290, -1, -1));
-
-        jLabel7.setText("jLabel7");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 340, -1, -1));
-
-        jLabel8.setText("jLabel8");
-        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 390, -1, -1));
 
         panelTablero.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/tablero.png"))); // NOI18N
         jPanel1.add(panelTablero, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 140, -1, 460));
@@ -268,9 +292,6 @@ public class ColocacionPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblFondo;
     private javax.swing.JLabel lblTitulo1;

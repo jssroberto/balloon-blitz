@@ -104,7 +104,7 @@ public class PersonalizarPanel extends javax.swing.JPanel {
     }
 
     private void crearJugador() {
-        new Jugador.Builder()
+        Jugador jugador = new Jugador.Builder()
                 .nombre(txtNombre.getText())
                 .colorPropio(colorNaves)
                 .fotoPerfil(fotoPerfil)
@@ -240,6 +240,12 @@ public class PersonalizarPanel extends javax.swing.JPanel {
         globoRojo.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 globoRojoMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                globoRojoMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                globoRojoMouseExited(evt);
             }
         });
         jPanel1.add(globoRojo, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 330, -1, -1));
@@ -388,6 +394,14 @@ public class PersonalizarPanel extends javax.swing.JPanel {
     private void pfpQuincyMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pfpQuincyMouseClicked
         fotoPerfil = "/images/icons/quincy.png";
     }//GEN-LAST:event_pfpQuincyMouseClicked
+
+    private void globoRojoMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_globoRojoMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_globoRojoMouseEntered
+
+    private void globoRojoMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_globoRojoMouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_globoRojoMouseExited
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
