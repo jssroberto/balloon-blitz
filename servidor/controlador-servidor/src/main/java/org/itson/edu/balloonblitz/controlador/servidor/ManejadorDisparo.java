@@ -4,53 +4,48 @@
  */
 package org.itson.edu.balloonblitz.controlador.servidor;
 
+import java.io.ObjectInputStream;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+
+import org.itson.edu.balloonblitz.entidades.Disparo;
 import org.itson.edu.balloonblitz.entidades.Jugador;
+import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
+import org.itson.edu.balloonblitz.modelo.servidor.EventoObserver;
 
 /**
  *
  * @author elimo
  */
-public class ManejadorDisparo {
+public class ManejadorDisparo implements Runnable, EventoObserver{
 
-    Evento posicionarNaves;
-    private static final int LIMITE_TIEMPO_TURNO = 3; // minutos
-    private final ScheduledExecutorService temporizadorTurno = Executors.newSingleThreadScheduledExecutor();
-    private ScheduledFuture<?> temporizadorActual;
-    private Jugador jugadorActual;
-    private Jugador jugador1;
-    private Jugador jugador2;
+    private final DisparoEvento disparoEvento;
 
-    public ManejadorDisparo(Evento evento) {
+    public ManejadorDisparo(DisparoEvento disparoEvento) {
+        this.disparoEvento = disparoEvento;
     }
 
-    public void iniciarTurno(Jugador jugador) {
-        jugadorActual = jugador;
-        temporizadorActual = temporizadorTurno.schedule(() -> {
-            System.out.println("El tiempo de turno ha expirado para " + jugadorActual.getNombre());
-            cambiarTurno();
-        }, LIMITE_TIEMPO_TURNO, TimeUnit.MINUTES);
-
+    public DisparoEvento getDisparoEvento() {
+        return disparoEvento;
     }
 
-    private void cambiarTurno() {
-        if (temporizadorActual != null) {
-            temporizadorActual.cancel(true); // Cancelar el temporizador del turno actual
-        }
 
-        jugadorActual = (jugadorActual.equals(jugador1)) ? jugador2 : jugador1;
-
-        iniciarTurno(jugadorActual);
+    //TODO hacer que esto devuela un evento en lugar de void
+    @Override
+    public void manejarEvento(Evento evento, ObjectInputStream entrada) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    public Evento obtenerEvento() {
-
-        return null;
-
+    @Override
+    public void run() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+    
+    
+
+    
 
 }

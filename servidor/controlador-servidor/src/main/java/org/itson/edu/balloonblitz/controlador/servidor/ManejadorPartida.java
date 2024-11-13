@@ -5,14 +5,16 @@ import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.Partida;
 import org.itson.edu.balloonblitz.entidades.Tablero;
 import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoPartida;
 import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
+import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
-import org.itson.edu.balloonblitz.entidades.eventos.conexion.EnviarJugador;
+import org.itson.edu.balloonblitz.entidades.eventos.EnvioJugadorEvento;
 import org.itson.edu.balloonblitz.modelo.servidor.ControladorStreams;
 import org.itson.edu.balloonblitz.modelo.servidor.EventoObserver;
 import org.itson.edu.balloonblitz.modelo.servidor.Servidor;
@@ -23,7 +25,7 @@ import org.itson.edu.balloonblitz.modelo.servidor.Servidor;
  *
  * @author elimo
  */
-public class ManejadorPartida extends Thread implements EventoObserver {
+public class ManejadorPartida implements EventoObserver {
 
     private final ControladorStreams streamsJugador1;
     private final ControladorStreams streamsJugador2;
@@ -47,8 +49,8 @@ public class ManejadorPartida extends Thread implements EventoObserver {
         streamsJugador2 = jugadores.get(1);
         executorService.submit(() -> servidor.recibirDatosCiente(streamsJugador1.getEntrada()));
         executorService.submit(() -> servidor.recibirDatosCiente(streamsJugador2.getEntrada()));
-        executorService.submit(() -> servidor.mandarDatosCliente(streamsJugador1.getSalida(), new EnviarJugador()));
-        executorService.submit(() -> servidor.mandarDatosCliente(streamsJugador2.getSalida(), new EnviarJugador()));
+        executorService.submit(() -> servidor.mandarDatosCliente(streamsJugador1.getSalida(), new EnvioJugadorEvento()));
+        executorService.submit(() -> servidor.mandarDatosCliente(streamsJugador2.getSalida(), new EnvioJugadorEvento()));
 
     }
 
@@ -85,7 +87,6 @@ public class ManejadorPartida extends Thread implements EventoObserver {
      *
      * @param evento Evento enviado por el cliente
      * @param entrada
-     * @return
      */
     @Override
     public void manejarEvento(Evento evento, ObjectInputStream entrada) {
@@ -106,23 +107,17 @@ public class ManejadorPartida extends Thread implements EventoObserver {
 //            enviarEventoAJugador1(streamsJugador1.getSalida(), evento);
     }
 
-    @Override
-    public void run() {
-        obtenerEventoJugador1();
-        obtenerEventoJugador2();
-    }
-
     public void crearPartida() {
         partida = new Partida(jugador1, jugador2);
         partida.setTableroJugador1(tableroJugador1);
         partida.setTableroJugador2(tableroJugador2);
         partida.setEstadoPartida(EstadoPartida.ACTIVA);
         enviarEventoAJugador1(streamsJugador1.getSalida(), new TimeOutEvento(1));
-        enviarEventoAJugador2(streamsJugador2.getSalida(), new TimeOutEvento(1));
+        enviarEventoAJugador2(streamsJugador2.getSalida(), new TimeOutEvento (1));
 
     }
 
-    public Evento manejarPartida(Evento evento, ObjectInputStream entrada) {
+    public Object manejarPartida(Evento evento, ObjectInputStream entrada) {
 
         if (entrada.equals(streamsJugador1.getEntrada())) {
             evento.setEmisor(jugador1);
@@ -136,8 +131,9 @@ public class ManejadorPartida extends Thread implements EventoObserver {
 
         } else if (evento.getTipoEvento() == TipoEvento.DISPARO) {
 
-            ManejadorDisparo manejadorDisparo = new ManejadorDisparo(evento);
-            return manejadorDisparo.obtenerEvento();
+            //TODO devolver un evento en lugar de null
+            ManejadorDisparo manejadorDisparo = new ManejadorDisparo((DisparoEvento) evento);
+            return null;
         }
         return null;
     }

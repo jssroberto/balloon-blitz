@@ -7,7 +7,7 @@ package org.itson.edu.balloonblitz.controlador;
 import java.util.Scanner;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
-import org.itson.edu.balloonblitz.entidades.eventos.conexion.EnviarJugador;
+import org.itson.edu.balloonblitz.entidades.eventos.*;
 
 /**
  *
@@ -31,7 +31,7 @@ public class pruebacliente {
             Jugador jugador = new Jugador.Builder().fotoPerfil("").nombre("").build();
 
             // Crear un evento de tipo EnviarJugador y asignarle el emisor
-            Evento jugador2 = new EnviarJugador();
+            Evento jugador2 = new EnvioJugadorEvento();
             jugador2.setEmisor(jugador);
 
             // Imprimir el emisor para verificar antes de enviar
