@@ -32,6 +32,8 @@ public class GridDragDropHandler extends DropTargetAdapter {
     private int currentSize;
     private boolean isDragging = false;
 
+    private Point lastDragPoint;
+
     public GridDragDropHandler(JLabel tableroPanel) {
         this.tableroPanel = tableroPanel;
         this.tablero = new Tablero();
@@ -75,8 +77,6 @@ public class GridDragDropHandler extends DropTargetAdapter {
         });
     }
 
-    private Point lastDragPoint;
-
     @Override
     public void dragEnter(DropTargetDragEvent dtde) {
         isDragging = true;
@@ -85,8 +85,7 @@ public class GridDragDropHandler extends DropTargetAdapter {
             currentIcon = new ImageIcon((Image) dtde.getTransferable().getTransferData(DataFlavor.imageFlavor));
             String balloonType = getBalloonType(dtde.getTransferable());
             currentSize = getBalloonSize(balloonType);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (UnsupportedFlavorException | IOException e) {
         }
     }
 

@@ -31,6 +31,8 @@ public class ColocacionPanel extends javax.swing.JPanel {
     private static final Logger LOGGER = Logger.getLogger(InicioPanel.class.getName());
     private static final String FONT_PATH = "/fonts/oetztype/OETZTYPE.TTF";
     private static final float TITLE_FONT_SIZE = 28.0F;
+    
+    // Segun el tipo de 
     private static final String BALLOON_BASE_PATH = "/images/ballons/rojo/rojo-";
     private static final int BORDER_THICKNESS = 2;
 
