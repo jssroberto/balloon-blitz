@@ -17,7 +17,7 @@ public interface EventoObserver {
     /**
      * Metodo para manejar eventos
      *
-     * @param evento Evento s manejar
+     * @param evento Eventos a manejar por el observador
      * @return
      */
     void manejarEvento(Evento evento, ObjectInputStream entrada);

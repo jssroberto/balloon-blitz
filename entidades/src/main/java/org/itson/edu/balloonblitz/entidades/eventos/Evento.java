@@ -16,7 +16,7 @@ public abstract class Evento implements Serializable{
 
     private static final long serialVersionUID = 1L;
     protected Jugador emisor;
-    protected TipoEvento tipoEvento;
+    protected final TipoEvento tipoEvento;
 
     public Evento(TipoEvento tipoEvento) {
         this.tipoEvento = tipoEvento;

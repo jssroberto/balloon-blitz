@@ -4,6 +4,7 @@
  */
 package org.itson.edu.balloonblitz.entidades;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -12,6 +13,7 @@ import java.io.Serializable;
  */
 public class Disparo implements Serializable{
 
+    @Serial
     private static final long serialVersionUID = 1L;
     private Casilla casilla;
     private Jugador jugador;

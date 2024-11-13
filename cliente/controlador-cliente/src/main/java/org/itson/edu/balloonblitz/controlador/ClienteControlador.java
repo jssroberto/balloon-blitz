@@ -4,15 +4,18 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
 
 /**
- *
  * @author elimo
- *
  */
+//TODO seguros que cliente controlador debe de extender de Thread?
 public class ClienteControlador extends Thread {
 
     private static ClienteControlador instancia;
@@ -53,32 +56,34 @@ public class ClienteControlador extends Thread {
     }
 
     private void procesarMensaje(Evento mensajeRecibido) {
-
-        if (mensajeRecibido.getTipoEvento() == TipoEvento.TIMEOUT) {
-            TimeOutEvento timeOut = (TimeOutEvento) mensajeRecibido;
-            tiempoRestante = timeOut.getTiempoRestante();
-
-            if (tiempoRestante > 0) {
-                // Crear un temporizador que se ejecute cada segundo
-                new Thread(() -> {
-                    while (tiempoRestante > 0) {
-                        System.out.println("El temporizador está corriendo. Tiempo restante: " + tiempoRestante + " minutos.");
-                        try {
-                            // Esperar 1 segundo antes de actualizar el tiempo
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        tiempoRestante--; // Disminuir el tiempo restante
-                    }
-
-                }).start();  // Iniciar el hilo en segundo plano
-            } else {
-                System.out.println("El tiempo ha expirado. Has perdido tu turno.");
-            }
-        } else if (mensajeRecibido.getTipoEvento() == TipoEvento.ENVIO_JUGADOR) {
-            System.out.println(mensajeRecibido.getEmisor());
+        switch (mensajeRecibido.getTipoEvento()) {
+            case TIMEOUT -> manejarTimeOut((TimeOutEvento) mensajeRecibido);
+            case ENVIO_JUGADOR -> manejarEnvioJugador(mensajeRecibido);
+            default -> System.out.println("Tipo de evento no reconocido: " + mensajeRecibido.getTipoEvento());
         }
+    }
+
+
+    private void manejarTimeOut(TimeOutEvento timeOut) {
+        tiempoRestante = timeOut.getTiempoRestante();
+        if (tiempoRestante > 0) {
+            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+            scheduler.scheduleAtFixedRate(() -> {
+                if (tiempoRestante > 0) {
+                    System.out.println("El temporizador está corriendo. Tiempo restante: " + tiempoRestante + " minutos.");
+                    tiempoRestante--;
+                } else {
+                    System.out.println("El tiempo ha expirado. Has perdido tu turno.");
+                    scheduler.shutdown();
+                }
+            }, 0, 1, TimeUnit.SECONDS);
+        } else {
+            System.out.println("El tiempo ha expirado. Has perdido tu turno.");
+        }
+    }
+
+    private void manejarEnvioJugador(Evento mensajeRecibido) {
+        System.out.println(mensajeRecibido.getEmisor());
     }
 
     public void enviarMensaje(Evento evento) {

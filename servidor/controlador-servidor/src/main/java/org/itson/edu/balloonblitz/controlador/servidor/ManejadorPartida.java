@@ -1,5 +1,18 @@
 package org.itson.edu.balloonblitz.controlador.servidor;
 
+import org.itson.edu.balloonblitz.entidades.Jugador;
+import org.itson.edu.balloonblitz.entidades.Partida;
+import org.itson.edu.balloonblitz.entidades.Tablero;
+import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoPartida;
+import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
+import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
+import org.itson.edu.balloonblitz.entidades.eventos.EnvioJugadorEvento;
+import org.itson.edu.balloonblitz.entidades.eventos.Evento;
+import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
+import org.itson.edu.balloonblitz.modelo.servidor.ControladorStreams;
+import org.itson.edu.balloonblitz.modelo.servidor.EventoObserver;
+import org.itson.edu.balloonblitz.modelo.servidor.Servidor;
+
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
@@ -7,19 +20,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import org.itson.edu.balloonblitz.entidades.Jugador;
-import org.itson.edu.balloonblitz.entidades.Partida;
-import org.itson.edu.balloonblitz.entidades.Tablero;
-import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoPartida;
-import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
-import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
-import org.itson.edu.balloonblitz.entidades.eventos.Evento;
-import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
-import org.itson.edu.balloonblitz.entidades.eventos.EnvioJugadorEvento;
-import org.itson.edu.balloonblitz.modelo.servidor.ControladorStreams;
-import org.itson.edu.balloonblitz.modelo.servidor.EventoObserver;
-import org.itson.edu.balloonblitz.modelo.servidor.Servidor;
 
 /**
  * Clase que representa el manejador de la partida
@@ -43,8 +43,6 @@ public class ManejadorPartida implements EventoObserver {
 
     /**
      * Constructor que agrega los I/O de los jugadores
-     *
-     * @param jugadores
      */
     public ManejadorPartida(List<ControladorStreams> jugadores) {
         servidor = Servidor.getInstance();
@@ -75,7 +73,7 @@ public class ManejadorPartida implements EventoObserver {
      * Manda a enviar el resultado de los eventos a los jugadores
      *
      * @param salida1 Output del jugador 1
-     * @param evento Resultado de un evento
+     * @param evento  Resultado de un evento
      */
     public void enviarEventoAJugador1(ObjectOutputStream salida1, Evento evento) {
         servidor.mandarDatosCliente(salida1, evento);
@@ -88,11 +86,12 @@ public class ManejadorPartida implements EventoObserver {
     /**
      * Metodo suscriptor que maneja el evento obtenido del servidor
      *
-     * @param evento Evento enviado por el cliente
+     * @param evento  Evento enviado por el cliente
      * @param entrada
      */
     @Override
     public void manejarEvento(Evento evento, ObjectInputStream entrada) {
+        //por que esto esta afuera del método manejar partida?
         if (evento.getTipoEvento() == TipoEvento.ENVIO_JUGADOR) {
             if (entrada.equals(streamsJugador1.getEntrada())) {
 

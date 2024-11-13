@@ -5,12 +5,12 @@
 package org.itson.edu.balloonblitz.controlador;
 
 import java.util.Scanner;
+
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.entidades.eventos.*;
 
 /**
- *
  * @author elimo
  */
 public class pruebacliente {
@@ -40,8 +40,7 @@ public class pruebacliente {
             // Inicializar el cliente y enviar el mensaje al servidor
             // Este método inicia la conexión del cliente con el servidor
             cliente.enviarMensaje(jugador2); // Enviar el evento al servidor
-            
-            
+
 
             System.out.println("Evento enviado al servidor.");
         } else {
