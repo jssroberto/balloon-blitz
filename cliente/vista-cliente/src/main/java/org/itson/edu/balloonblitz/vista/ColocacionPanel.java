@@ -6,13 +6,13 @@ package org.itson.edu.balloonblitz.vista;
 
 import org.itson.edu.balloonblitz.auxiliar.BalloonTransferHandler;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.io.IOException;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -21,7 +21,6 @@ import javax.swing.JLabel;
 import javax.swing.TransferHandler;
 import org.itson.edu.balloonblitz.auxiliar.GridDragDropHandler;
 import org.itson.edu.balloonblitz.entidades.Jugador;
-import org.itson.edu.balloonblitz.entidades.Nave;
 
 /**
  *
@@ -29,9 +28,14 @@ import org.itson.edu.balloonblitz.entidades.Nave;
  */
 public class ColocacionPanel extends javax.swing.JPanel {
 
-    private static final Logger logger = Logger.getLogger(InicioPanel.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(InicioPanel.class.getName());
+    private static final String FONT_PATH = "/fonts/oetztype/OETZTYPE.TTF";
+    private static final float TITLE_FONT_SIZE = 28.0F;
+    private static final String BALLOON_BASE_PATH = "/images/ballons/rojo/rojo-";
+    private static final int BORDER_THICKNESS = 2;
+
     private final FramePrincipal framePrincipal;
-    private GridDragDropHandler gridDragDropHandler;
+    private final GridDragDropHandler gridDragDropHandler;
 
     /**
      * Creates new form PersonalizarPanel
@@ -39,158 +43,114 @@ public class ColocacionPanel extends javax.swing.JPanel {
      * @param framePrincipal
      */
     public ColocacionPanel(FramePrincipal framePrincipal) {
-        this.gridDragDropHandler = new GridDragDropHandler(panelTablero);
         this.framePrincipal = framePrincipal;
         initComponents();
+        this.gridDragDropHandler = new GridDragDropHandler(panelTablero);
 
         try {
-            setFuentes();
-            setGlobos();
-            enableDrop();
+            setupUI();
         } catch (FontFormatException | IOException e) {
-            logger.log(Level.SEVERE, "Error al cargar fuentes: ", e);
+            LOGGER.log(Level.SEVERE, "Error initializing UI: ", e);
         }
     }
 
-    private void setFuentes() throws FontFormatException, IOException {
-        lblTitulo1.setFont(framePrincipal.cargarFuente("/fonts/oetztype/OETZTYPE.TTF", 28.0F));
-        lblTitulo2.setFont(framePrincipal.cargarFuente("/fonts/oetztype/OETZTYPE.TTF", 28.0F));
+    private void setupUI() throws FontFormatException, IOException {
+        setupFonts();
+        setupBalloons();
+    }
+
+    private void setupFonts() throws FontFormatException, IOException {
+        Font titleFont = framePrincipal.cargarFuente(FONT_PATH, TITLE_FONT_SIZE);
+        lblTitulo1.setFont(titleFont);
+        lblTitulo2.setFont(titleFont);
 
         addTextBorder(lblTitulo1);
         addTextBorder(lblTitulo2);
     }
 
-    // Le agrega bordo a todo
     private void addTextBorder(JLabel label) {
         label.setForeground(Color.WHITE);
         label.setUI(new javax.swing.plaf.basic.BasicLabelUI() {
             @Override
             public void paint(Graphics g, JComponent c) {
                 Graphics2D g2d = (Graphics2D) g.create();
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-                int borderThickness = 2;
-                Color borderColor = Color.BLACK;
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                        RenderingHints.VALUE_ANTIALIAS_ON);
 
                 String text = label.getText();
                 FontMetrics metrics = g2d.getFontMetrics(label.getFont());
                 int x = (label.getWidth() - metrics.stringWidth(text)) / 2;
                 int y = (label.getHeight() - metrics.getHeight()) / 2 + metrics.getAscent();
 
-                g2d.setColor(borderColor);
-                for (int i = -borderThickness; i <= borderThickness; i++) {
-                    for (int j = -borderThickness; j <= borderThickness; j++) {
+                // Dibuja los bordes
+                g2d.setColor(Color.BLACK);
+                for (int i = -BORDER_THICKNESS; i <= BORDER_THICKNESS; i++) {
+                    for (int j = -BORDER_THICKNESS; j <= BORDER_THICKNESS; j++) {
                         g2d.drawString(text, x + i, y + j);
                     }
                 }
 
+                // Dibuja el texto
                 g2d.setColor(label.getForeground());
                 g2d.drawString(text, x, y);
-
                 g2d.dispose();
             }
         });
     }
 
-    private void setGlobos() throws FontFormatException, IOException {
-        // Globo de una casilla
-        ImageIcon iconRojo = new ImageIcon(getClass().getResource("/images/ballons/rojo/rojo-1.png"));
-        JLabel globoRojo = new JLabel(iconRojo);
-        globoRojo.setTransferHandler(new BalloonTransferHandler(globoRojo, "single"));
-
-        // Globo de dos casillas
-        ImageIcon iconDoble = new ImageIcon(getClass().getResource("/images/ballons/rojo/rojo-2.png"));
-        JLabel globoDoble = new JLabel(iconDoble);
-        globoDoble.setTransferHandler(new BalloonTransferHandler(globoDoble, "double"));
-
-        // Globo de tres casillas
-        ImageIcon iconTriple = new ImageIcon(getClass().getResource("/images/ballons/rojo/rojo-3.png"));
-        JLabel globoTriple = new JLabel(iconTriple);
-        globoTriple.setTransferHandler(new BalloonTransferHandler(globoTriple, "triple"));
-
-        // Globo de cuatro casillas
-        ImageIcon iconQuad = new ImageIcon(getClass().getResource("/images/ballons/rojo/rojo-4.png"));
-        JLabel globoQuad = new JLabel(iconQuad);
-        globoQuad.setTransferHandler(new BalloonTransferHandler(globoQuad, "quadruple"));
-
+    private void setupBalloons() {
         panelContenedorGlobos.setLayout(null);
 
-        int x = 150; // posición x dentro del contenedor
-        int y = 25; // posición y dentro del contenedor
-        int width = iconRojo.getIconWidth();
-        int height = iconRojo.getIconHeight();
+        // Aqui irían los tipos de barcos
+        String[] balloonTypes = {"single", "double", "triple", "quadruple"};
+        int baseX = 150;
+        int baseY = 25;
+        int yOffset = 50;
 
-        globoRojo.setBounds(x - panelContenedorGlobos.getX(),
-                y - panelContenedorGlobos.getY(),
-                width,
-                height);
+        for (int i = 0; i < balloonTypes.length; i++) {
+            JLabel balloon = createBalloon(i + 1, balloonTypes[i]);
 
-        globoDoble.setBounds(x - panelContenedorGlobos.getX(),
-                y + 50 - panelContenedorGlobos.getY(),
-                width,
-                height);
+            ImageIcon icon = (ImageIcon) balloon.getIcon();
+            int x = baseX - panelContenedorGlobos.getX();
+            int y = baseY + (i * yOffset) - panelContenedorGlobos.getY();
 
-        globoTriple.setBounds(x - panelContenedorGlobos.getX(),
-                y + 100 - panelContenedorGlobos.getY(),
-                width,
-                height);
+            balloon.setBounds(x, y, icon.getIconWidth(), icon.getIconHeight());
+            addDragListener(balloon);
+            panelContenedorGlobos.add(balloon);
+        }
 
-        globoQuad.setBounds(x - panelContenedorGlobos.getX(),
-                y + 150 - panelContenedorGlobos.getY(),
-                width,
-                height);
-
-        globoRojo.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                JLabel source = (JLabel) evt.getSource();
-                TransferHandler handler = source.getTransferHandler();
-                handler.exportAsDrag(source, evt, TransferHandler.COPY);
-            }
-        });
-
-        globoDoble.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                JLabel source = (JLabel) evt.getSource();
-                TransferHandler handler = source.getTransferHandler();
-                handler.exportAsDrag(source, evt, TransferHandler.COPY);
-            }
-        });
-
-        globoTriple.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                JLabel source = (JLabel) evt.getSource();
-                TransferHandler handler = source.getTransferHandler();
-                handler.exportAsDrag(source, evt, TransferHandler.COPY);
-            }
-        });
-
-        globoQuad.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                JLabel source = (JLabel) evt.getSource();
-                TransferHandler handler = source.getTransferHandler();
-                handler.exportAsDrag(source, evt, TransferHandler.COPY);
-            }
-        });
-
-        panelContenedorGlobos.add(globoRojo);
-        panelContenedorGlobos.add(globoDoble);
-        panelContenedorGlobos.add(globoTriple);
-        panelContenedorGlobos.add(globoQuad);
         panelContenedorGlobos.repaint();
     }
 
-    private void enableDrop() {
-        new GridDragDropHandler(panelTablero);
+    // Aqui el numero de la foto define el tamaño de la nave
+    private JLabel createBalloon(int size, String type) {
+        String imagePath = BALLOON_BASE_PATH + size + ".png";
+        ImageIcon icon = new ImageIcon(getClass().getResource(imagePath));
+        JLabel balloon = new JLabel(icon);
+        balloon.setTransferHandler(new BalloonTransferHandler(balloon, type));
+        return balloon;
+    }
+
+    private void addDragListener(JLabel balloon) {
+        balloon.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                // Iniciar el arrastre
+                TransferHandler handler = balloon.getTransferHandler();
+                handler.exportAsDrag(balloon, evt, TransferHandler.COPY);
+            }
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                // Restaurar el cursor por defecto
+                balloon.setCursor(java.awt.Cursor.getDefaultCursor());
+            }
+        });
     }
 
     private void construirJugador() {
-        List<Nave> naves = null;
         new Jugador.Builder()
-                .naves(naves)
+                .naves(null)
                 .tableroPropio(gridDragDropHandler.obtenerTablero())
                 .build();
     }
