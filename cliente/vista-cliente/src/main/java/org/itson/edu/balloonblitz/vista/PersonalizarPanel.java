@@ -9,14 +9,17 @@ import java.awt.FontFormatException;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.RenderingHints;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.border.MatteBorder;
 import org.itson.edu.balloonblitz.entidades.Jugador;
-import org.itson.edu.balloonblitz.entidades.Partida;
+import org.itson.edu.balloonblitz.entidades.enumeradores.ColorNaves;
 
 /**
  *
@@ -26,6 +29,11 @@ public class PersonalizarPanel extends javax.swing.JPanel {
 
     private static final Logger logger = Logger.getLogger(InicioPanel.class.getName());
     private final FramePrincipal framePrincipal;
+    private ColorNaves colorNaves;
+    private String fotoPerfil;
+    private boolean imagenBenjaminAumentada = false;
+    private int anchoOriginal;
+    private int altoOriginal;
 
     /**
      * Creates new form PersonalizarPanel
@@ -95,11 +103,11 @@ public class PersonalizarPanel extends javax.swing.JPanel {
         });
     }
 
-    // IDK what im cooking
     private void crearJugador() {
-        Jugador jugador = new Jugador.Builder()
-                .fotoPerfil("benjamin")
+        new Jugador.Builder()
                 .nombre(txtNombre.getText())
+                .colorPropio(colorNaves)
+                .fotoPerfil(fotoPerfil)
                 .build();
     }
 
@@ -211,30 +219,65 @@ public class PersonalizarPanel extends javax.swing.JPanel {
 
         pfpGwendolin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/gwendolin.png"))); // NOI18N
         pfpGwendolin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        pfpGwendolin.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                pfpGwendolinMouseClicked(evt);
+            }
+        });
         jPanel1.add(pfpGwendolin, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 310, -1, -1));
 
         pfpFat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/patFusty.png"))); // NOI18N
         pfpFat.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        pfpFat.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                pfpFatMouseClicked(evt);
+            }
+        });
         jPanel1.add(pfpFat, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 310, -1, -1));
 
         globoRojo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ballons/59x73/rojo.png"))); // NOI18N
         globoRojo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        globoRojo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                globoRojoMouseClicked(evt);
+            }
+        });
         jPanel1.add(globoRojo, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 330, -1, -1));
 
         globoAzul.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ballons/59x73/azul.png"))); // NOI18N
         globoAzul.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        globoAzul.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                globoAzulMouseClicked(evt);
+            }
+        });
         jPanel1.add(globoAzul, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 330, -1, -1));
 
         globoVerde.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ballons/59x73/verde.png"))); // NOI18N
         globoVerde.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        globoVerde.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                globoVerdeMouseClicked(evt);
+            }
+        });
         jPanel1.add(globoVerde, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 330, -1, -1));
 
         globoAmarillo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ballons/59x73/amarillo.png"))); // NOI18N
         globoAmarillo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        globoAmarillo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                globoAmarilloMouseClicked(evt);
+            }
+        });
         jPanel1.add(globoAmarillo, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 330, -1, -1));
 
         globoRosa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ballons/59x73/rosa.png"))); // NOI18N
         globoRosa.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        globoRosa.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                globoRosaMouseClicked(evt);
+            }
+        });
         jPanel1.add(globoRosa, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 330, -1, -1));
 
         globoRojoOP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ballons/59x73/rojo.png"))); // NOI18N
@@ -258,7 +301,6 @@ public class PersonalizarPanel extends javax.swing.JPanel {
         jPanel1.add(globoRosaOP, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 490, -1, -1));
 
         lblFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/personalizar.png"))); // NOI18N
-        lblFondo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jPanel1.add(lblFondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1280, 680));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -277,14 +319,6 @@ public class PersonalizarPanel extends javax.swing.JPanel {
         framePrincipal.cambiarPanel(new InicioPanel(framePrincipal));
     }//GEN-LAST:event_lblVolverMouseClicked
 
-    private void pfpBenjaminMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pfpBenjaminMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_pfpBenjaminMouseClicked
-
-    private void pfpQuincyMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pfpQuincyMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_pfpQuincyMouseClicked
-
     private void lblContinuarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblContinuarMouseClicked
         crearJugador();
         framePrincipal.cambiarPanel(new EsperandoJugador(framePrincipal));
@@ -301,6 +335,59 @@ public class PersonalizarPanel extends javax.swing.JPanel {
             txtNombre.setText("Introduzca su nombre...");
         }
     }//GEN-LAST:event_txtNombreFocusLost
+
+    private void globoRojoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_globoRojoMouseClicked
+        colorNaves = ColorNaves.ROJO;
+    }//GEN-LAST:event_globoRojoMouseClicked
+
+    private void globoAzulMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_globoAzulMouseClicked
+        colorNaves = ColorNaves.AZUL;
+    }//GEN-LAST:event_globoAzulMouseClicked
+
+    private void globoVerdeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_globoVerdeMouseClicked
+        colorNaves = ColorNaves.VERDE;
+    }//GEN-LAST:event_globoVerdeMouseClicked
+
+    private void globoAmarilloMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_globoAmarilloMouseClicked
+        colorNaves = ColorNaves.AMARILLO;
+    }//GEN-LAST:event_globoAmarilloMouseClicked
+
+    private void globoRosaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_globoRosaMouseClicked
+        colorNaves = ColorNaves.ROSA;
+    }//GEN-LAST:event_globoRosaMouseClicked
+
+    private void pfpGwendolinMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pfpGwendolinMouseClicked
+        fotoPerfil = "/images/icons/gwendolin.png";
+    }//GEN-LAST:event_pfpGwendolinMouseClicked
+
+    private void pfpFatMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pfpFatMouseClicked
+        fotoPerfil = "/images/icons/patFusty.png";
+    }//GEN-LAST:event_pfpFatMouseClicked
+
+    private void pfpBenjaminMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pfpBenjaminMouseClicked
+        String rutaImagen = "/images/icons/benjamin.png";
+        fotoPerfil = rutaImagen;
+
+        ImageIcon iconoOriginal = new ImageIcon(getClass().getResource(rutaImagen));
+
+        if (!imagenBenjaminAumentada && anchoOriginal == 0 && altoOriginal == 0) {
+            anchoOriginal = iconoOriginal.getIconWidth();
+            altoOriginal = iconoOriginal.getIconHeight();
+        }
+
+        int ancho = imagenBenjaminAumentada ? anchoOriginal : anchoOriginal + 8;
+        int alto = imagenBenjaminAumentada ? altoOriginal : altoOriginal + 8;
+
+        Image imagenRedimensionada = iconoOriginal.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+
+        pfpBenjamin.setIcon(new ImageIcon(imagenRedimensionada));
+
+        imagenBenjaminAumentada = !imagenBenjaminAumentada;
+    }//GEN-LAST:event_pfpBenjaminMouseClicked
+
+    private void pfpQuincyMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pfpQuincyMouseClicked
+        fotoPerfil = "/images/icons/quincy.png";
+    }//GEN-LAST:event_pfpQuincyMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

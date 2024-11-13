@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.awt.Image;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetAdapter;
@@ -12,6 +13,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import org.itson.edu.balloonblitz.entidades.Casilla;
 import org.itson.edu.balloonblitz.entidades.Nave;
 import org.itson.edu.balloonblitz.entidades.Tablero;
@@ -99,7 +101,7 @@ public class GridDragDropHandler extends DropTargetAdapter {
             System.out.println("Estado actual del tablero en esta posicion: " + matriz[gridY][gridX].getNave().getTipoNave().name());
 
             dtde.dropComplete(true);
-        } catch (Exception e) {
+        } catch (UnsupportedFlavorException | IOException e) {
             System.out.println("Error al colocar el globo: " + e.getMessage());
             dtde.dropComplete(false);
         }
@@ -116,5 +118,9 @@ public class GridDragDropHandler extends DropTargetAdapter {
         ImageIcon icon = (ImageIcon) balloon.getIcon();
         Image img = icon.getImage();
         // Implementar la rotación de la imagen
+    }
+    
+    public Tablero obtenerTablero(){
+        return tablero;
     }
 }
