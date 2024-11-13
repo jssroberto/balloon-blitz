@@ -14,44 +14,23 @@ import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
  *
  * @author elimo
  */
-public final class TimeOutEvento extends Evento implements Serializable {
-    private static final long serialVersionUID = 1L;
+public final class TimeOutEvento extends Evento {
 
+    private int tiempoRestante;  // Puede ser en minutos u otro tipo que necesites
 
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-    private boolean tiempoExcedido = false;
-
-    public TimeOutEvento(int tiempoLimite) {
+    public TimeOutEvento(int tiempoRestante) {
         super(TipoEvento.TIMEOUT);
-        iniciarTemporizador(tiempoLimite);
-    }
-    
-    
-
-    public void iniciarTemporizador(int minutos) {
-        tiempoExcedido = false;
-
-        scheduler.schedule(() -> {
-            tiempoExcedido = true;
-            mostrarMensajeTiempoExcedido();
-            // Notificar al servidor aquí si es necesario
-        }, minutos, TimeUnit.MINUTES);
-
-        System.out.println("Temporizador iniciado por " + minutos + " minutos.");
+        this.tiempoRestante = tiempoRestante;
     }
 
-    private void mostrarMensajeTiempoExcedido() {
-        System.out.println("El tiempo ha expirado. Has perdido tu turno.");
-        // Notificar al servidor o tomar acciones para pasar el turno
-        scheduler.shutdown(); // Cerrar el scheduler después de que el tiempo se cumpla
+    public int getTiempoRestante() {
+        
+        return tiempoRestante;
     }
 
-    // Llamar a este método cuando el cliente complete la acción antes de que el tiempo expire
-    public void cancelarTemporizador() {
-        if (!tiempoExcedido) {
-            scheduler.shutdownNow();
-            System.out.println("Temporizador cancelado: el turno ha sido completado.");
-        }
+    @Override
+    public TipoEvento getTipoEvento() {
+        return TipoEvento.TIMEOUT;
     }
 
 }

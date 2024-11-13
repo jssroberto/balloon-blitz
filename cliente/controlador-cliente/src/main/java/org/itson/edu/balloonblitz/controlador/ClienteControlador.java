@@ -22,6 +22,7 @@ public class ClienteControlador extends Thread {
     private TimeOutEvento timeOut;
     private boolean conectado;
     Evento mensajeRecibido;
+    int tiempoRestante;
 
     public ClienteControlador(String host, int puerto) {
         try {
@@ -52,11 +53,30 @@ public class ClienteControlador extends Thread {
     }
 
     private void procesarMensaje(Evento mensajeRecibido) {
+
         if (mensajeRecibido.getTipoEvento() == TipoEvento.TIMEOUT) {
-            timeOut = (TimeOutEvento) mensajeRecibido;
-            timeOut.iniciarTemporizador(1);
-            System.out.println("bailaste");
-        }else if(mensajeRecibido.getTipoEvento() == TipoEvento.ENVIO_JUGADOR){
+            TimeOutEvento timeOut = (TimeOutEvento) mensajeRecibido;
+            tiempoRestante = timeOut.getTiempoRestante();
+
+            if (tiempoRestante > 0) {
+                // Crear un temporizador que se ejecute cada segundo
+                new Thread(() -> {
+                    while (tiempoRestante > 0) {
+                        System.out.println("El temporizador está corriendo. Tiempo restante: " + tiempoRestante + " minutos.");
+                        try {
+                            // Esperar 1 segundo antes de actualizar el tiempo
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        tiempoRestante--; // Disminuir el tiempo restante
+                    }
+
+                }).start();  // Iniciar el hilo en segundo plano
+            } else {
+                System.out.println("El tiempo ha expirado. Has perdido tu turno.");
+            }
+        } else if (mensajeRecibido.getTipoEvento() == TipoEvento.ENVIO_JUGADOR) {
             System.out.println(mensajeRecibido.getEmisor());
         }
     }

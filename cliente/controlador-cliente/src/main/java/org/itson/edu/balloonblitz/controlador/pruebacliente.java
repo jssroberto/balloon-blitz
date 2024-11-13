@@ -28,7 +28,7 @@ public class pruebacliente {
         int numero = scanner.nextInt();
         if (numero == 6) {
             // Inicializar el objeto Jugador y asignarle valores
-            Jugador jugador = new Jugador.Builder().fotoPerfil("").nombre("").build();
+            Jugador jugador = new Jugador.Builder().fotoPerfil("nnn").nombre("nnnn").build();
 
             // Crear un evento de tipo EnviarJugador y asignarle el emisor
             Evento jugador2 = new EnvioJugadorEvento();

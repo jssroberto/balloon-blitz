@@ -168,11 +168,10 @@ public final class Servidor {
      */
     public void mandarDatosCliente(ObjectOutputStream salida, Evento evento) {
         try {
-            while (evento != null) {
 
-                salida.writeObject(evento);
-                salida.flush();
-            }
+            salida.writeObject(evento);
+            salida.flush();
+
         } catch (IOException ex) {
             Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
         }

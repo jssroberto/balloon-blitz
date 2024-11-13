@@ -19,7 +19,6 @@ public class Lobby implements ConexionObserver {
     private static final int NUMERO_JUGADORES_NECESARIOS = 2;
     private static final Set<ControladorStreams> clientesEnLobby = ConcurrentHashMap.newKeySet();
     private static final List<List<ControladorStreams>> partidas = new ArrayList<>();
-    private ManejadorPartida manejador;
     private static Lobby instancia;
 
     /**
@@ -68,7 +67,6 @@ public class Lobby implements ConexionObserver {
             }
             clientesEnLobby.removeAll(nuevaPartida);
             partidas.add(nuevaPartida);
-            manejador = new ManejadorPartida(nuevaPartida);
             EventoObserver evento = new ManejadorPartida(nuevaPartida);
             Servidor.getInstance().setObservadorEventos(evento);
 
