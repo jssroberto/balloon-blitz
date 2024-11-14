@@ -1,24 +1,24 @@
 package org.itson.edu.balloonblitz.entidades.eventos;
 
-import java.io.Serializable;
-
-import org.itson.edu.balloonblitz.entidades.Disparo;
+import org.itson.edu.balloonblitz.entidades.Coordenada;
 import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
+
+import java.io.Serializable;
 
 /**
  *
  * @author elimo
  */
-public class DisparoEvento extends Evento implements Serializable {
+public class DisparoEvento extends Evento {
     
-    private final Disparo disparo;
+    private final Coordenada coordenda;
 
-    public DisparoEvento(Disparo disparo) {
+    public DisparoEvento(Coordenada coordenda) {
         super(TipoEvento.DISPARO);
-        this.disparo = disparo;
+        this.coordenda = coordenda;
     }
 
-    public Disparo getDisparo() {
-        return disparo;
-    }   
+    public Coordenada getCoordenda() {
+        return coordenda;
+    }
 }

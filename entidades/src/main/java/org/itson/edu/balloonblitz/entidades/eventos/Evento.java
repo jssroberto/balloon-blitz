@@ -4,6 +4,7 @@
  */
 package org.itson.edu.balloonblitz.entidades.eventos;
 
+import java.io.Serial;
 import java.io.Serializable;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
@@ -14,6 +15,7 @@ import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
  */
 public abstract class Evento implements Serializable{
 
+    @Serial
     private static final long serialVersionUID = 1L;
     protected Jugador emisor;
     protected final TipoEvento tipoEvento;

@@ -10,7 +10,7 @@ import org.itson.edu.balloonblitz.entidades.enumeradores.TipoNave;
  *
  * @author elimo
  */
-public class PosicionNavesEvento extends Evento implements Serializable {
+public class PosicionNavesEvento extends Evento {
 
     private final TipoNave tipoNave;
     private final Coordenada coordenadaCabecera;
