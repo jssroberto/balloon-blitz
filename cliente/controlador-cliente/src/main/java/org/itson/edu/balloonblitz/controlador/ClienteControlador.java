@@ -8,17 +8,16 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
 
 /**
  * @author elimo
  */
-//TODO seguros que cliente controlador debe de extender de Thread?
 public class ClienteControlador extends Thread {
 
     private static ClienteControlador instancia;
+
     private Socket socket;
     private ObjectOutputStream salida;
     private ObjectInputStream entrada;
@@ -34,35 +33,40 @@ public class ClienteControlador extends Thread {
             entrada = new ObjectInputStream(socket.getInputStream());
             salida.flush();
             conectado = true;
-
         } catch (IOException e) {
-            e.printStackTrace();
         }
+    }
+
+    public static synchronized ClienteControlador getInstancia(String host, int puerto) {
+        if (instancia == null) {
+            instancia = new ClienteControlador(host, puerto);
+        }
+        return instancia;
     }
 
     @Override
     public void run() {
         while (conectado) {
-
             try {
                 mensajeRecibido = (Evento) entrada.readObject();
                 procesarMensaje(mensajeRecibido);
             } catch (IOException | ClassNotFoundException ex) {
                 ex.getMessage();
             }
-
         }
         desconectar();
     }
 
     private void procesarMensaje(Evento mensajeRecibido) {
         switch (mensajeRecibido.getTipoEvento()) {
-            case TIMEOUT -> manejarTimeOut((TimeOutEvento) mensajeRecibido);
-            case ENVIO_JUGADOR -> manejarEnvioJugador(mensajeRecibido);
-            default -> System.out.println("Tipo de evento no reconocido: " + mensajeRecibido.getTipoEvento());
+            case TIMEOUT ->
+                manejarTimeOut((TimeOutEvento) mensajeRecibido);
+            case ENVIO_JUGADOR ->
+                manejarEnvioJugador(mensajeRecibido);
+            default ->
+                System.out.println("Tipo de evento no reconocido: " + mensajeRecibido.getTipoEvento());
         }
     }
-
 
     private void manejarTimeOut(TimeOutEvento timeOut) {
         tiempoRestante = timeOut.getTiempoRestante();
@@ -92,14 +96,11 @@ public class ClienteControlador extends Thread {
             salida.writeObject(evento);
             salida.flush();
         } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
     private Evento obtenerEvento() {
-
         return mensajeRecibido;
-
     }
 
     private void desconectar() {
@@ -109,8 +110,6 @@ public class ClienteControlador extends Thread {
             salida.close();
             socket.close();
         } catch (IOException e) {
-            e.printStackTrace();
         }
     }
-
 }
