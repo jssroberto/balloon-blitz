@@ -7,8 +7,15 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.*;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.List;
+import java.util.ArrayList;
 import org.itson.edu.balloonblitz.entidades.*;
 import org.itson.edu.balloonblitz.entidades.navefactory.Barco;
+import org.itson.edu.balloonblitz.entidades.navefactory.Crucero;
+import org.itson.edu.balloonblitz.entidades.navefactory.PortaAviones;
+import org.itson.edu.balloonblitz.entidades.navefactory.Submarino;
 
 public class GridDragDropHandler extends DropTargetAdapter {
 
@@ -32,11 +39,14 @@ public class GridDragDropHandler extends DropTargetAdapter {
     private int currentSize;
     private boolean isDragging = false;
 
+    private final List<Nave> naves;
+
     private Point lastDragPoint;
 
     public GridDragDropHandler(JLabel tableroPanel) {
         this.tableroPanel = tableroPanel;
         this.tablero = new Tablero();
+        naves = new ArrayList<>();
         this.matriz = tablero.getMatriz();
         new DropTarget(tableroPanel, DnDConstants.ACTION_COPY, this);
         setupKeyListener();
@@ -79,13 +89,17 @@ public class GridDragDropHandler extends DropTargetAdapter {
 
     @Override
     public void dragEnter(DropTargetDragEvent dtde) {
-        isDragging = true;
-        tableroPanel.requestFocusInWindow(); // Solicitar el foco al iniciar el arrastre
         try {
+            isDragging = true;
+            tableroPanel.requestFocusInWindow();
             currentIcon = new ImageIcon((Image) dtde.getTransferable().getTransferData(DataFlavor.imageFlavor));
-            String balloonType = getBalloonType(dtde.getTransferable());
-            currentSize = getBalloonSize(balloonType);
-        } catch (UnsupportedFlavorException | IOException e) {
+
+            if (dtde.getTransferable().isDataFlavorSupported(DataFlavor.stringFlavor)) {
+                String balloonType = (String) dtde.getTransferable().getTransferData(DataFlavor.stringFlavor);
+                currentSize = getBalloonSize(balloonType);
+            }
+        } catch (UnsupportedFlavorException | IOException ex) {
+            Logger.getLogger(GridDragDropHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -212,39 +226,6 @@ public class GridDragDropHandler extends DropTargetAdapter {
         }
     }
 
-    private void tryRotateLastPlacedBalloon() {
-        if (lastPlacedBalloon != null && lastPlacedSize > 1) {
-            boolean canRotate = isVertical
-                    ? isValidPosition(lastPlacedX, lastPlacedY, lastPlacedSize, false)
-                    : isValidPosition(lastPlacedX, lastPlacedY, lastPlacedSize, true);
-
-            if (canRotate) {
-                clearCurrentPosition();
-                isVertical = !isVertical;
-                placeBalloons(lastPlacedX, lastPlacedY, lastPlacedSize, (ImageIcon) lastPlacedBalloon.getIcon());
-            }
-        }
-    }
-
-    // Los métodos restantes permanecen igual...
-    private void clearCurrentPosition() {
-        if (isVertical) {
-            for (int i = 0; i < lastPlacedSize; i++) {
-                matriz[lastPlacedY + i][lastPlacedX].setNave(null);
-            }
-        } else {
-            for (int i = 0; i < lastPlacedSize; i++) {
-                matriz[lastPlacedY][lastPlacedX + i].setNave(null);
-            }
-        }
-        for (Component comp : tableroPanel.getComponents()) {
-            if (comp instanceof JLabel && ((JLabel) comp).getIcon() != null) {
-                tableroPanel.remove(comp);
-            }
-        }
-        tableroPanel.repaint();
-    }
-
     private boolean isValidPosition(int x, int y, int size, boolean vertical) {
         // Check basic bounds
         if (vertical) {
@@ -283,9 +264,23 @@ public class GridDragDropHandler extends DropTargetAdapter {
     }
 
     private void placeBalloons(int gridX, int gridY, int size, ImageIcon icon) {
-        Nave nave = new Barco();
-        System.out.println("\nNueva nave colocada en las casillas:");
+        Nave nave;
 
+        switch (size) {
+            case 4 ->
+                nave = new PortaAviones();
+            case 3 ->
+                nave = new Crucero();
+            case 2 ->
+                nave = new Submarino();
+            default ->
+                nave = new Barco();
+        }
+
+        // Agregar la nave a la lista de naves
+        naves.add(nave);
+
+        System.out.println("\nNave de tipo " + nave.getTipoNave().toString().toLowerCase() + " colocada en las casillas:");
         if (isVertical) {
             for (int i = 0; i < size; i++) {
                 int snapX = gridX * CELL_SIZE + OFFSET_X;
@@ -296,7 +291,6 @@ public class GridDragDropHandler extends DropTargetAdapter {
                 if (i == 0) {
                     lastPlacedBalloon = balloon;
                 }
-                // Imprimir coordenadas (y, x) de la casilla
                 System.out.printf("Casilla [%d, %d]%n", gridY + i, gridX);
             }
         } else {
@@ -309,7 +303,6 @@ public class GridDragDropHandler extends DropTargetAdapter {
                 if (i == 0) {
                     lastPlacedBalloon = balloon;
                 }
-                // Imprimir coordenadas (y, x) de la casilla
                 System.out.printf("Casilla [%d, %d]%n", gridY, gridX + i);
             }
         }
@@ -322,26 +315,26 @@ public class GridDragDropHandler extends DropTargetAdapter {
         return balloon;
     }
 
-    private String getBalloonType(Transferable transferable) throws UnsupportedFlavorException, IOException {
-        return transferable.isDataFlavorSupported(DataFlavor.stringFlavor)
-                ? (String) transferable.getTransferData(DataFlavor.stringFlavor)
-                : "single";
-    }
-
     private int getBalloonSize(String balloonType) {
         return switch (balloonType) {
-            case "quadruple" ->
-                4;
-            case "triple" ->
-                3;
-            case "double" ->
-                2;
-            default ->
+            case "barco" ->
                 1;
+            case "submarino" ->
+                2;
+            case "crucero" ->
+                3;
+            case "portaAviones" ->
+                4;
+            default ->
+                throw new IllegalArgumentException("Tipo de globo no válido: " + balloonType);
         };
     }
 
     public Tablero obtenerTablero() {
         return tablero;
+    }
+
+    public List<Nave> obtenerNaves() {
+        return naves;
     }
 }
