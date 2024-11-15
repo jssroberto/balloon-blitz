@@ -20,10 +20,10 @@ public class ManejadorDisparo{
         this.disparoEvento = disparoEvento;
     }
 
-    //TODO ocupo discernir de donde salio el jugador, ya que no tengo id
     public DisparoEvento procesarDisparo(DisparoEvento disparoEvento){
         Jugador jugador = disparoEvento.getEmisor();
-        Coordenada coordenada = disparoEvento.getDisparo().getCasilla().getCoordenada();
+        Coordenada coordenada = disparoEvento.getCoordenda();
+
 
         return null;
     }

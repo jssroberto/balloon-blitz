@@ -5,11 +5,12 @@
 package org.itson.edu.balloonblitz.entidades;
 
 import java.io.Serializable;
+
 import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoPartida;
+
 import java.util.List;
 
 /**
- *
  * @author elimo
  */
 public class Partida implements Serializable {
@@ -21,6 +22,11 @@ public class Partida implements Serializable {
     private EstadoPartida estadoPartida;
     private Tablero tableroJugador1;
     private Tablero tableroJugador2;
+
+
+    public Partida() {
+        this.estadoPartida = EstadoPartida.ESPERA;
+    }
 
     public Partida(Jugador jugador1, Jugador jugador2) {
         this.jugador1 = jugador1;

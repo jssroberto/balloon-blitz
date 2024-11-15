@@ -1,6 +1,5 @@
 package org.itson.edu.balloonblitz.controlador.servidor;
 
-import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.Partida;
 import org.itson.edu.balloonblitz.entidades.Tablero;
 import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoPartida;
@@ -33,26 +32,23 @@ public class ManejadorPartida implements EventoObserver {
     private final ExecutorService executorService = Executors.newFixedThreadPool(10);
     private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
     private final Servidor servidor;
-    private Jugador jugador1;
-    private ManejadorTurno turno;
-    boolean tiempoExcedido;
-    private Jugador jugador2;
     private Partida partida;
-    private Tablero tableroJugador1;
-    private Tablero tableroJugador2;
+    private boolean tiempoExcedido;
 
-    /**
-     * Constructor que agrega los I/O de los jugadores
-     */
+
     public ManejadorPartida(List<ControladorStreams> jugadores) {
         servidor = Servidor.getInstance();
         streamsJugador1 = jugadores.get(0);
         streamsJugador2 = jugadores.get(1);
+        iniciarStreams();
+        partida = new Partida();
+    }
+
+    private void iniciarStreams() {
         executorService.submit(() -> servidor.recibirDatosCiente(streamsJugador1.getEntrada()));
         executorService.submit(() -> servidor.recibirDatosCiente(streamsJugador2.getEntrada()));
         executorService.submit(() -> servidor.mandarDatosCliente(streamsJugador1.getSalida(), new EnvioJugadorEvento()));
         executorService.submit(() -> servidor.mandarDatosCliente(streamsJugador2.getSalida(), new EnvioJugadorEvento()));
-
     }
 
     /**
@@ -72,16 +68,12 @@ public class ManejadorPartida implements EventoObserver {
     /**
      * Manda a enviar el resultado de los eventos a los jugadores
      *
-     * @param salida1 Output del jugador 1
-     * @param evento  Resultado de un evento
+     * @param evento Resultado de un evento
      */
-    public void enviarEventoAJugador1(ObjectOutputStream salida1, Evento evento) {
-        servidor.mandarDatosCliente(salida1, evento);
+    public void enviarEventoAJugador(ObjectOutputStream salida, Evento evento) {
+        servidor.mandarDatosCliente(salida, evento);
     }
 
-    public void enviarEventoAJugador2(ObjectOutputStream salida2, Evento evento) {
-        servidor.mandarDatosCliente(salida2, evento);
-    }
 
     /**
      * Metodo suscriptor que maneja el evento obtenido del servidor
@@ -91,16 +83,14 @@ public class ManejadorPartida implements EventoObserver {
      */
     @Override
     public void manejarEvento(Evento evento, ObjectInputStream entrada) {
-        //por que esto esta afuera del método manejar partida?
+
         if (evento.getTipoEvento() == TipoEvento.ENVIO_JUGADOR) {
             if (entrada.equals(streamsJugador1.getEntrada())) {
-
-                jugador1 = evento.getEmisor();
+                partida.setJugador1(evento.getEmisor());
                 verificarYCrearPartida();
 
             } else if (entrada.equals(streamsJugador2.getEntrada())) {
-
-                jugador2 = evento.getEmisor();
+                partida.setJugador2(evento.getEmisor());
                 verificarYCrearPartida();
             }
         }
@@ -108,32 +98,28 @@ public class ManejadorPartida implements EventoObserver {
     }
 
     private void verificarYCrearPartida() {
-        if (jugador1 != null && jugador2 != null) { // Primera comprobación (no sincronizada)
-            synchronized (this) {
-                if (jugador1 != null && jugador2 != null && partida == null) { // Segunda comprobación
-                    crearPartida();
-                }
+        synchronized (this) {
+            if (partida.getJugador1() != null && partida.getJugador2() != null) {
+                crearPartida();
             }
         }
     }
 
     public void crearPartida() {
-        partida = new Partida(jugador1, jugador2);
-        partida.setTableroJugador1(tableroJugador1);
-        partida.setTableroJugador2(tableroJugador2);
+        partida.setTableroJugador1(new Tablero());
+        partida.setTableroJugador2(new Tablero());
         partida.setEstadoPartida(EstadoPartida.ACTIVA);
-        System.out.println(jugador1.getNombre());
-        System.out.println(jugador2.getNombre());
+        System.out.println(partida.getJugador1().getNombre());
+        System.out.println(partida.getJugador2().getNombre());
         iniciarTemporizador(10);
-
     }
 
     public Object manejarPartida(Evento evento, ObjectInputStream entrada) {
 
         if (entrada.equals(streamsJugador1.getEntrada())) {
-            evento.setEmisor(jugador1);
+            evento.setEmisor(partida.getJugador1());
         } else if (entrada.equals(streamsJugador2.getEntrada())) {
-            evento.setEmisor(jugador2);
+            evento.setEmisor(partida.getJugador2());
         }
 
         if (evento.getTipoEvento() == TipoEvento.POSICION_NAVES) {
@@ -154,8 +140,8 @@ public class ManejadorPartida implements EventoObserver {
         tiempoExcedido = false;
 
         // Enviar un mensaje de "Inicio del temporizador" al cliente
-        enviarEventoAJugador1(streamsJugador1.getSalida(), new TimeOutEvento(segundos));
-        enviarEventoAJugador2(streamsJugador2.getSalida(), new TimeOutEvento(segundos));
+        enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(segundos));
+        enviarEventoAJugador(streamsJugador2.getSalida(), new TimeOutEvento(segundos));
 
         // Ejecutar el temporizador
         scheduler.schedule(() -> {
@@ -163,8 +149,8 @@ public class ManejadorPartida implements EventoObserver {
             mostrarMensajeTiempoExcedido();
 
             // Notificar a los jugadores que el tiempo ha expirado
-            enviarEventoAJugador1(streamsJugador1.getSalida(), new TimeOutEvento(0));  // 0 significa que el tiempo ha expirado
-            enviarEventoAJugador2(streamsJugador2.getSalida(), new TimeOutEvento(0));
+            enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(0));  // 0 significa que el tiempo ha expirado
+            enviarEventoAJugador(streamsJugador2.getSalida(), new TimeOutEvento(0));
         }, segundos, TimeUnit.SECONDS);
 
         System.out.println("Temporizador iniciado por " + segundos + " minutos.");
