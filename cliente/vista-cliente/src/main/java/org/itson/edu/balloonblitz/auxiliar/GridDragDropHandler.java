@@ -108,78 +108,43 @@ public class GridDragDropHandler extends DropTargetAdapter {
     }
 
     public void updatePreview(Point point) {
-    if (point == null) {
-        return;
-    }
-
-    int gridX = (point.x - OFFSET_X) / CELL_SIZE;
-    int gridY = (point.y - OFFSET_Y) / CELL_SIZE;
-
-    if (isValidPosition(gridX, gridY, currentSize, isVertical)) {
-        for (int i = 0; i < currentSize; i++) {
-            previewLabels[i].setIcon(currentIcon);
-            previewLabels[i].setVisible(true);
-
-            if (isVertical) {
-                previewLabels[i].setBounds(
-                        gridX * CELL_SIZE + OFFSET_X,
-                        (gridY + i) * CELL_SIZE + OFFSET_Y,
-                        CELL_SIZE,
-                        CELL_SIZE
-                );
-            } else {
-                previewLabels[i].setBounds(
-                        (gridX + i) * CELL_SIZE + OFFSET_X,
-                        gridY * CELL_SIZE + OFFSET_Y,
-                        CELL_SIZE,
-                        CELL_SIZE
-                );
-            }
-            previewLabels[i].setBackground(null);  // Restablecer color por defecto si es válido
+        if (point == null) {
+            return;
         }
-        // Ocultar los labels no usados
-        for (int i = currentSize; i < previewLabels.length; i++) {
-            previewLabels[i].setVisible(false);
-        }
-    } else {
-        for (int i = 0; i < currentSize; i++) {
-            if (isVertical) {
-                int posY = gridY + i;
-                if (posY < GRID_SIZE) {
+
+        int gridX = (point.x - OFFSET_X) / CELL_SIZE;
+        int gridY = (point.y - OFFSET_Y) / CELL_SIZE;
+
+        if (isValidPosition(gridX, gridY, currentSize, isVertical)) {
+            for (int i = 0; i < currentSize; i++) {
+                previewLabels[i].setIcon(currentIcon);
+                previewLabels[i].setVisible(true);
+
+                if (isVertical) {
                     previewLabels[i].setBounds(
                             gridX * CELL_SIZE + OFFSET_X,
-                            posY * CELL_SIZE + OFFSET_Y,
+                            (gridY + i) * CELL_SIZE + OFFSET_Y,
                             CELL_SIZE,
                             CELL_SIZE
                     );
-                    previewLabels[i].setBackground(Color.RED);
-                    previewLabels[i].setOpaque(true);  // Hacer que el fondo rojo sea visible
-                    previewLabels[i].setVisible(true);
-                }
-            } else {
-                int posX = gridX + i;
-                if (posX < GRID_SIZE) {
+                } else {
                     previewLabels[i].setBounds(
-                            posX * CELL_SIZE + OFFSET_X,
+                            (gridX + i) * CELL_SIZE + OFFSET_X,
                             gridY * CELL_SIZE + OFFSET_Y,
                             CELL_SIZE,
                             CELL_SIZE
                     );
-                    previewLabels[i].setBackground(Color.RED);
-                    previewLabels[i].setOpaque(true);
-                    previewLabels[i].setVisible(true);
                 }
             }
+            // Ocultar los labels no usados
+            for (int i = currentSize; i < previewLabels.length; i++) {
+                previewLabels[i].setVisible(false);
+            }
+        } else {
+            hidePreview();
         }
-        // Ocultar los labels no usados
-        for (int i = currentSize; i < previewLabels.length; i++) {
-            previewLabels[i].setVisible(false);
-        }
+        tableroPanel.repaint();
     }
-    tableroPanel.repaint();
-}
-
-
 
     @Override
     public void drop(DropTargetDropEvent dtde) {
@@ -250,39 +215,25 @@ public class GridDragDropHandler extends DropTargetAdapter {
     }
 
     private boolean isValidPosition(int x, int y, int size, boolean vertical) {
-        // Check basic bounds
         if (vertical) {
             if (x < 0 || y < 0 || x >= GRID_SIZE || (y + size - 1) >= GRID_SIZE) {
                 return false;
+            }
+            for (int i = 0; i < size; i++) {
+                if (matriz[y + i][x].getNave() != null) {
+                    return false;
+                }
             }
         } else {
             if (x < 0 || y < 0 || y >= GRID_SIZE || (x + size - 1) >= GRID_SIZE) {
                 return false;
             }
-        }
-
-        // Check the area around the placement position including diagonals
-        int startX = Math.max(0, x - 1);
-        int startY = Math.max(0, y - 1);
-        int endX, endY;
-
-        if (vertical) {
-            endX = Math.min(GRID_SIZE - 1, x + 1);
-            endY = Math.min(GRID_SIZE - 1, y + size);
-        } else {
-            endX = Math.min(GRID_SIZE - 1, x + size);
-            endY = Math.min(GRID_SIZE - 1, y + 1);
-        }
-
-        // Check if any adjacent cell (including diagonals) has a balloon
-        for (int i = startY; i <= endY; i++) {
-            for (int j = startX; j <= endX; j++) {
-                if (matriz[i][j].getNave() != null) {
+            for (int i = 0; i < size; i++) {
+                if (matriz[y][x + i].getNave() != null) {
                     return false;
                 }
             }
         }
-
         return true;
     }
 
@@ -312,6 +263,7 @@ public class GridDragDropHandler extends DropTargetAdapter {
                 }
             }
         }
+
         tableroPanel.repaint();
     }
 

@@ -34,7 +34,6 @@ public class ClienteControlador extends Thread {
             salida.flush();
             conectado = true;
         } catch (IOException e) {
-            System.err.println("Error al conectar: " + e.getMessage());
         }
     }
 
@@ -52,8 +51,7 @@ public class ClienteControlador extends Thread {
                 mensajeRecibido = (Evento) entrada.readObject();
                 procesarMensaje(mensajeRecibido);
             } catch (IOException | ClassNotFoundException ex) {
-                System.err.println("Error al recibir mensaje: " + ex.getMessage());
-                
+                ex.getMessage();
             }
         }
         desconectar();
@@ -98,7 +96,6 @@ public class ClienteControlador extends Thread {
             salida.writeObject(evento);
             salida.flush();
         } catch (IOException e) {
-            System.err.println("Error al enviar mensaje: " + e.getMessage());
         }
     }
 
@@ -113,7 +110,6 @@ public class ClienteControlador extends Thread {
             salida.close();
             socket.close();
         } catch (IOException e) {
-             System.err.println("Error al desconectar: " + e.getMessage());
         }
     }
 }
