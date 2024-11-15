@@ -4,14 +4,17 @@
  */
 package org.itson.edu.balloonblitz.entidades;
 
+import java.io.Serial;
 import java.io.Serializable;
+import java.util.Optional;
+
 import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoCasilla;
 
 /**
- *
  * @author elimo
  */
-public class Casilla implements Serializable{
+public class Casilla implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
     private EstadoCasilla estado;
     private Coordenada coordenada;
@@ -20,6 +23,7 @@ public class Casilla implements Serializable{
     public Casilla(Coordenada coordenada) {
         this.coordenada = coordenada;
         this.estado = EstadoCasilla.INTACTA;
+        this.nave = null;
     }
 
     public EstadoCasilla getEstado() {
@@ -38,8 +42,8 @@ public class Casilla implements Serializable{
         this.coordenada = coordenada;
     }
 
-    public Nave getNave() {
-        return nave;
+    public Optional<Nave> getNave() {
+        return Optional.ofNullable(nave);
     }
 
     public void setNave(Nave nave) {

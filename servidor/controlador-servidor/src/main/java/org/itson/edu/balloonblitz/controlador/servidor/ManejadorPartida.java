@@ -129,7 +129,7 @@ public class ManejadorPartida implements EventoObserver {
         } else if (evento.getTipoEvento() == TipoEvento.DISPARO) {
 
             //TODO devolver un evento en lugar de null
-            ManejadorDisparo manejadorDisparo = new ManejadorDisparo((DisparoEvento) evento);
+            ManejadorDisparo manejadorDisparo = new ManejadorDisparo((DisparoEvento) evento, partida);
             return null;
         }
         return null;

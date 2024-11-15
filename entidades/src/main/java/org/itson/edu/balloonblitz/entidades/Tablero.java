@@ -4,6 +4,7 @@
  */
 package org.itson.edu.balloonblitz.entidades;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -12,6 +13,7 @@ import java.io.Serializable;
  */
 public class Tablero implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
     private final Casilla[][] matriz;
 
@@ -30,5 +32,13 @@ public class Tablero implements Serializable {
 
     public Casilla[][] getMatriz() {
         return matriz;
+    }
+
+    public Casilla getCasilla(Coordenada coordenada){
+        return matriz[coordenada.getFila()][coordenada.getColumna()];
+    }
+
+    public void setCasilla(Casilla casilla){
+        matriz[casilla.getCoordenada().getFila()][casilla.getCoordenada().getColumna()] = casilla;
     }
 }
