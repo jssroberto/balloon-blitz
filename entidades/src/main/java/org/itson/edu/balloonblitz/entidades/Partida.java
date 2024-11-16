@@ -4,6 +4,7 @@
  */
 package org.itson.edu.balloonblitz.entidades;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoPartida;
@@ -15,6 +16,7 @@ import java.util.List;
  */
 public class Partida implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
     private List<Disparo> registroDisparos;
     private Jugador jugador1;

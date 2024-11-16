@@ -4,27 +4,13 @@
  */
 package org.itson.edu.balloonblitz.entidades;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
- *
  * @author elimo
  */
-public class Coordenada implements Serializable{
+public record Coordenada(int fila, int columna) implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
-    private final int fila;
-    private final int columna;
-
-    public Coordenada(int fila, int columna) {
-        this.fila = fila;
-        this.columna = columna;
-    }
-
-    public int getFila() {
-        return fila;
-    }
-
-    public int getColumna() {
-        return columna;
-    }
 }

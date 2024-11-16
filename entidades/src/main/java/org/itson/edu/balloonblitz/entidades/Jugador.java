@@ -9,12 +9,14 @@ package org.itson.edu.balloonblitz.entidades;
  *
  * @author elimo
  */
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 import org.itson.edu.balloonblitz.entidades.enumeradores.ColorNaves;
 
 public class Jugador implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
     private final String nombre;
     private final String fotoPerfil;

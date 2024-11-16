@@ -4,10 +4,13 @@
  */
 package org.itson.edu.balloonblitz.entidades;
 
+import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoNave;
+import org.itson.edu.balloonblitz.entidades.enumeradores.TipoNave;
+
 import java.io.Serial;
 import java.io.Serializable;
-import org.itson.edu.balloonblitz.entidades.enumeradores.TipoNave;
-import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoNave;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  *
@@ -17,20 +20,18 @@ public abstract class Nave implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
-    protected final TipoNave tipoNave;
-    protected final int tamano;
-    protected EstadoNave estadoNave;
-    protected int impactos;
+    private final String id;
+    private final TipoNave tipoNave;
+    private final int tamano;
+    private EstadoNave estadoNave;
+    private int impactos;
 
     public Nave(TipoNave tipoNave, int tamano) {
+        this.id = UUID.randomUUID().toString();
         this.tipoNave = tipoNave;
         this.tamano = tamano;
         this.estadoNave = EstadoNave.COMPLETA;
         this.impactos = 0;
-    }
-
-    public void recibirImpacto() {
-        impactos++;
     }
 
     public TipoNave getTipoNave() {
@@ -51,5 +52,25 @@ public abstract class Nave implements Serializable {
 
     public int getImpactos() {
         return impactos;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public int recibirImpacto() {
+        return ++impactos;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Nave nave)) return false;
+        return Objects.equals(id, nave.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

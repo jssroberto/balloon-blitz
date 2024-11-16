@@ -16,7 +16,7 @@ import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
  */
 public final class TimeOutEvento extends Evento {
 
-    private int tiempoRestante;  // Puede ser en minutos u otro tipo que necesites
+    private final int tiempoRestante;  // Puede ser en minutos u otro tipo que necesites
 
     public TimeOutEvento(int tiempoRestante) {
         super(TipoEvento.TIMEOUT);
@@ -24,7 +24,6 @@ public final class TimeOutEvento extends Evento {
     }
 
     public int getTiempoRestante() {
-        
         return tiempoRestante;
     }
 

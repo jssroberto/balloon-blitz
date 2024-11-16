@@ -47,7 +47,7 @@ public class GridDragDropHandler extends DropTargetAdapter {
         this.tableroPanel = tableroPanel;
         this.tablero = new Tablero();
         naves = new ArrayList<>();
-        this.matriz = tablero.getMatriz();
+        this.matriz = tablero.getTablero();
         new DropTarget(tableroPanel, DnDConstants.ACTION_COPY, this);
         setupKeyListener();
         setupPreviewLabels();

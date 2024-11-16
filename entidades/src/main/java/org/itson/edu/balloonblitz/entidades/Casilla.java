@@ -4,11 +4,11 @@
  */
 package org.itson.edu.balloonblitz.entidades;
 
+import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoCasilla;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Optional;
-
-import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoCasilla;
 
 /**
  * @author elimo

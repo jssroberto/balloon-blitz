@@ -1,5 +1,6 @@
 package org.itson.edu.balloonblitz.controlador.servidor;
 
+import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.Partida;
 import org.itson.edu.balloonblitz.entidades.Tablero;
 import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoPartida;
@@ -127,9 +128,10 @@ public class ManejadorPartida implements EventoObserver {
             return manejadorPosicion.obtenerEvento();
 
         } else if (evento.getTipoEvento() == TipoEvento.DISPARO) {
-
+            Jugador jugadorRival = obtenerJugadorRival(evento.getEmisor());
+            Tablero tableroRival = obtenerTableroRival(evento.getEmisor());
             //TODO devolver un evento en lugar de null
-            ManejadorDisparo manejadorDisparo = new ManejadorDisparo((DisparoEvento) evento, partida);
+            ManejadorDisparo manejadorDisparo = new ManejadorDisparo((DisparoEvento) evento, tableroRival, jugadorRival);
             return null;
         }
         return null;
@@ -160,4 +162,11 @@ public class ManejadorPartida implements EventoObserver {
         System.out.println("El tiempo ha expirado.");
     }
 
+    private Jugador obtenerJugadorRival(Jugador jugador) {
+        return jugador.equals(partida.getJugador1()) ? partida.getJugador2() : partida.getJugador1();
+    }
+
+    private Tablero obtenerTableroRival(Jugador jugador) {
+        return jugador.equals(partida.getJugador1()) ? partida.getTableroJugador2() : partida.getTableroJugador1();
+    }
 }

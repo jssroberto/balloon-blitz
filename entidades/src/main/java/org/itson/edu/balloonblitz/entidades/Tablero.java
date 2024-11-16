@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package org.itson.edu.balloonblitz.entidades;
 
 import java.io.Serial;
@@ -15,30 +11,38 @@ public class Tablero implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
-    private final Casilla[][] matriz;
+    private final Casilla[][] tablero;
 
     public Tablero() {
-        matriz = new Casilla[10][10];
-        inicializarMatriz();
+        tablero = new Casilla[10][10];
+        inicializarTablero();
     }
 
-    private void inicializarMatriz() {
+    private void inicializarTablero() {
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
-                matriz[i][j] = new Casilla(new Coordenada(i, j));
+                tablero[i][j] = new Casilla(new Coordenada(i, j));
             }
         }
     }
 
-    public Casilla[][] getMatriz() {
-        return matriz;
+    public int getFilas() {
+        return tablero.length;
+    }
+
+    public int getColumnas() {
+        return tablero[0].length;
+    }
+
+    public Casilla[][] getTablero() {
+        return tablero;
     }
 
     public Casilla getCasilla(Coordenada coordenada){
-        return matriz[coordenada.getFila()][coordenada.getColumna()];
+        return tablero[coordenada.fila()][coordenada.columna()];
     }
 
     public void setCasilla(Casilla casilla){
-        matriz[casilla.getCoordenada().getFila()][casilla.getCoordenada().getColumna()] = casilla;
+        tablero[casilla.getCoordenada().fila()][casilla.getCoordenada().columna()] = casilla;
     }
 }
