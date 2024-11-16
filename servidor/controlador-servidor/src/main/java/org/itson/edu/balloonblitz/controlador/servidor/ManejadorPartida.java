@@ -115,7 +115,7 @@ public class ManejadorPartida implements EventoObserver {
         iniciarTemporizador(10);
     }
 
-    public Object manejarPartida(Evento evento, ObjectInputStream entrada) {
+    public Evento manejarPartida(Evento evento, ObjectInputStream entrada) {
 
         if (entrada.equals(streamsJugador1.getEntrada())) {
             evento.setEmisor(partida.getJugador1());
@@ -128,11 +128,11 @@ public class ManejadorPartida implements EventoObserver {
             return manejadorPosicion.obtenerEvento();
 
         } else if (evento.getTipoEvento() == TipoEvento.DISPARO) {
-            Jugador jugadorRival = obtenerJugadorRival(evento.getEmisor());
+            //Obtiene el jugador rival y su tablero correspondientes al servidor
             Tablero tableroRival = obtenerTableroRival(evento.getEmisor());
-            //TODO devolver un evento en lugar de null
+            Jugador jugadorRival = obtenerJugadorRival(evento.getEmisor());
             ManejadorDisparo manejadorDisparo = new ManejadorDisparo((DisparoEvento) evento, tableroRival, jugadorRival);
-            return null;
+            return manejadorDisparo.procesarEvento();
         }
         return null;
     }

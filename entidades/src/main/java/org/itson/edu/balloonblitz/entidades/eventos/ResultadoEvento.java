@@ -4,6 +4,7 @@ import org.itson.edu.balloonblitz.entidades.Casilla;
 import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ResultadoEvento extends Evento {
 
@@ -16,8 +17,8 @@ public class ResultadoEvento extends Evento {
         this.acertado = acertado;
     }
 
-    public List<Casilla> getCasillas() {
-        return casillas;
+    public Optional<List<Casilla>> getCasillas() {
+        return Optional.ofNullable(casillas);
     }
 
     public boolean isAcertado() {

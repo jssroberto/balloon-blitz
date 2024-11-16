@@ -12,7 +12,6 @@ import org.itson.edu.balloonblitz.entidades.eventos.ResultadoEvento;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author elimo
@@ -22,7 +21,7 @@ public class ManejadorDisparo {
     private final DisparoEvento disparoEvento;
     private final Tablero tableroRival;
     private final Jugador jugadorRival;
-    private List<Casilla> casillasAtacadas;
+    private final List<Casilla> casillasAtacadas;
 
     public ManejadorDisparo(DisparoEvento disparoEvento, Tablero tableroRival, Jugador jugadorRival) {
         this.disparoEvento = disparoEvento;
@@ -31,18 +30,9 @@ public class ManejadorDisparo {
         this.casillasAtacadas = new ArrayList<>();
     }
 
-    /**
-     * Procesa el disparo realizado por un jugador.
-     *
-     * @return Resultado del evento de disparo.
-     */
-    public ResultadoEvento procesarDisparo() {
-        // Obtener el jugador que realizó el disparo y la coordenada del disparo
-        Jugador jugador = disparoEvento.getEmisor();
-        Coordenada coordenada = disparoEvento.getCoordenda();
-
-        // Obtener el tablero del rival y la casilla objetivo
-        Casilla casilla = tableroRival.getCasilla(coordenada);
+    //Los cambios que se le hagan al tablero y jugador en esta clase se reflejarán en la partida que tiene el servidor (i hope)
+    public ResultadoEvento procesarEvento() {
+        Casilla casilla = tableroRival.getCasilla(disparoEvento.getCoordenada());
 
         // Verificar si la casilla ya fue golpeada
         if (casilla.getEstado() == EstadoCasilla.GOLPEADA) {
@@ -51,34 +41,37 @@ public class ManejadorDisparo {
         casilla.setEstado(EstadoCasilla.GOLPEADA);
 
         // Usar Optional para obtener la nave en la casilla
-        Optional<Nave> naveOptional = casilla.getNave();
-        if (naveOptional.isEmpty()) {
+        if (casilla.getNave().isEmpty()) {
             // Si no hay nave en la casilla, retornar un evento de resultado sin impacto
-            return new ResultadoEvento(casillasAtacadas, false);
+            return new ResultadoEvento(null, false);
         }
+        return procesarDisparo(casilla);
+    }
 
-        // Si hay una nave, procesar el impacto
-        Nave nave = naveOptional.get();
+    /**
+     * Procesa el disparo realizado por un jugador.
+     *
+     * @return Resultado del evento de disparo.
+     */
+    private ResultadoEvento procesarDisparo(Casilla casilla) {
+        Nave nave = casilla.getNave().orElseThrow();
         int impactos = nave.recibirImpacto();
-        // Verificar si el número de impactos excede el tamaño de la nave
+
         if (impactos > nave.getTamano()) {
             throw new IllegalStateException("El número de impactos excede el tamaño de la nave");
-        }
-
-        if (impactos < nave.getTamano()) {
-            nave.setEstadoNave(EstadoNave.AVERIADA);
-            return new ResultadoEvento(casillasAtacadas, true);
-
-        } else if (impactos == nave.getTamano()) {
+        } else if (impactos < nave.getTamano()) {
+            procesarNaveAveriada(casilla, nave);
+        } else {
             // Si la nave está hundida, procesar el hundimiento
-            nave.setEstadoNave(EstadoNave.HUNDIDA);
             procesarNaveHundida(tableroRival, jugadorRival, casilla);
         }
-
-        // Retornar un evento de resultado con impacto
         return new ResultadoEvento(casillasAtacadas, true);
     }
 
+    private void procesarNaveAveriada(Casilla casilla, Nave nave) {
+        nave.setEstadoNave(EstadoNave.AVERIADA);
+        casillasAtacadas.add(casilla);
+    }
 
     private void procesarNaveHundida(Tablero tableroRival, Jugador jugadorRival, Casilla casilla) {
         Nave nave = casilla.getNave().orElseThrow();

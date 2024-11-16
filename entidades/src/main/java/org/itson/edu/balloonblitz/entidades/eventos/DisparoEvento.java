@@ -18,7 +18,7 @@ public class DisparoEvento extends Evento {
         this.coordenda = coordenda;
     }
 
-    public Coordenada getCoordenda() {
+    public Coordenada getCoordenada() {
         return coordenda;
     }
 }
