@@ -59,12 +59,9 @@ public class ClienteControlador extends Thread {
 
     private void procesarMensaje(Evento mensajeRecibido) {
         switch (mensajeRecibido.getTipoEvento()) {
-            case TIMEOUT ->
-                manejarTimeOut((TimeOutEvento) mensajeRecibido);
-            case ENVIO_JUGADOR ->
-                manejarEnvioJugador(mensajeRecibido);
-            default ->
-                System.out.println("Tipo de evento no reconocido: " + mensajeRecibido.getTipoEvento());
+            case TIMEOUT -> manejarTimeOut((TimeOutEvento) mensajeRecibido);
+            case ENVIO_JUGADOR -> manejarEnvioJugador(mensajeRecibido);
+            default -> System.out.println("Tipo de evento no reconocido: " + mensajeRecibido.getTipoEvento());
         }
     }
 

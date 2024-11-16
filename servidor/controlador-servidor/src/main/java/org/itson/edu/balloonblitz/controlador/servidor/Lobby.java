@@ -1,13 +1,14 @@
 package org.itson.edu.balloonblitz.controlador.servidor;
 
 import org.itson.edu.balloonblitz.modelo.servidor.ConexionObserver;
+import org.itson.edu.balloonblitz.modelo.servidor.ControladorStreams;
+import org.itson.edu.balloonblitz.modelo.servidor.EventoObserver;
+import org.itson.edu.balloonblitz.modelo.servidor.Servidor;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import org.itson.edu.balloonblitz.modelo.servidor.ControladorStreams;
-import org.itson.edu.balloonblitz.modelo.servidor.EventoObserver;
-import org.itson.edu.balloonblitz.modelo.servidor.Servidor;
 
 /**
  * Clase que representa un lobby para emparejamiento
@@ -65,7 +66,7 @@ public class Lobby implements ConexionObserver {
                     break;
                 }
             }
-            clientesEnLobby.removeAll(nuevaPartida);
+            nuevaPartida.forEach(clientesEnLobby::remove);
             partidas.add(nuevaPartida);
             EventoObserver evento = new ManejadorPartida(nuevaPartida);
             Servidor.getInstance().setObservadorEventos(evento);

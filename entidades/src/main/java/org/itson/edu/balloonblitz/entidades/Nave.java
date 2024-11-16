@@ -4,6 +4,7 @@
  */
 package org.itson.edu.balloonblitz.entidades;
 
+import java.io.Serial;
 import java.io.Serializable;
 import org.itson.edu.balloonblitz.entidades.enumeradores.TipoNave;
 import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoNave;
@@ -12,17 +13,18 @@ import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoNave;
  *
  * @author elimo
  */
-public abstract class Nave implements Serializable{
-    
+public abstract class Nave implements Serializable {
+
+    @Serial
     private static final long serialVersionUID = 1L;
-    protected TipoNave tipoNave;
-    protected int tamaño;
+    protected final TipoNave tipoNave;
+    protected final int tamano;
     protected EstadoNave estadoNave;
     protected int impactos;
 
-    public Nave(TipoNave tipoNave, int tamaño) {
+    public Nave(TipoNave tipoNave, int tamano) {
         this.tipoNave = tipoNave;
-        this.tamaño = tamaño;
+        this.tamano = tamano;
         this.estadoNave = EstadoNave.COMPLETA;
         this.impactos = 0;
     }
@@ -35,16 +37,8 @@ public abstract class Nave implements Serializable{
         return tipoNave;
     }
 
-    public void setTipoNave(TipoNave tipoNave) {
-        this.tipoNave = tipoNave;
-    }
-
-    public int getTamaño() {
-        return tamaño;
-    }
-
-    public void setTamaño(int tamaño) {
-        this.tamaño = tamaño;
+    public int getTamano() {
+        return tamano;
     }
 
     public EstadoNave getEstadoNave() {
@@ -57,9 +51,5 @@ public abstract class Nave implements Serializable{
 
     public int getImpactos() {
         return impactos;
-    }
-
-    public void setImpactos(int impactos) {
-        this.impactos = impactos;
     }
 }
