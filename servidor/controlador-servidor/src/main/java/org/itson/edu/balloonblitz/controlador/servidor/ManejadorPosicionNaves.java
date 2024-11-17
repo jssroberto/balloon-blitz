@@ -100,10 +100,10 @@ public class ManejadorPosicionNaves {
         return contador;
     }
 
-//    private boolean validarCantidadNaves(Map<TipoNave, Integer> contadorNaves) {
-//        return contadorNaves.get(TipoNave.PORTAAVIONES) == 1 &&
-//                contadorNaves.get(TipoNave.CRUCERO) == 2 &&
-//                contadorNaves.get(TipoNave.SUBMARINO) == 3 &&
-//                contadorNaves.get(TipoNave.BARCO) == 4;
-//    }
+    private boolean validarCantidadNaves(Map<TipoNave, Integer> contadorNaves) {
+        return contadorNaves.get(TipoNave.PORTAAVIONES) == 1 &&
+                contadorNaves.get(TipoNave.CRUCERO) == 2 &&
+                contadorNaves.get(TipoNave.SUBMARINO) == 3 &&
+                contadorNaves.get(TipoNave.BARCO) == 4;
+    }
 }

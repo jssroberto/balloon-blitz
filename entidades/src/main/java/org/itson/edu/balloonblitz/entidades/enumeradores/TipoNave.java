@@ -1,13 +1,33 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Enum.java to edit this template
- */
 package org.itson.edu.balloonblitz.entidades.enumeradores;
 
 /**
+ * Enum que representa los diferentes tipos de naves en el juego.
+ * Cada valor corresponde a un tipo específico de nave con su tamaño y características.
  *
- * @author elimo
+ * @author Eliana Monge
+ * @author Cristina Castro
+ * @author Eduardo Talavera
+ * @author Roberto Garcia
+ * @version 1.0
  */
 public enum TipoNave {
-    PORTAAVIONES, CRUCERO, SUBMARINO, BARCO;
+    /**
+     * Representa un portaaviones, una nave de tamaño 4.
+     */
+    PORTAAVIONES,
+
+    /**
+     * Representa un crucero, una nave de tamaño 3.
+     */
+    CRUCERO,
+
+    /**
+     * Representa un submarino, una nave de tamaño 2.
+     */
+    SUBMARINO,
+
+    /**
+     * Representa un barco, una nave de tamaño 1.
+     */
+    BARCO;
 }
