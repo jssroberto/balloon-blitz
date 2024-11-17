@@ -71,6 +71,7 @@ public class PartidaPanel extends javax.swing.JPanel {
 //                .fotoPerfil(fotoPerfil)
 //                .build();
 
+// Todavía me falta la forma de obtener el tablero del servidor sin hacer la nacada de pasarlo en el constructor
         TableroRenderer.renderizarTablero(
                 tableroJugador,
                 gridDragDropHandler.obtenerTablero(),

@@ -265,6 +265,7 @@ public class ColocacionPanel extends javax.swing.JPanel {
 
     private void btnConfirmarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConfirmarMouseClicked
         construirTablero();
+        // Así no va quedar final, es para probar que se acomoden los globos en el tablero
         framePrincipal.cambiarPanel(new PartidaPanel(framePrincipal, gridDragDropHandler));
     }//GEN-LAST:event_btnConfirmarMouseClicked
 
