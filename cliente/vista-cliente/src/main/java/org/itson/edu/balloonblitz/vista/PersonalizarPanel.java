@@ -17,11 +17,11 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import org.itson.edu.balloonblitz.controlador.ClienteControlador;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.enumeradores.ColorNaves;
 import org.itson.edu.balloonblitz.entidades.eventos.EnvioJugadorEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
+import org.itson.edu.balloonblitz.modelo.ClienteControlador;
 
 /**
  *
@@ -30,6 +30,7 @@ import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 public class PersonalizarPanel extends javax.swing.JPanel {
 
     private static final Logger logger = Logger.getLogger(InicioPanel.class.getName());
+    ClienteControlador controlador;
     private final FramePrincipal framePrincipal;
     private ColorNaves colorNaves;
     private String fotoPerfil;
@@ -135,7 +136,6 @@ public class PersonalizarPanel extends javax.swing.JPanel {
     }
 
     private void crearJugador() {
-        ClienteControlador cliente = ClienteControlador.getInstancia("localhost", 1234);
 
         Jugador jugador = new Jugador.Builder()
                 .nombre(txtNombre.getText())
@@ -150,7 +150,7 @@ public class PersonalizarPanel extends javax.swing.JPanel {
         // Imprimir el emisor para verificar antes de enviar
         System.out.println("Emisor antes de enviar: " + jugador2.getEmisor().getNombre());
 
-        cliente.enviarMensaje(jugador2); // Enviar el evento al servidor
+        controlador.enviarMensaje(jugador2); // Enviar el evento al servidor
         System.out.println("Evento enviado al servidor.");
     }
 

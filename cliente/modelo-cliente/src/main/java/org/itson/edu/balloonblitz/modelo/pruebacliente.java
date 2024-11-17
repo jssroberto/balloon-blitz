@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
-package org.itson.edu.balloonblitz.controlador;
+package org.itson.edu.balloonblitz.modelo;
 
+import org.itson.edu.balloonblitz.modelo.ClienteControlador;
 import java.util.Scanner;
 
 import org.itson.edu.balloonblitz.entidades.Jugador;

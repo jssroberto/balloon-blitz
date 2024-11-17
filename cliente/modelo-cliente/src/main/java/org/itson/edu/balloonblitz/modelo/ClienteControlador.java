@@ -1,4 +1,4 @@
-package org.itson.edu.balloonblitz.controlador;
+package org.itson.edu.balloonblitz.modelo;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -26,6 +26,9 @@ public class ClienteControlador extends Thread {
     Evento mensajeRecibido;
     int tiempoRestante;
 
+    public ClienteControlador() {
+    }
+
     public ClienteControlador(String host, int puerto) {
         try {
             socket = new Socket(host, puerto);
@@ -35,13 +38,6 @@ public class ClienteControlador extends Thread {
             conectado = true;
         } catch (IOException e) {
         }
-    }
-
-    public static synchronized ClienteControlador getInstancia(String host, int puerto) {
-        if (instancia == null) {
-            instancia = new ClienteControlador(host, puerto);
-        }
-        return instancia;
     }
 
     @Override
@@ -59,9 +55,12 @@ public class ClienteControlador extends Thread {
 
     private void procesarMensaje(Evento mensajeRecibido) {
         switch (mensajeRecibido.getTipoEvento()) {
-            case TIMEOUT -> manejarTimeOut((TimeOutEvento) mensajeRecibido);
-            case ENVIO_JUGADOR -> manejarEnvioJugador(mensajeRecibido);
-            default -> System.out.println("Tipo de evento no reconocido: " + mensajeRecibido.getTipoEvento());
+            case TIMEOUT ->
+                manejarTimeOut((TimeOutEvento) mensajeRecibido);
+            case ENVIO_JUGADOR ->
+                manejarEnvioJugador(mensajeRecibido);
+            default ->
+                System.out.println("Tipo de evento no reconocido: " + mensajeRecibido.getTipoEvento());
         }
     }
 
