@@ -7,6 +7,10 @@ import java.net.Socket;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import static org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento.DISPARO;
+import static org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento.ENVIO_JUGADOR;
+import static org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento.POSICION_NAVES;
+import static org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento.RESULTADO_POSICION_NAVES;
 
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
@@ -66,6 +70,14 @@ public class ClienteControlador extends Thread {
                 manejarTimeOut((TimeOutEvento) mensajeRecibido);
             case ENVIO_JUGADOR ->
                 manejarEnvioJugador(mensajeRecibido);
+            case POSICION_NAVES ->
+                manejarPosicionarNaves(mensajeRecibido);
+            case DISPARO ->
+                manejarDisparo(mensajeRecibido);
+            case RESULTADO_POSICION_NAVES ->
+                manejarResultadoPosicion(mensajeRecibido);
+            case RESULTADO_DISPARO ->
+                manejarResultadoDisparo(mensajeRecibido);
             default ->
                 System.out.println("Tipo de evento no reconocido: " + mensajeRecibido.getTipoEvento());
         }
@@ -90,6 +102,27 @@ public class ClienteControlador extends Thread {
     }
 
     private void manejarEnvioJugador(Evento mensajeRecibido) {
+        System.out.println("1");
+        System.out.println(mensajeRecibido.getEmisor());
+    }
+
+    private void manejarPosicionarNaves(Evento mensajeRecibido) {
+        System.out.println("2");
+        System.out.println(mensajeRecibido.getEmisor());
+    }
+
+    private void manejarDisparo(Evento mensajeRecibido) {
+        System.out.println("3");
+        System.out.println(mensajeRecibido.getEmisor());
+    }
+
+    private void manejarResultadoPosicion(Evento mensajeRecibido) {
+        System.out.println("4");
+        System.out.println(mensajeRecibido.getEmisor());
+    }
+
+    private void manejarResultadoDisparo(Evento mensajeRecibido) {
+        System.out.println("5");
         System.out.println(mensajeRecibido.getEmisor());
     }
 

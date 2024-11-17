@@ -11,7 +11,7 @@ import org.itson.edu.balloonblitz.modelo.servidor.Servidor;
  *
  * @author elimo
  */
-public class pruebasservidor {
+public class InicializarServidor {
 
     /**
      * @param args the command line arguments
