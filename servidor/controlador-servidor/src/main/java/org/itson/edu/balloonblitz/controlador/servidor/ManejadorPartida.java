@@ -137,7 +137,7 @@ public class ManejadorPartida implements EventoObserver {
         }
 
         if (evento.getTipoEvento() == TipoEvento.POSICION_NAVES) {
-            ManejadorPosicionNavesDeprecado manejadorPosicion = new ManejadorPosicionNavesDeprecado((PosicionNavesEvento) evento);
+            ManejadorPosicionNaves manejadorPosicion = new ManejadorPosicionNaves((PosicionNavesEvento) evento);
             return manejadorPosicion.procesarEvento();
 
         } else if (evento.getTipoEvento() == TipoEvento.DISPARO) {
