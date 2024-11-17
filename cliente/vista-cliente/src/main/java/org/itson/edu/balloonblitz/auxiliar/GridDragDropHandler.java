@@ -28,10 +28,6 @@ public class GridDragDropHandler extends DropTargetAdapter {
     private static final int OFFSET_Y = 0;
 
     private boolean isVertical = false;
-    private JLabel lastPlacedBalloon;
-    private int lastPlacedX = -1;
-    private int lastPlacedY = -1;
-    private int lastPlacedSize = 0;
 
     // Variables para el preview durante el arrastre
     private JLabel[] previewLabels;
@@ -123,7 +119,6 @@ public class GridDragDropHandler extends DropTargetAdapter {
 
     public void updatePreview(Point point) {
         if (point == null) {
-
             hidePreview();
             return;
         }
@@ -131,37 +126,7 @@ public class GridDragDropHandler extends DropTargetAdapter {
         int gridX = (point.x - OFFSET_X) / CELL_SIZE;
         int gridY = (point.y - OFFSET_Y) / CELL_SIZE;
 
-
-        if (isValidPosition(gridX, gridY, currentSize, isVertical)) {
-            for (int i = 0; i < currentSize; i++) {
-                previewLabels[i].setIcon(currentIcon);
-                previewLabels[i].setVisible(true);
-
-                if (isVertical) {
-                    previewLabels[i].setBounds(
-                            gridX * CELL_SIZE + OFFSET_X,
-                            (gridY + i) * CELL_SIZE + OFFSET_Y,
-                            CELL_SIZE,
-                            CELL_SIZE
-                    );
-                } else {
-                    previewLabels[i].setBounds(
-                            (gridX + i) * CELL_SIZE + OFFSET_X,
-                            gridY * CELL_SIZE + OFFSET_Y,
-                            CELL_SIZE,
-                            CELL_SIZE
-                    );
-                }
-            }
-            // Ocultar los labels no usados
-            for (int i = currentSize; i < previewLabels.length; i++) {
-                previewLabels[i].setVisible(false);
-            }
-        } else {
-            hidePreview();
-        }
-
-        // Verificar si el punto está completamente fuera del tablero
+        // Verificar si el punto está fuera del tablero
         if (gridX < 0 || gridY < 0 || gridX >= GRID_SIZE || gridY >= GRID_SIZE) {
             hidePreview();
             return;
@@ -178,12 +143,12 @@ public class GridDragDropHandler extends DropTargetAdapter {
         }
 
         boolean isValid = isValidPosition(gridX, gridY, currentSize, isVertical);
-        Color backgroundColor = isValid ? Color.WHITE : Color.RED;
 
+        // Mostrar el preview con el color correspondiente
         for (int i = 0; i < currentSize; i++) {
             previewLabels[i].setIcon(currentIcon);
             previewLabels[i].setVisible(true);
-            previewLabels[i].setBackground(backgroundColor);
+            previewLabels[i].setBackground(isValid ? Color.WHITE : Color.RED);
             previewLabels[i].setOpaque(true);
 
             if (isVertical) {
@@ -208,7 +173,6 @@ public class GridDragDropHandler extends DropTargetAdapter {
             previewLabels[i].setVisible(false);
         }
 
-
         tableroPanel.repaint();
     }
 
@@ -230,7 +194,7 @@ public class GridDragDropHandler extends DropTargetAdapter {
                 return;
             }
 
-            // Verificar si alguna parte del barco quedaría fuera
+            // Verificar si alguna parte del barco estaría fuera o si la posición no es válida
             boolean outOfBounds = isVertical
                     ? (gridY + currentSize > GRID_SIZE)
                     : (gridX + currentSize > GRID_SIZE);
@@ -241,11 +205,6 @@ public class GridDragDropHandler extends DropTargetAdapter {
             }
 
             dtde.acceptDrop(DnDConstants.ACTION_COPY);
-
-            // Guardar información del último globo colocado
-            lastPlacedX = gridX;
-            lastPlacedY = gridY;
-            lastPlacedSize = currentSize;
 
             placeBalloons(gridX, gridY, currentSize, currentIcon);
             dtde.dropComplete(true);
@@ -259,26 +218,37 @@ public class GridDragDropHandler extends DropTargetAdapter {
     }
 
     private boolean isValidPosition(int x, int y, int size, boolean vertical) {
-        if (vertical) {
-            if (x < 0 || y < 0 || x >= GRID_SIZE || (y + size - 1) >= GRID_SIZE) {
-                return false;
+        try {
+            // Verificar el área extendida alrededor del barco (incluyendo diagonales)
+            int startX = Math.max(0, x - 1);
+            int startY = Math.max(0, y - 1);
+            int endX = vertical ? Math.min(GRID_SIZE - 1, x + 1) : Math.min(GRID_SIZE - 1, x + size);
+            int endY = vertical ? Math.min(GRID_SIZE - 1, y + size) : Math.min(GRID_SIZE - 1, y + 1);
+
+            // Verificar todas las casillas alrededor
+            for (int i = startY; i <= endY; i++) {
+                for (int j = startX; j <= endX; j++) {
+                    if (matriz[i][j].getNave().isPresent()) {
+                        return false;
+                    }
+                }
             }
-            for (int i = 0; i < size; i++) {
-                if (matriz[y + i][x].getNave() != null) {
+
+            // Verificar límites del tablero
+            if (vertical) {
+                if (y + size > GRID_SIZE) {
+                    return false;
+                }
+            } else {
+                if (x + size > GRID_SIZE) {
                     return false;
                 }
             }
-        } else {
-            if (x < 0 || y < 0 || y >= GRID_SIZE || (x + size - 1) >= GRID_SIZE) {
-                return false;
-            }
-            for (int i = 0; i < size; i++) {
-                if (matriz[y][x + i].getNave() != null) {
-                    return false;
-                }
-            }
+
+            return true;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return false;
         }
-        return true;
     }
 
     private void placeBalloons(int gridX, int gridY, int size, ImageIcon icon) {
@@ -295,7 +265,6 @@ public class GridDragDropHandler extends DropTargetAdapter {
                 nave = new Barco();
         }
 
-        // Agregar la nave a la lista de naves
         naves.add(nave);
 
         System.out.println("\nNave de tipo " + nave.getTipoNave().toString().toLowerCase() + " colocada en las casillas:");
@@ -306,9 +275,6 @@ public class GridDragDropHandler extends DropTargetAdapter {
                 matriz[gridY + i][gridX].setNave(nave);
                 JLabel balloon = createBalloonLabel(icon, snapX, snapY);
                 tableroPanel.add(balloon);
-                if (i == 0) {
-                    lastPlacedBalloon = balloon;
-                }
                 System.out.printf("Casilla [%d, %d]%n", gridY + i, gridX);
             }
         } else {
@@ -318,9 +284,6 @@ public class GridDragDropHandler extends DropTargetAdapter {
                 matriz[gridY][gridX + i].setNave(nave);
                 JLabel balloon = createBalloonLabel(icon, snapX, snapY);
                 tableroPanel.add(balloon);
-                if (i == 0) {
-                    lastPlacedBalloon = balloon;
-                }
                 System.out.printf("Casilla [%d, %d]%n", gridY, gridX + i);
             }
         }
