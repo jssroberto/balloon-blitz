@@ -5,6 +5,7 @@
 package org.itson.edu.balloonblitz.vista;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -13,9 +14,13 @@ import java.awt.RenderingHints;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import org.itson.edu.balloonblitz.entidades.Partida;
+import org.itson.edu.balloonblitz.auxiliar.BalloonTransferHandler;
+import org.itson.edu.balloonblitz.auxiliar.GridDragDropHandler;
+import org.itson.edu.balloonblitz.auxiliar.TableroRenderer;
+import org.itson.edu.balloonblitz.entidades.Tablero;
 
 /**
  *
@@ -23,72 +28,133 @@ import org.itson.edu.balloonblitz.entidades.Partida;
  */
 public class PartidaPanel extends javax.swing.JPanel {
 
+    private Tablero tablero;
+    private GridDragDropHandler gridDragDropHandler;
     private static final Logger logger = Logger.getLogger(InicioPanel.class.getName());
     private final FramePrincipal framePrincipal;
+
+    private static final String FONT_PATH = "/fonts/oetztype/OETZTYPE.TTF";
+    private static final float TITLE_FONT_SIZE = 28.0F;
+
+    // Segun el tipo de 
+    private static final String BALLOON_BASE_PATH = "/images/ballons/rojo/rojo-";
+    private static final int BORDER_THICKNESS = 2;
 
     /**
      * Creates new form PersonalizarPanel
      *
      * @param framePrincipal
+     * @param gridDragDropHandler
      */
-    public PartidaPanel(FramePrincipal framePrincipal) {
+    // Esto está mockeado falta saber como voy a obtener el tablero que ya se hizo antes
+    public PartidaPanel(FramePrincipal framePrincipal, GridDragDropHandler gridDragDropHandler) {
         this.framePrincipal = framePrincipal;
+        this.gridDragDropHandler = gridDragDropHandler;
         initComponents();
         try {
-            setFuentes();
+            setupUI();
         } catch (FontFormatException | IOException e) {
             logger.log(Level.SEVERE, "Error al cargar fuentes: ", e);
         }
     }
 
-    private void setFuentes() throws FontFormatException, IOException {
-        lblEsperandoMovimiento.setFont(framePrincipal.cargarFuente("/fonts/oetztype/OETZTYPE.TTF", 28.0F));
-        lblNombre.setFont(framePrincipal.cargarFuente("/fonts/oetztype/OETZTYPE.TTF", 28.0F));
-        lblNombreEnemigo.setFont(framePrincipal.cargarFuente("/fonts/oetztype/OETZTYPE.TTF", 28.0F));
+    private void setupUI() throws FontFormatException, IOException {
+        setupFonts();
+        setupBalloons();
+        renderizarTableroJugador();
+    }
+
+    private void renderizarTableroJugador() {
+//        Jugador jugador = new Jugador.Builder()
+//                .nombre(txtNombre.getText())
+//                .colorPropio(colorNaves)
+//                .fotoPerfil(fotoPerfil)
+//                .build();
+
+        TableroRenderer.renderizarTablero(
+                tableroJugador,
+                gridDragDropHandler.obtenerTablero(),
+                gridDragDropHandler.obtenerNaves()
+        );
+    }
+
+    private void setupFonts() throws FontFormatException, IOException {
+        Font titleFont = framePrincipal.cargarFuente(FONT_PATH, TITLE_FONT_SIZE);
+
+        lblEsperandoMovimiento.setFont(titleFont);
+        lblNombre.setFont(titleFont);
+        lblNombreEnemigo.setFont(titleFont);
 
         addTextBorder(lblEsperandoMovimiento);
         addTextBorder(lblNombre);
         addTextBorder(lblNombreEnemigo);
     }
 
-    // Método para añadir borde al texto en JLabel
     private void addTextBorder(JLabel label) {
-        label.setForeground(Color.WHITE); // Color principal del texto
+        label.setForeground(Color.WHITE);
         label.setUI(new javax.swing.plaf.basic.BasicLabelUI() {
             @Override
             public void paint(Graphics g, JComponent c) {
                 Graphics2D g2d = (Graphics2D) g.create();
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                        RenderingHints.VALUE_ANTIALIAS_ON);
 
-                // Definir el grosor del borde y color
-                int borderThickness = 2;
-                Color borderColor = Color.BLACK;
-
-                // Posición del texto
                 String text = label.getText();
                 FontMetrics metrics = g2d.getFontMetrics(label.getFont());
                 int x = (label.getWidth() - metrics.stringWidth(text)) / 2;
                 int y = (label.getHeight() - metrics.getHeight()) / 2 + metrics.getAscent();
 
-                // Dibujar borde en varias direcciones alrededor del texto
-                g2d.setColor(borderColor);
-                for (int i = -borderThickness; i <= borderThickness; i++) {
-                    for (int j = -borderThickness; j <= borderThickness; j++) {
+                // Dibuja los bordes
+                g2d.setColor(Color.BLACK);
+                for (int i = -BORDER_THICKNESS; i <= BORDER_THICKNESS; i++) {
+                    for (int j = -BORDER_THICKNESS; j <= BORDER_THICKNESS; j++) {
                         g2d.drawString(text, x + i, y + j);
                     }
                 }
 
-                // Dibujar el texto principal encima del borde
+                // Dibuja el texto
                 g2d.setColor(label.getForeground());
                 g2d.drawString(text, x, y);
-
                 g2d.dispose();
             }
         });
     }
 
+    private void setupBalloons() {
+        tableroJugador.setLayout(null);
+
+        // Tipos de barco
+        String[] balloonTypes = {"barco", "submarino", "crucero", "portaAviones"};
+        int baseX = 150;
+        int baseY = 25;
+        int yOffset = 50;
+
+        for (int i = 0; i < balloonTypes.length; i++) {
+            JLabel balloon = createBalloon(i + 1, balloonTypes[i]);
+
+            ImageIcon icon = (ImageIcon) balloon.getIcon();
+            int x = baseX - tableroJugador.getX();
+            int y = baseY + (i * yOffset) - tableroJugador.getY();
+
+            balloon.setBounds(x, y, icon.getIconWidth(), icon.getIconHeight());
+            tableroJugador.add(balloon);
+        }
+
+        tableroJugador.repaint();
+    }
+
+    private JLabel createBalloon(int size, String type) {
+        String imagePath = BALLOON_BASE_PATH + size + ".png";
+        ImageIcon icon = new ImageIcon(getClass().getResource(imagePath));
+        JLabel balloon = new JLabel(icon);
+        balloon.setTransferHandler(new BalloonTransferHandler(balloon, type));
+        return balloon;
+    }
+
     /**
-     * This method is called from within the constructor to initialize the form. WARNING: Do NOT modify this code. The content of this method is always regenerated by the Form Editor.
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -103,6 +169,8 @@ public class PartidaPanel extends javax.swing.JPanel {
         lblEsperandoMovimiento = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        tableroJugador = new javax.swing.JLabel();
+        tableroRival = new javax.swing.JLabel();
         lblFondo = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -147,7 +215,13 @@ public class PartidaPanel extends javax.swing.JPanel {
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/patFusty.png"))); // NOI18N
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
-        lblFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/partida.png"))); // NOI18N
+        tableroJugador.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/tablero.png"))); // NOI18N
+        jPanel1.add(tableroJugador, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 160, -1, 460));
+
+        tableroRival.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/tablero.png"))); // NOI18N
+        jPanel1.add(tableroRival, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 160, 460, 460));
+
+        lblFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/partidaSinTablero.png"))); // NOI18N
         jPanel1.add(lblFondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1280, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -186,5 +260,7 @@ public class PartidaPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lblFondo;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblNombreEnemigo;
+    private javax.swing.JLabel tableroJugador;
+    private javax.swing.JLabel tableroRival;
     // End of variables declaration//GEN-END:variables
 }

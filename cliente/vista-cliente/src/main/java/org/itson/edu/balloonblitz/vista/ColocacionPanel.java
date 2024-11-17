@@ -37,7 +37,7 @@ public class ColocacionPanel extends javax.swing.JPanel {
     private static final int BORDER_THICKNESS = 2;
 
     private final FramePrincipal framePrincipal;
-    private final GridDragDropHandler gridDragDropHandler;
+    private GridDragDropHandler gridDragDropHandler;
 
     /**
      * Creates new form PersonalizarPanel
@@ -265,7 +265,7 @@ public class ColocacionPanel extends javax.swing.JPanel {
 
     private void btnConfirmarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConfirmarMouseClicked
         construirTablero();
-        framePrincipal.cambiarPanel(new PartidaPanel(framePrincipal));
+        framePrincipal.cambiarPanel(new PartidaPanel(framePrincipal, gridDragDropHandler));
     }//GEN-LAST:event_btnConfirmarMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
