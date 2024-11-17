@@ -4,10 +4,6 @@
  */
 package org.itson.edu.balloonblitz.entidades.eventos;
 
-import java.io.Serializable;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
 
 /**

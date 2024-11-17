@@ -166,7 +166,7 @@ public final class Servidor {
      * @param salida ObjectOutputStream del jugador a enviar
      * @param evento Evento a enviar
      */
-    public void mandarDatosCliente(ObjectOutputStream salida, Evento evento) {
+    public synchronized void mandarDatosCliente(ObjectOutputStream salida, Evento evento) {
         try {
 
             salida.writeObject(evento);

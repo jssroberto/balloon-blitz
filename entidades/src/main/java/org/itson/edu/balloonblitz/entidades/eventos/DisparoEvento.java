@@ -3,7 +3,6 @@ package org.itson.edu.balloonblitz.entidades.eventos;
 import org.itson.edu.balloonblitz.entidades.Coordenada;
 import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
 
-import java.io.Serializable;
 
 /**
  *

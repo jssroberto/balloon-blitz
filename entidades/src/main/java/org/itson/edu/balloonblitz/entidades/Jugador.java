@@ -4,7 +4,6 @@
  */
 package org.itson.edu.balloonblitz.entidades;
 
-
 /**
  *
  * @author elimo
@@ -26,6 +25,7 @@ public class Jugador implements Serializable {
     private final ColorNaves colorPropio;
     private final ColorNaves colorRival;
     private final int navesRestantes;
+    public boolean turno;
 
     // Constructor privado que recibe el builder
     private Jugador(Builder builder) {
@@ -37,6 +37,14 @@ public class Jugador implements Serializable {
         this.colorPropio = builder.colorPropio;
         this.colorRival = builder.colorRival;
         this.navesRestantes = builder.navesRestantes;
+    }
+
+    public void setTurno(boolean turno) {
+        this.turno = turno;
+    }
+
+    public boolean isTurno() {
+        return turno;
     }
 
     public String getNombre() {
@@ -72,6 +80,7 @@ public class Jugador implements Serializable {
     }
 
     public static class Builder {
+
         private String nombre;
         private String fotoPerfil;
         private Tablero tableroPropio;
