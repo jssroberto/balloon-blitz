@@ -12,6 +12,8 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -31,11 +33,20 @@ public class PersonalizarPanel extends javax.swing.JPanel {
 
     private static final Logger logger = Logger.getLogger(InicioPanel.class.getName());
     private final FramePrincipal framePrincipal;
+
     private ColorNaves colorNaves;
+    private ColorNaves colorNavesRival;
     private String fotoPerfil;
 
     private ClienteControlador controlador;
     private Jugador jugador;
+
+    private record ImageProperties(int width, int height, boolean isEnlarged) {
+
+    }
+    private final Map<String, ImageProperties> imageCache = new HashMap<>();
+    private String currentlySelectedPath = null;
+    private String currentlySelectedRivalPath = null;  // Para globos del rival
 
     // Necesario para elegir la imagen de perfil
     private int anchoOriginalQuincy = 0, altoOriginalQuincy = 0;
@@ -47,27 +58,6 @@ public class PersonalizarPanel extends javax.swing.JPanel {
     private boolean imagenQuincyAumentada = false;
     private boolean imagenGwendolinAumentada = false;
     private boolean imagenPatFustyAumentada = false;
-
-    // Agregar estas variables al inicio de la clase, junto con las otras variables de instancia
-    private boolean globoRojoAumentado = false;
-    private int anchoOriginalGloboRojo = 0;
-    private int altoOriginalGloboRojo = 0;
-
-    private boolean globoAzulAumentado = false;
-    private int anchoOriginalGloboAzul = 0;
-    private int altoOriginalGloboAzul = 0;
-
-    private boolean globoVerdeAumentado = false;
-    private int anchoOriginalGloboVerde = 0;
-    private int altoOriginalGloboVerde = 0;
-
-    private boolean globoAmarilloAumentado = false;
-    private int anchoOriginalGloboAmarillo = 0;
-    private int altoOriginalGloboAmarillo = 0;
-
-    private boolean globoRosaAumentado = false;
-    private int anchoOriginalGloboRosa = 0;
-    private int altoOriginalGloboRosa = 0;
 
     /**
      * Creates new form PersonalizarPanel
@@ -142,6 +132,7 @@ public class PersonalizarPanel extends javax.swing.JPanel {
         this.jugador = new Jugador.Builder()
                 .nombre(txtNombre.getText())
                 .colorPropio(colorNaves)
+                .colorRival(colorNavesRival)
                 .fotoPerfil(fotoPerfil)
                 .build();
 
@@ -150,7 +141,7 @@ public class PersonalizarPanel extends javax.swing.JPanel {
 
         System.out.println("Emisor antes de enviar: " + jugador2.getEmisor().getNombre());
 
-        controlador.enviarMensaje(jugador2); // Enviar el evento al servidor
+        controlador.enviarMensaje(jugador2);
         System.out.println("Evento enviado al servidor.");
     }
 
@@ -187,45 +178,86 @@ public class PersonalizarPanel extends javax.swing.JPanel {
         }
     }
 
-    private void restaurarImagenesGlobo(String imagenExcluida) {
-        ImageIcon iconoOriginal;
-        Image imagenRedimensionada;
-
-        if (!imagenExcluida.equalsIgnoreCase("/images/ballons/59x73/rojo.png") && globoRojoAumentado) {
-            iconoOriginal = new ImageIcon(getClass().getResource("/images/ballons/59x73/rojo.png"));
-            imagenRedimensionada = iconoOriginal.getImage().getScaledInstance(anchoOriginalGloboRojo, altoOriginalGloboRojo, Image.SCALE_SMOOTH);
-            globoRojo.setIcon(new ImageIcon(imagenRedimensionada));
-            globoRojoAumentado = false;
+    private void handleGloboClick(String imagePath, JLabel label, ColorNaves color, boolean isRival) {
+        // Actualizar el color correspondiente según si es rival o no
+        if (isRival) {
+            colorNavesRival = color;
+        } else {
+            colorNaves = color;
         }
 
-        if (!imagenExcluida.equalsIgnoreCase("/images/ballons/59x73/azul.png") && globoAzulAumentado) {
-            iconoOriginal = new ImageIcon(getClass().getResource("/images/ballons/59x73/azul.png"));
-            imagenRedimensionada = iconoOriginal.getImage().getScaledInstance(anchoOriginalGloboAzul, altoOriginalGloboAzul, Image.SCALE_SMOOTH);
-            globoAzul.setIcon(new ImageIcon(imagenRedimensionada));
-            globoAzulAumentado = false;
+        String currentPath = isRival ? currentlySelectedRivalPath : currentlySelectedPath;
+
+        // Si hay un globo seleccionado y es diferente al actual, restaurarlo
+        if (currentPath != null && !currentPath.equals(imagePath)) {
+            JLabel previousLabel = getLabelForPath(currentPath, isRival);
+            if (previousLabel != null) {
+                ImageProperties prevProps = imageCache.get(currentPath);
+                updateGloboImage(currentPath, previousLabel, prevProps.width(), prevProps.height());
+                imageCache.put(currentPath, new ImageProperties(prevProps.width(), prevProps.height(), false));
+            }
         }
 
-        if (!imagenExcluida.equalsIgnoreCase("/images/ballons/59x73/verde.png") && globoVerdeAumentado) {
-            iconoOriginal = new ImageIcon(getClass().getResource("/images/ballons/59x73/verde.png"));
-            imagenRedimensionada = iconoOriginal.getImage().getScaledInstance(anchoOriginalGloboVerde, altoOriginalGloboVerde, Image.SCALE_SMOOTH);
-            globoVerde.setIcon(new ImageIcon(imagenRedimensionada));
-            globoVerdeAumentado = false;
-        }
+        // Procesa el nuevo globo seleccionado
+        ImageProperties props = imageCache.computeIfAbsent(imagePath, path -> {
+            ImageIcon icon = new ImageIcon(getClass().getResource(path));
+            return new ImageProperties(icon.getIconWidth(), icon.getIconHeight(), false);
+        });
 
-        if (!imagenExcluida.equalsIgnoreCase("/images/ballons/59x73/amarillo.png") && globoAmarilloAumentado) {
-            iconoOriginal = new ImageIcon(getClass().getResource("/images/ballons/59x73/amarillo.png"));
-            imagenRedimensionada = iconoOriginal.getImage().getScaledInstance(anchoOriginalGloboAmarillo, altoOriginalGloboAmarillo, Image.SCALE_SMOOTH);
-            globoAmarillo.setIcon(new ImageIcon(imagenRedimensionada));
-            globoAmarilloAumentado = false;
-        }
+        // Siempre aumenta el tamaño del nuevo globo seleccionado
+        int newWidth = props.width() + 8;
+        int newHeight = props.height() + 8;
 
-        if (!imagenExcluida.equalsIgnoreCase("/images/ballons/59x73/rosa.png") && globoRosaAumentado) {
-            iconoOriginal = new ImageIcon(getClass().getResource("/images/ballons/59x73/rosa.png"));
-            imagenRedimensionada = iconoOriginal.getImage().getScaledInstance(anchoOriginalGloboRosa, altoOriginalGloboRosa, Image.SCALE_SMOOTH);
-            globoRosa.setIcon(new ImageIcon(imagenRedimensionada));
-            globoRosaAumentado = false;
-        }
+        updateGloboImage(imagePath, label, newWidth, newHeight);
+        imageCache.put(imagePath, new ImageProperties(props.width(), props.height(), true));
 
+        // Actualizar el path seleccionado correspondiente
+        if (isRival) {
+            currentlySelectedRivalPath = imagePath;
+        } else {
+            currentlySelectedPath = imagePath;
+        }
+    }
+
+    private JLabel getLabelForPath(String path, boolean isRival) {
+        // Mapeo de rutas de imagen a sus correspondientes JLabels
+        if (isRival) {
+            return switch (path) {
+                case "/images/ballons/59x73/azul.png" ->
+                    globoAzulOP;
+                case "/images/ballons/59x73/verde.png" ->
+                    globoVerdeOP;
+                case "/images/ballons/59x73/amarillo.png" ->
+                    globoAmarilloOP;
+                case "/images/ballons/59x73/rojo.png" ->
+                    globoRojoOP;
+                case "/images/ballons/59x73/rosa.png" ->
+                    globoRosaOP;
+                default ->
+                    null;
+            };
+        } else {
+            return switch (path) {
+                case "/images/ballons/59x73/azul.png" ->
+                    globoAzul;
+                case "/images/ballons/59x73/verde.png" ->
+                    globoVerde;
+                case "/images/ballons/59x73/amarillo.png" ->
+                    globoAmarillo;
+                case "/images/ballons/59x73/rojo.png" ->
+                    globoRojo;
+                case "/images/ballons/59x73/rosa.png" ->
+                    globoRosa;
+                default ->
+                    null;
+            };
+        }
+    }
+
+    private void updateGloboImage(String imagePath, JLabel label, int width, int height) {
+        ImageIcon originalIcon = new ImageIcon(getClass().getResource(imagePath));
+        Image resizedImage = originalIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        label.setIcon(new ImageIcon(resizedImage));
     }
 
     /**
@@ -400,22 +432,47 @@ public class PersonalizarPanel extends javax.swing.JPanel {
 
         globoRojoOP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ballons/59x73/rojo.png"))); // NOI18N
         globoRojoOP.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        globoRojoOP.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                globoRojoOPMouseClicked(evt);
+            }
+        });
         jPanel1.add(globoRojoOP, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 490, -1, -1));
 
         globoAzulOP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ballons/59x73/azul.png"))); // NOI18N
         globoAzulOP.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        globoAzulOP.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                globoAzulOPMouseClicked(evt);
+            }
+        });
         jPanel1.add(globoAzulOP, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 490, -1, -1));
 
         globoVerdeOP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ballons/59x73/verde.png"))); // NOI18N
         globoVerdeOP.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        globoVerdeOP.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                globoVerdeOPMouseClicked(evt);
+            }
+        });
         jPanel1.add(globoVerdeOP, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 490, -1, -1));
 
         globoAmarilloOP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ballons/59x73/amarillo.png"))); // NOI18N
         globoAmarilloOP.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        globoAmarilloOP.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                globoAmarilloOPMouseClicked(evt);
+            }
+        });
         jPanel1.add(globoAmarilloOP, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 490, -1, -1));
 
         globoRosaOP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ballons/59x73/rosa.png"))); // NOI18N
         globoRosaOP.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        globoRosaOP.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                globoRosaOPMouseClicked(evt);
+            }
+        });
         jPanel1.add(globoRosaOP, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 490, -1, -1));
 
         lblFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/personalizar.png"))); // NOI18N
@@ -468,143 +525,23 @@ public class PersonalizarPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_txtNombreFocusLost
 
     private void globoRojoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_globoRojoMouseClicked
-        colorNaves = ColorNaves.ROJO;  // Mantener la funcionalidad original
-
-        String rutaImagen = "/images/ballons/59x73/rojo.png";
-        ImageIcon iconoOriginal = new ImageIcon(getClass().getResource(rutaImagen));
-
-        // Guardar tamaño original la primera vez
-        if (!globoRojoAumentado && anchoOriginalGloboRojo == 0 && altoOriginalGloboRojo == 0) {
-            anchoOriginalGloboRojo = iconoOriginal.getIconWidth();
-            altoOriginalGloboRojo = iconoOriginal.getIconHeight();
-        }
-
-        // Calcular nuevo tamaño basado en el estado actual
-        int ancho = globoRojoAumentado ? anchoOriginalGloboRojo : anchoOriginalGloboRojo + 8;
-        int alto = globoRojoAumentado ? altoOriginalGloboRojo : altoOriginalGloboRojo + 8;
-
-        // Redimensionar la imagen
-        Image imagenRedimensionada = iconoOriginal.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
-        globoRojo.setIcon(new ImageIcon(imagenRedimensionada));
-
-        // Cambiar el estado
-        globoRojoAumentado = !globoRojoAumentado;
-
-        if (globoRojoAumentado) {
-            restaurarImagenesGlobo("/images/ballons/59x73/rojo.png");
-        }
+        handleGloboClick("/images/ballons/59x73/rojo.png", globoRojo, ColorNaves.ROJO, false);
     }//GEN-LAST:event_globoRojoMouseClicked
 
     private void globoAzulMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_globoAzulMouseClicked
-        colorNaves = ColorNaves.AZUL;  // Mantener la funcionalidad original
-
-        String rutaImagen = "/images/ballons/59x73/azul.png";
-        ImageIcon iconoOriginal = new ImageIcon(getClass().getResource(rutaImagen));
-
-        // Guardar tamaño original la primera vez
-        if (!globoAzulAumentado && anchoOriginalGloboAzul == 0 && altoOriginalGloboAzul == 0) {
-            anchoOriginalGloboAzul = iconoOriginal.getIconWidth();
-            altoOriginalGloboAzul = iconoOriginal.getIconHeight();
-        }
-
-        // Calcular nuevo tamaño basado en el estado actual
-        int ancho = globoAzulAumentado ? anchoOriginalGloboAzul : anchoOriginalGloboAzul + 8;
-        int alto = globoAzulAumentado ? altoOriginalGloboAzul : altoOriginalGloboAzul + 8;
-
-        // Redimensionar la imagen
-        Image imagenRedimensionada = iconoOriginal.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
-        globoAzul.setIcon(new ImageIcon(imagenRedimensionada));
-
-        // Cambiar el estado
-        globoAzulAumentado = !globoAzulAumentado;
-
-        if (globoAzulAumentado) {
-            restaurarImagenesGlobo("/images/ballons/59x73/azul.png");
-        }
+        handleGloboClick("/images/ballons/59x73/azul.png", globoAzul, ColorNaves.AZUL, false);
     }//GEN-LAST:event_globoAzulMouseClicked
 
     private void globoVerdeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_globoVerdeMouseClicked
-        colorNaves = ColorNaves.VERDE;  // Mantener la funcionalidad original
-
-        String rutaImagen = "/images/ballons/59x73/verde.png";
-        ImageIcon iconoOriginal = new ImageIcon(getClass().getResource(rutaImagen));
-
-        // Guardar tamaño original la primera vez
-        if (!globoVerdeAumentado && anchoOriginalGloboVerde == 0 && altoOriginalGloboVerde == 0) {
-            anchoOriginalGloboVerde = iconoOriginal.getIconWidth();
-            altoOriginalGloboVerde = iconoOriginal.getIconHeight();
-        }
-
-        // Calcular nuevo tamaño basado en el estado actual
-        int ancho = globoVerdeAumentado ? anchoOriginalGloboVerde : anchoOriginalGloboVerde + 8;
-        int alto = globoVerdeAumentado ? altoOriginalGloboVerde : altoOriginalGloboVerde + 8;
-
-        // Redimensionar la imagen
-        Image imagenRedimensionada = iconoOriginal.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
-        globoVerde.setIcon(new ImageIcon(imagenRedimensionada));
-
-        // Cambiar el estado
-        globoVerdeAumentado = !globoVerdeAumentado;
-
-        if (globoVerdeAumentado) {
-            restaurarImagenesGlobo("/images/ballons/59x73/verde.png");
-        }
+        handleGloboClick("/images/ballons/59x73/verde.png", globoVerde, ColorNaves.VERDE, false);
     }//GEN-LAST:event_globoVerdeMouseClicked
 
     private void globoAmarilloMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_globoAmarilloMouseClicked
-        colorNaves = ColorNaves.AMARILLO;  // Mantener la funcionalidad original
-
-        String rutaImagen = "/images/ballons/59x73/amarillo.png";
-        ImageIcon iconoOriginal = new ImageIcon(getClass().getResource(rutaImagen));
-
-        // Guardar tamaño original la primera vez
-        if (!globoAmarilloAumentado && anchoOriginalGloboAmarillo == 0 && altoOriginalGloboAmarillo == 0) {
-            anchoOriginalGloboAmarillo = iconoOriginal.getIconWidth();
-            altoOriginalGloboAmarillo = iconoOriginal.getIconHeight();
-        }
-
-        // Calcular nuevo tamaño basado en el estado actual
-        int ancho = globoAmarilloAumentado ? anchoOriginalGloboAmarillo : anchoOriginalGloboAmarillo + 8;
-        int alto = globoAmarilloAumentado ? altoOriginalGloboAmarillo : altoOriginalGloboAmarillo + 8;
-
-        // Redimensionar la imagen
-        Image imagenRedimensionada = iconoOriginal.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
-        globoAmarillo.setIcon(new ImageIcon(imagenRedimensionada));
-
-        // Cambiar el estado
-        globoAmarilloAumentado = !globoAmarilloAumentado;
-
-        if (globoAmarilloAumentado) {
-            restaurarImagenesGlobo("/images/ballons/59x73/amarillo.png");
-        }
+        handleGloboClick("/images/ballons/59x73/amarillo.png", globoAmarillo, ColorNaves.AMARILLO, false);
     }//GEN-LAST:event_globoAmarilloMouseClicked
 
     private void globoRosaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_globoRosaMouseClicked
-        colorNaves = ColorNaves.ROSA;  // Mantener la funcionalidad original
-
-        String rutaImagen = "/images/ballons/59x73/rosa.png";
-        ImageIcon iconoOriginal = new ImageIcon(getClass().getResource(rutaImagen));
-
-        // Guardar tamaño original la primera vez
-        if (!globoRosaAumentado && anchoOriginalGloboRosa == 0 && altoOriginalGloboRosa == 0) {
-            anchoOriginalGloboRosa = iconoOriginal.getIconWidth();
-            altoOriginalGloboRosa = iconoOriginal.getIconHeight();
-        }
-
-        // Calcular nuevo tamaño basado en el estado actual
-        int ancho = globoRosaAumentado ? anchoOriginalGloboRosa : anchoOriginalGloboRosa + 8;
-        int alto = globoRosaAumentado ? altoOriginalGloboRosa : altoOriginalGloboRosa + 8;
-
-        // Redimensionar la imagen
-        Image imagenRedimensionada = iconoOriginal.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
-        globoRosa.setIcon(new ImageIcon(imagenRedimensionada));
-
-        // Cambiar el estado
-        globoRosaAumentado = !globoRosaAumentado;
-
-        if (globoRosaAumentado) {
-            restaurarImagenesGlobo("/images/ballons/59x73/rosa.png");
-        }
+        handleGloboClick("/images/ballons/59x73/rosa.png", globoRosa, ColorNaves.ROSA, false);
     }//GEN-LAST:event_globoRosaMouseClicked
 
     private void pfpGwendolinMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pfpGwendolinMouseClicked
@@ -702,6 +639,26 @@ public class PersonalizarPanel extends javax.swing.JPanel {
             restaurarImagenesPFP("quincy");
         }
     }//GEN-LAST:event_pfpQuincyMouseClicked
+
+    private void globoRojoOPMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_globoRojoOPMouseClicked
+        handleGloboClick("/images/ballons/59x73/rojo.png", globoRojoOP, ColorNaves.ROSA, true);
+    }//GEN-LAST:event_globoRojoOPMouseClicked
+
+    private void globoAzulOPMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_globoAzulOPMouseClicked
+        handleGloboClick("/images/ballons/59x73/azul.png", globoAzulOP, ColorNaves.AZUL, true);
+    }//GEN-LAST:event_globoAzulOPMouseClicked
+
+    private void globoVerdeOPMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_globoVerdeOPMouseClicked
+        handleGloboClick("/images/ballons/59x73/verde.png", globoVerdeOP, ColorNaves.VERDE, true);
+    }//GEN-LAST:event_globoVerdeOPMouseClicked
+
+    private void globoAmarilloOPMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_globoAmarilloOPMouseClicked
+        handleGloboClick("/images/ballons/59x73/amarillo.png", globoAmarilloOP, ColorNaves.AMARILLO, true);
+    }//GEN-LAST:event_globoAmarilloOPMouseClicked
+
+    private void globoRosaOPMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_globoRosaOPMouseClicked
+        handleGloboClick("/images/ballons/59x73/rosa.png", globoRosaOP, ColorNaves.ROSA, true);
+    }//GEN-LAST:event_globoRosaOPMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
