@@ -3,6 +3,7 @@
  */
 package org.itson.edu.balloonblitz.main.cliente;
 
+import org.itson.edu.balloonblitz.modelo.ClienteControlador;
 import org.itson.edu.balloonblitz.vista.FramePrincipal;
 import org.itson.edu.balloonblitz.vista.InicioPanel;
 
@@ -13,6 +14,8 @@ import org.itson.edu.balloonblitz.vista.InicioPanel;
 public class MainCliente {
 
     public static void main(String[] args) {
+        ClienteControlador controlador = ClienteControlador.getInstancia("localhost", 1234);
+        controlador.start();
 
         javax.swing.SwingUtilities.invokeLater(() -> {
             FramePrincipal framePrincipal = new FramePrincipal();

@@ -30,10 +30,12 @@ import org.itson.edu.balloonblitz.modelo.ClienteControlador;
 public class PersonalizarPanel extends javax.swing.JPanel {
 
     private static final Logger logger = Logger.getLogger(InicioPanel.class.getName());
-    ClienteControlador controlador;
     private final FramePrincipal framePrincipal;
     private ColorNaves colorNaves;
     private String fotoPerfil;
+
+    private ClienteControlador controlador;
+    private Jugador jugador;
 
     // Necesario para elegir la imagen de perfil
     private int anchoOriginalQuincy = 0, altoOriginalQuincy = 0;
@@ -73,6 +75,7 @@ public class PersonalizarPanel extends javax.swing.JPanel {
      * @param framePrincipal
      */
     public PersonalizarPanel(FramePrincipal framePrincipal) {
+        this.controlador = ClienteControlador.getInstancia("localhost", 1234);
         this.framePrincipal = framePrincipal;
         initComponents();
         try {
@@ -136,22 +139,19 @@ public class PersonalizarPanel extends javax.swing.JPanel {
     }
 
     private void crearJugador() {
-// Tuve que documentar esto porque el servidor no jala
-//        Jugador jugador = new Jugador.Builder()
-//                .nombre(txtNombre.getText())
-//                .colorPropio(colorNaves)
-//                .fotoPerfil(fotoPerfil)
-//                .build();
-//
-//        // Crear un evento de tipo EnviarJugador y asignarle el emisor
-//        Evento jugador2 = new EnvioJugadorEvento();
-//        jugador2.setEmisor(jugador);
-//
-//        // Imprimir el emisor para verificar antes de enviar
-//        System.out.println("Emisor antes de enviar: " + jugador2.getEmisor().getNombre());
-//
-//        controlador.enviarMensaje(jugador2); // Enviar el evento al servidor
-//        System.out.println("Evento enviado al servidor.");
+        this.jugador = new Jugador.Builder()
+                .nombre(txtNombre.getText())
+                .colorPropio(colorNaves)
+                .fotoPerfil(fotoPerfil)
+                .build();
+
+        Evento jugador2 = new EnvioJugadorEvento();
+        jugador2.setEmisor(jugador);
+
+        System.out.println("Emisor antes de enviar: " + jugador2.getEmisor().getNombre());
+
+        controlador.enviarMensaje(jugador2); // Enviar el evento al servidor
+        System.out.println("Evento enviado al servidor.");
     }
 
     private void restaurarImagenesPFP(String imagenExcluida) {
@@ -452,7 +452,7 @@ public class PersonalizarPanel extends javax.swing.JPanel {
 
     private void lblContinuarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblContinuarMouseClicked
         crearJugador();
-        framePrincipal.cambiarPanel(new EsperandoJugador(framePrincipal));
+        framePrincipal.cambiarPanel(new EsperandoJugador(framePrincipal, jugador));
     }//GEN-LAST:event_lblContinuarMouseClicked
 
     private void txtNombreFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNombreFocusGained

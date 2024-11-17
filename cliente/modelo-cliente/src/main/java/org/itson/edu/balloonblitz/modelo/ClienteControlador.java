@@ -29,7 +29,14 @@ public class ClienteControlador extends Thread {
     public ClienteControlador() {
     }
 
-    public ClienteControlador(String host, int puerto) {
+    public static synchronized ClienteControlador getInstancia(String host, int puerto) {
+        if (instancia == null) {
+            instancia = new ClienteControlador(host, puerto);
+        }
+        return instancia;
+    }
+
+    private ClienteControlador(String host, int puerto) {
         try {
             socket = new Socket(host, puerto);
             salida = new ObjectOutputStream(socket.getOutputStream());

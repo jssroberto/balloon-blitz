@@ -4,7 +4,6 @@
  */
 package org.itson.edu.balloonblitz.modelo;
 
-import org.itson.edu.balloonblitz.modelo.ClienteControlador;
 import java.util.Scanner;
 
 import org.itson.edu.balloonblitz.entidades.Jugador;
@@ -22,7 +21,7 @@ public class pruebacliente {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        ClienteControlador cliente = new ClienteControlador("localhost", 1234);
+        ClienteControlador cliente = ClienteControlador.getInstancia("localhost", 1234);
         cliente.start();
 
         System.out.println("Ingrese un número: ");
@@ -41,7 +40,6 @@ public class pruebacliente {
             // Inicializar el cliente y enviar el mensaje al servidor
             // Este método inicia la conexión del cliente con el servidor
             cliente.enviarMensaje(jugador2); // Enviar el evento al servidor
-
 
             System.out.println("Evento enviado al servidor.");
         } else {

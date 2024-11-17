@@ -5,6 +5,7 @@ import java.util.Optional;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import org.itson.edu.balloonblitz.entidades.Casilla;
+import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.Nave;
 import org.itson.edu.balloonblitz.entidades.Tablero;
 
@@ -15,7 +16,7 @@ public class TableroRenderer {
     private static final int GRID_OFFSET_X = 0;
     private static final int GRID_OFFSET_Y = 0;
 
-    public static void renderizarTablero(JLabel tableroLabel, Tablero tablero, List<Nave> naves) {
+    public static void renderizarTablero(JLabel tableroLabel, Tablero tablero, List<Nave> naves, Jugador jugador) {
         // Eliminar todos los componentes previos
         tableroLabel.removeAll();
         tableroLabel.setLayout(null);
@@ -29,7 +30,7 @@ public class TableroRenderer {
                     Optional<Nave> naveOpt = casillas[i][j].getNave();
                     if (naveOpt.isPresent() && naveOpt.get().equals(nave)) {
                         // Crear y posicionar un globo para cada casilla de la nave
-                        JLabel globoLabel = crearGloboLabel(nave);
+                        JLabel globoLabel = crearGloboLabel(nave, jugador);
                         posicionarGlobo(globoLabel, i, j, nave);
                         tableroLabel.add(globoLabel);
                     }
@@ -41,8 +42,8 @@ public class TableroRenderer {
         tableroLabel.repaint();
     }
 
-    private static JLabel crearGloboLabel(Nave nave) {
-        String color = "rojo";
+    private static JLabel crearGloboLabel(Nave nave, Jugador jugador) {
+        String color = jugador.getColorPropio().toString().toLowerCase();
         String tipo = nave.getTipoNave().toString().toLowerCase();
         int tamano = nave.getTamano();
 

@@ -21,6 +21,10 @@ import javax.swing.JLabel;
 import javax.swing.TransferHandler;
 import org.itson.edu.balloonblitz.auxiliar.GridDragDropHandler;
 import org.itson.edu.balloonblitz.entidades.Jugador;
+import org.itson.edu.balloonblitz.entidades.Tablero;
+import org.itson.edu.balloonblitz.entidades.eventos.Evento;
+import org.itson.edu.balloonblitz.entidades.eventos.PosicionNavesEvento;
+import org.itson.edu.balloonblitz.modelo.ClienteControlador;
 
 /**
  *
@@ -33,21 +37,27 @@ public class ColocacionPanel extends javax.swing.JPanel {
     private static final float TITLE_FONT_SIZE = 28.0F;
 
     // Segun el tipo de 
-    private static final String BALLOON_BASE_PATH = "/images/ballons/rojo/rojo-";
+    private String balloon_base_path;
     private static final int BORDER_THICKNESS = 2;
 
     private final FramePrincipal framePrincipal;
     private GridDragDropHandler gridDragDropHandler;
+    private ClienteControlador controlador;
+    private final Jugador jugador;
 
     /**
      * Creates new form PersonalizarPanel
      *
      * @param framePrincipal
+     * @param jugador
      */
-    public ColocacionPanel(FramePrincipal framePrincipal) {
-        this.framePrincipal = framePrincipal;
+    public ColocacionPanel(FramePrincipal framePrincipal, Jugador jugador) {
         initComponents();
+        this.controlador = ClienteControlador.getInstancia("localhost", 1234);
+        this.framePrincipal = framePrincipal;
         this.gridDragDropHandler = new GridDragDropHandler(panelTablero);
+        this.jugador = jugador;
+        this.balloon_base_path = "/images/ballons/" + jugador.getColorPropio() + "/" + jugador.getColorPropio() + "-";
 
         try {
             setupUI();
@@ -126,7 +136,7 @@ public class ColocacionPanel extends javax.swing.JPanel {
 
     // Aqui el numero de la foto define el tamaño de la nave
     private JLabel createBalloon(int size, String type) {
-        String imagePath = BALLOON_BASE_PATH + size + ".png";
+        String imagePath = balloon_base_path + size + ".png";
         ImageIcon icon = new ImageIcon(getClass().getResource(imagePath));
         JLabel balloon = new JLabel(icon);
         balloon.setTransferHandler(new BalloonTransferHandler(balloon, type));
@@ -151,31 +161,15 @@ public class ColocacionPanel extends javax.swing.JPanel {
     }
 
     private void construirTablero() {
-//        List<Nave> naves = gridDragDropHandler.obtenerNaves();
-//        Tablero tablero = gridDragDropHandler.obtenerTablero();
+        Tablero tablero = gridDragDropHandler.obtenerTablero();
 
-//        // Tamaño 1
-//        naves.add(new Barco());
-//        naves.add(new Barco());
-//        naves.add(new Barco());
-//
-//        // Tamaño 2
-//        naves.add(new Submarino());
-//        naves.add(new Submarino());
-//        naves.add(new Submarino());
-//        naves.add(new Submarino());
-//
-//        // Tamaño 3
-//        naves.add(new Crucero());
-//        naves.add(new Crucero());
-//
-//        // Tamaño 4
-//        naves.add(new PortaAviones());
-//        naves.add(new PortaAviones());
-        new Jugador.Builder()
-                .naves(gridDragDropHandler.obtenerNaves())
-                .tableroPropio(gridDragDropHandler.obtenerTablero())
-                .build();
+        Evento eventoTablero = new PosicionNavesEvento(tablero);
+        eventoTablero.setEmisor(jugador);
+
+        System.out.println("Emisor antes de enviar: " + eventoTablero.getEmisor().getNombre());
+
+        controlador.enviarMensaje(eventoTablero); // Enviar el evento al servidor
+        System.out.println("Evento enviado al servidor.");
     }
 
     /**
@@ -260,13 +254,13 @@ public class ColocacionPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        framePrincipal.cambiarPanel(new EsperandoJugador(framePrincipal));
+        framePrincipal.cambiarPanel(new EsperandoJugador(framePrincipal, jugador));
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnConfirmarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConfirmarMouseClicked
         construirTablero();
         // Así no va quedar final, es para probar que se acomoden los globos en el tablero
-        framePrincipal.cambiarPanel(new PartidaPanel(framePrincipal, gridDragDropHandler));
+        framePrincipal.cambiarPanel(new PartidaPanel(framePrincipal, gridDragDropHandler, jugador));
     }//GEN-LAST:event_btnConfirmarMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

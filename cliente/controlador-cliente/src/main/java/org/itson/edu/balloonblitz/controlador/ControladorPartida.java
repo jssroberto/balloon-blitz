@@ -18,12 +18,9 @@ public class ControladorPartida {
     public ControladorPartida() {
         cliente = new ClienteControlador();
     }
-    
-    public void enviarEvento(Evento evento){
+
+    public void enviarEvento(Evento evento) {
         cliente.enviarMensaje(evento);
     }
-    
-    
-    
-    
+
 }

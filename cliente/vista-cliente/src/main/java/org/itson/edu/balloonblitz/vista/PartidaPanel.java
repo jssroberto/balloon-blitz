@@ -14,12 +14,14 @@ import java.awt.RenderingHints;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import org.itson.edu.balloonblitz.auxiliar.BalloonTransferHandler;
 import org.itson.edu.balloonblitz.auxiliar.GridDragDropHandler;
 import org.itson.edu.balloonblitz.auxiliar.TableroRenderer;
+import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.Tablero;
 
 /**
@@ -28,6 +30,7 @@ import org.itson.edu.balloonblitz.entidades.Tablero;
  */
 public class PartidaPanel extends javax.swing.JPanel {
 
+    private Jugador jugador;
     private Tablero tablero;
     private GridDragDropHandler gridDragDropHandler;
     private static final Logger logger = Logger.getLogger(InicioPanel.class.getName());
@@ -45,11 +48,13 @@ public class PartidaPanel extends javax.swing.JPanel {
      *
      * @param framePrincipal
      * @param gridDragDropHandler
+     * @param jugador
      */
     // Esto está mockeado falta saber como voy a obtener el tablero que ya se hizo antes
-    public PartidaPanel(FramePrincipal framePrincipal, GridDragDropHandler gridDragDropHandler) {
+    public PartidaPanel(FramePrincipal framePrincipal, GridDragDropHandler gridDragDropHandler, Jugador jugador) {
         this.framePrincipal = framePrincipal;
         this.gridDragDropHandler = gridDragDropHandler;
+        this.jugador = jugador;
         initComponents();
         try {
             setupUI();
@@ -65,17 +70,11 @@ public class PartidaPanel extends javax.swing.JPanel {
     }
 
     private void renderizarTableroJugador() {
-//        Jugador jugador = new Jugador.Builder()
-//                .nombre(txtNombre.getText())
-//                .colorPropio(colorNaves)
-//                .fotoPerfil(fotoPerfil)
-//                .build();
-
-// Todavía me falta la forma de obtener el tablero del servidor sin hacer la nacada de pasarlo en el constructor
         TableroRenderer.renderizarTablero(
                 tableroJugador,
                 gridDragDropHandler.obtenerTablero(),
-                gridDragDropHandler.obtenerNaves()
+                gridDragDropHandler.obtenerNaves(),
+                jugador
         );
     }
 
@@ -89,6 +88,10 @@ public class PartidaPanel extends javax.swing.JPanel {
         addTextBorder(lblEsperandoMovimiento);
         addTextBorder(lblNombre);
         addTextBorder(lblNombreEnemigo);
+
+        lblNombre.setText(jugador.getNombre());
+
+        pfpJugador.setIcon(new ImageIcon(getClass().getResource(jugador.getFotoPerfil())));
     }
 
     private void addTextBorder(JLabel label) {
@@ -168,8 +171,8 @@ public class PartidaPanel extends javax.swing.JPanel {
         lblNombre = new javax.swing.JLabel();
         lblNombreEnemigo = new javax.swing.JLabel();
         lblEsperandoMovimiento = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        pfpRival = new javax.swing.JLabel();
+        pfpJugador = new javax.swing.JLabel();
         tableroJugador = new javax.swing.JLabel();
         tableroRival = new javax.swing.JLabel();
         lblFondo = new javax.swing.JLabel();
@@ -210,11 +213,11 @@ public class PartidaPanel extends javax.swing.JPanel {
         lblEsperandoMovimiento.setText("Esperando movimiento...");
         jPanel1.add(lblEsperandoMovimiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 110, -1, 50));
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/benjamin.png"))); // NOI18N
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1180, 20, -1, -1));
+        pfpRival.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/benjamin.png"))); // NOI18N
+        jPanel1.add(pfpRival, new org.netbeans.lib.awtextra.AbsoluteConstraints(1180, 20, -1, -1));
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/patFusty.png"))); // NOI18N
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
+        pfpJugador.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/patFusty.png"))); // NOI18N
+        jPanel1.add(pfpJugador, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
         tableroJugador.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/tablero.png"))); // NOI18N
         jPanel1.add(tableroJugador, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 160, -1, 460));
@@ -246,7 +249,7 @@ public class PartidaPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        framePrincipal.cambiarPanel(new ColocacionPanel(framePrincipal));
+        framePrincipal.cambiarPanel(new ColocacionPanel(framePrincipal, jugador));
     }//GEN-LAST:event_jButton4ActionPerformed
 
 
@@ -254,13 +257,13 @@ public class PartidaPanel extends javax.swing.JPanel {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblEsperandoMovimiento;
     private javax.swing.JLabel lblFondo;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblNombreEnemigo;
+    private javax.swing.JLabel pfpJugador;
+    private javax.swing.JLabel pfpRival;
     private javax.swing.JLabel tableroJugador;
     private javax.swing.JLabel tableroRival;
     // End of variables declaration//GEN-END:variables
