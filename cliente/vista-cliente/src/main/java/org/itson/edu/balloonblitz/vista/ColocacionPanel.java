@@ -12,12 +12,15 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.datatransfer.Transferable;
 import java.io.IOException;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.TransferHandler;
 import org.itson.edu.balloonblitz.auxiliar.GridDragDropHandler;
 import org.itson.edu.balloonblitz.entidades.Jugador;
@@ -35,6 +38,14 @@ public class ColocacionPanel extends javax.swing.JPanel {
     private static final Logger LOGGER = Logger.getLogger(InicioPanel.class.getName());
     private static final String FONT_PATH = "/fonts/oetztype/OETZTYPE.TTF";
     private static final float TITLE_FONT_SIZE = 28.0F;
+    private static final float TEXT_FONT_SIZE = 20.0F;
+
+    private static final Map<String, Integer> BALLOON_LIMITS = Map.of(
+            "barco", 4, // 4 barcos de 1 casilla
+            "submarino", 3, // 3 submarinos de 2 casillas
+            "crucero", 2, // 2 cruceros de 3 casillas
+            "portaAviones", 1 // 1 portaaviones de 4 casillas
+    );
 
     // Segun el tipo de 
     private String balloon_base_path;
@@ -59,6 +70,12 @@ public class ColocacionPanel extends javax.swing.JPanel {
         this.jugador = jugador;
         this.balloon_base_path = "/images/ballons/" + jugador.getColorPropio() + "/" + jugador.getColorPropio() + "-";
 
+        // Inicializar los labels de cantidad
+        cantNave = new JLabel("x4");
+        cantBarco = new JLabel("x3");
+        cantCrucero = new JLabel("x2");
+        cantPortaAviones = new JLabel("x1");
+
         try {
             setupUI();
         } catch (FontFormatException | IOException e) {
@@ -69,15 +86,93 @@ public class ColocacionPanel extends javax.swing.JPanel {
     private void setupUI() throws FontFormatException, IOException {
         setupFonts();
         setupBalloons();
+        // Asegurarse de que los contadores estén en cero al iniciar
+        BalloonTransferHandler.resetPlacedBalloons();
     }
 
     private void setupFonts() throws FontFormatException, IOException {
         Font titleFont = framePrincipal.cargarFuente(FONT_PATH, TITLE_FONT_SIZE);
+        Font textFont = framePrincipal.cargarFuente(FONT_PATH, TEXT_FONT_SIZE);
+
         lblTitulo1.setFont(titleFont);
         lblTitulo2.setFont(titleFont);
 
+        cantNave.setFont(textFont);
+        cantBarco.setFont(textFont);
+        cantCrucero.setFont(textFont);
+        cantPortaAviones.setFont(textFont);
+
+        lblNaves.setFont(textFont);
+        lblBarcos.setFont(textFont);
+        lblCruceros.setFont(textFont);
+        lblPortaAviones.setFont(textFont);
+
         addTextBorder(lblTitulo1);
         addTextBorder(lblTitulo2);
+
+        addTextBorder(cantNave);
+        addTextBorder(cantBarco);
+        addTextBorder(cantCrucero);
+        addTextBorder(cantPortaAviones);
+
+        addTextBorder(lblNaves);
+        addTextBorder(lblBarcos);
+        addTextBorder(lblCruceros);
+        addTextBorder(lblPortaAviones);
+    }
+
+    public void reiniciarColocacion() {
+//        panelContenedorGlobos.removeAll();
+//        BalloonTransferHandler.resetPlacedBalloons();
+//        this.gridDragDropHandler = new GridDragDropHandler(panelTablero);
+//        setupBalloons();
+//        panelContenedorGlobos.revalidate();
+//        panelContenedorGlobos.repaint();
+    }
+
+    private void actualizarLabelsContadores() {
+        int barcosRestantes = BALLOON_LIMITS.get("barco") - BalloonTransferHandler.getPlacedBalloonCount("barco");
+        int submarinosRestantes = BALLOON_LIMITS.get("submarino") - BalloonTransferHandler.getPlacedBalloonCount("submarino");
+        int crucerosRestantes = BALLOON_LIMITS.get("crucero") - BalloonTransferHandler.getPlacedBalloonCount("crucero");
+        int portaAvionesRestantes = BALLOON_LIMITS.get("portaAviones") - BalloonTransferHandler.getPlacedBalloonCount("portaAviones");
+
+        cantNave.setText("x" + barcosRestantes);
+        cantBarco.setText("x" + submarinosRestantes);
+        cantCrucero.setText("x" + crucerosRestantes);
+        cantPortaAviones.setText("x" + portaAvionesRestantes);
+
+        // Opcional: cambiar el color si no quedan más
+        cantNave.setForeground(barcosRestantes > 0 ? Color.WHITE : Color.RED);
+        cantBarco.setForeground(submarinosRestantes > 0 ? Color.WHITE : Color.RED);
+        cantCrucero.setForeground(crucerosRestantes > 0 ? Color.WHITE : Color.RED);
+        cantPortaAviones.setForeground(portaAvionesRestantes > 0 ? Color.WHITE : Color.RED);
+    }
+
+    // Modificar el método construirTablero para incluir validación
+    private boolean construirTablero() {
+        // Verificar que se hayan colocado todos los barcos necesarios
+        if (!todosLosGlobosColocados()) {
+            JOptionPane.showMessageDialog(this,
+                    "Debes colocar todos los barcos antes de continuar",
+                    "Barcos Incompletos",
+                    JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        Tablero tablero = gridDragDropHandler.obtenerTablero();
+        Evento eventoTablero = new PosicionNavesEvento(tablero);
+        eventoTablero.setEmisor(jugador);
+        controlador.enviarMensaje(eventoTablero);
+
+        return true;
+    }
+
+    // Método para verificar si se han colocado todos los barcos necesarios
+    private boolean todosLosGlobosColocados() {
+        return BalloonTransferHandler.getPlacedBalloonCount("barco") == 4
+                && BalloonTransferHandler.getPlacedBalloonCount("submarino") == 3
+                && BalloonTransferHandler.getPlacedBalloonCount("crucero") == 2
+                && BalloonTransferHandler.getPlacedBalloonCount("portaAviones") == 1;
     }
 
     private void addTextBorder(JLabel label) {
@@ -113,24 +208,45 @@ public class ColocacionPanel extends javax.swing.JPanel {
     private void setupBalloons() {
         panelContenedorGlobos.setLayout(null);
 
-        // Tipos de barco
+        // Tipos de barco y sus labels correspondientes
         String[] balloonTypes = {"barco", "submarino", "crucero", "portaAviones"};
-        int baseX = 150;
+        JLabel[] countLabels = {cantNave, cantBarco, cantCrucero, cantPortaAviones};
+
+        int baseX = 200;
         int baseY = 25;
         int yOffset = 50;
 
         for (int i = 0; i < balloonTypes.length; i++) {
             JLabel balloon = createBalloon(i + 1, balloonTypes[i]);
+            JLabel countLabel = countLabels[i];
 
+            // Configurar el balloon
             ImageIcon icon = (ImageIcon) balloon.getIcon();
             int x = baseX - panelContenedorGlobos.getX();
             int y = baseY + (i * yOffset) - panelContenedorGlobos.getY();
-
             balloon.setBounds(x, y, icon.getIconWidth(), icon.getIconHeight());
+
+            // Configurar el label de cantidad
+            countLabel.setForeground(Color.WHITE);
+            countLabel.setFont(new Font("Arial", Font.BOLD, 16));
+            countLabel.setBounds(x + icon.getIconWidth() + 5, y, 30, 30);
+
+            // Agregar el TransferHandler con listener para actualizar cantidades
+            BalloonTransferHandler handler = new BalloonTransferHandler(balloon, balloonTypes[i]) {
+                @Override
+                protected void exportDone(JComponent source, Transferable data, int action) {
+                    super.exportDone(source, data, action);
+                    actualizarLabelsContadores();
+                }
+            };
+            balloon.setTransferHandler(handler);
+
             addDragListener(balloon);
             panelContenedorGlobos.add(balloon);
+            panelContenedorGlobos.add(countLabel);
         }
 
+        actualizarLabelsContadores();
         panelContenedorGlobos.repaint();
     }
 
@@ -160,18 +276,6 @@ public class ColocacionPanel extends javax.swing.JPanel {
         });
     }
 
-    private void construirTablero() {
-        Tablero tablero = gridDragDropHandler.obtenerTablero();
-
-        Evento eventoTablero = new PosicionNavesEvento(tablero);
-        eventoTablero.setEmisor(jugador);
-
-        System.out.println("Emisor antes de enviar: " + eventoTablero.getEmisor().getNombre());
-
-        controlador.enviarMensaje(eventoTablero); // Enviar el evento al servidor
-        System.out.println("Evento enviado al servidor.");
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -183,15 +287,20 @@ public class ColocacionPanel extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         lblTitulo1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
+        cantNave = new javax.swing.JLabel();
+        cantBarco = new javax.swing.JLabel();
+        cantCrucero = new javax.swing.JLabel();
+        cantPortaAviones = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         lblTitulo2 = new javax.swing.JLabel();
         panelTablero = new javax.swing.JLabel();
-        panelContenedorGlobos = new javax.swing.JLabel();
         btnConfirmar = new javax.swing.JLabel();
+        btnReiniciar = new javax.swing.JLabel();
+        lblBarcos = new javax.swing.JLabel();
+        lblCruceros = new javax.swing.JLabel();
+        lblPortaAviones = new javax.swing.JLabel();
+        lblNaves = new javax.swing.JLabel();
+        panelContenedorGlobos = new javax.swing.JLabel();
         lblFondo = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -199,18 +308,10 @@ public class ColocacionPanel extends javax.swing.JPanel {
 
         lblTitulo1.setText("Arrastra tus naves (globos) para colocarlas en el tablero, usa click");
         jPanel1.add(lblTitulo1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 6, 1020, 40));
-
-        jLabel2.setText("cantGlobo1");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 240, -1, -1));
-
-        jLabel1.setText("cantGlobo2");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 290, -1, -1));
-
-        jLabel3.setText("cantGlobo3");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 340, -1, -1));
-
-        jLabel4.setText("cantGlobo4");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 390, -1, -1));
+        jPanel1.add(cantNave, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 170, -1, 40));
+        jPanel1.add(cantBarco, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 220, -1, 40));
+        jPanel1.add(cantCrucero, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 270, 50, 40));
+        jPanel1.add(cantPortaAviones, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 320, 70, 40));
 
         jButton1.setText("regresar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -226,9 +327,6 @@ public class ColocacionPanel extends javax.swing.JPanel {
         panelTablero.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/tablero.png"))); // NOI18N
         jPanel1.add(panelTablero, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 140, -1, 460));
 
-        panelContenedorGlobos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/contenedorGlobos.png"))); // NOI18N
-        jPanel1.add(panelContenedorGlobos, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 210, 240, 240));
-
         btnConfirmar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/buttons/confirmar.png"))); // NOI18N
         btnConfirmar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnConfirmar.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -236,7 +334,31 @@ public class ColocacionPanel extends javax.swing.JPanel {
                 btnConfirmarMouseClicked(evt);
             }
         });
-        jPanel1.add(btnConfirmar, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 470, 260, 80));
+        jPanel1.add(btnConfirmar, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 410, 260, 80));
+
+        btnReiniciar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/buttons/reiniciar.png"))); // NOI18N
+        btnReiniciar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnReiniciar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnReiniciarMouseClicked(evt);
+            }
+        });
+        jPanel1.add(btnReiniciar, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 500, -1, -1));
+
+        lblBarcos.setText("Barcos");
+        jPanel1.add(lblBarcos, new org.netbeans.lib.awtextra.AbsoluteConstraints(265, 220, 80, 40));
+
+        lblCruceros.setText("Cruceros");
+        jPanel1.add(lblCruceros, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 270, 110, 40));
+
+        lblPortaAviones.setText("Portaaviones");
+        jPanel1.add(lblPortaAviones, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 320, 160, 40));
+
+        lblNaves.setText("Naves");
+        jPanel1.add(lblNaves, new org.netbeans.lib.awtextra.AbsoluteConstraints(262, 170, 80, 40));
+
+        panelContenedorGlobos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/contenedorGlobos.png"))); // NOI18N
+        jPanel1.add(panelContenedorGlobos, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 150, 300, 240));
 
         lblFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/colocacionSinTablero.png"))); // NOI18N
         jPanel1.add(lblFondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1280, 680));
@@ -258,20 +380,30 @@ public class ColocacionPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnConfirmarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConfirmarMouseClicked
-        construirTablero();
-        // Así no va quedar final, es para probar que se acomoden los globos en el tablero
-        framePrincipal.cambiarPanel(new PartidaPanel(framePrincipal, gridDragDropHandler, jugador));
+        if (construirTablero()) {
+            // Así no va quedar final, es para probar que se acomoden los globos en el tablero
+            framePrincipal.cambiarPanel(new PartidaPanel(framePrincipal, gridDragDropHandler, jugador));
+        }
     }//GEN-LAST:event_btnConfirmarMouseClicked
+
+    private void btnReiniciarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnReiniciarMouseClicked
+        reiniciarColocacion();
+    }//GEN-LAST:event_btnReiniciarMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel btnConfirmar;
+    private javax.swing.JLabel btnReiniciar;
+    private javax.swing.JLabel cantBarco;
+    private javax.swing.JLabel cantCrucero;
+    private javax.swing.JLabel cantNave;
+    private javax.swing.JLabel cantPortaAviones;
     private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lblBarcos;
+    private javax.swing.JLabel lblCruceros;
     private javax.swing.JLabel lblFondo;
+    private javax.swing.JLabel lblNaves;
+    private javax.swing.JLabel lblPortaAviones;
     private javax.swing.JLabel lblTitulo1;
     private javax.swing.JLabel lblTitulo2;
     private javax.swing.JLabel panelContenedorGlobos;
