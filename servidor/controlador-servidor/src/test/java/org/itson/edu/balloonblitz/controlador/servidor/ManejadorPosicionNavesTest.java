@@ -83,7 +83,7 @@ public class ManejadorPosicionNavesTest {
         for (int i = 0; i < nave.getTamano(); i++) {
             int f = fila + (horizontal ? 0 : i);
             int c = columna + (horizontal ? i : 0);
-            Casilla casilla = tablero.getTablero()[f][c];
+            Casilla casilla = tablero.getMatriz()[f][c];
             casilla.setNave(nave);
         }
     }

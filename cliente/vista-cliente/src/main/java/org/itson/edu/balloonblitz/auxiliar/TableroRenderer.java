@@ -24,7 +24,7 @@ public class TableroRenderer {
         // Iterar sobre cada nave en la lista de naves
         for (Nave nave : naves) {
             // Encontrar todas las casillas que ocupa esta nave
-            Casilla[][] casillas = tablero.getTablero();
+            Casilla[][] casillas = tablero.getMatriz();
             for (int i = 0; i < tablero.getFilas(); i++) {
                 for (int j = 0; j < tablero.getColumnas(); j++) {
                     Optional<Nave> naveOpt = casillas[i][j].getNave();

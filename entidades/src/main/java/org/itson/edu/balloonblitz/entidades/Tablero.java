@@ -4,8 +4,9 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * Representa el tablero de juego, que consiste en una matriz de casillas.
- * Cada casilla tiene una coordenada específica y un estado, y el tablero puede contener varias naves.
+ * Representa el tablero de juego, que consiste en una matriz de casillas. Cada
+ * casilla tiene una coordenada específica y un estado, y el tablero puede
+ * contener varias naves.
  *
  * @author Eliana Monge
  * @author Cristina Castro
@@ -20,8 +21,8 @@ public class Tablero implements Serializable {
     private final Casilla[][] matriz;
 
     /**
-     * Constructor que inicializa el tablero con una matriz de casillas de tamaño 10x10.
-     * Cada casilla se crea con sus coordenadas correspondientes.
+     * Constructor que inicializa el tablero con una matriz de casillas de
+     * tamaño 10x10. Cada casilla se crea con sus coordenadas correspondientes.
      */
     public Tablero() {
         matriz = new Casilla[10][10];
@@ -29,7 +30,8 @@ public class Tablero implements Serializable {
     }
 
     /**
-     * Inicializa el tablero, creando una casilla para cada coordenada en una matriz 10x10.
+     * Inicializa el tablero, creando una casilla para cada coordenada en una
+     * matriz 10x10.
      */
     private void inicializarTablero() {
         for (int i = 0; i < 10; i++) {
@@ -77,12 +79,13 @@ public class Tablero implements Serializable {
     }
 
     /**
-     * Establece una casilla en el tablero en las coordenadas de la casilla proporcionada.
+     * Establece una casilla en el tablero en las coordenadas de la casilla
+     * proporcionada.
      *
      * @param casilla La casilla a colocar en el tablero.
      */
     public void setCasilla(Casilla casilla) {
         matriz[casilla.getCoordenada().fila()][casilla.getCoordenada().columna()] = casilla;
     }
-}
 
+}

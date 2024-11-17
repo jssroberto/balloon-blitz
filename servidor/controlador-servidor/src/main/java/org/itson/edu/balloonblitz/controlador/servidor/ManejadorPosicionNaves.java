@@ -25,7 +25,7 @@ public class ManejadorPosicionNaves {
         boolean[][] visitadas = new boolean[tablero.getFilas()][tablero.getColumnas()];
         Map<TipoNave, Integer> contadorNaves = inicializarContadorNaves();
 
-        Casilla[][] casillas = tablero.getTablero();
+        Casilla[][] casillas = tablero.getMatriz();
         for (int i = 0; i < tablero.getFilas(); i++) {
             for (int j = 0; j < tablero.getColumnas(); j++) {
                 if (!visitadas[i][j] && casillas[i][j].getNave().isPresent()) {
@@ -41,7 +41,7 @@ public class ManejadorPosicionNaves {
     }
 
     private boolean validarNave(Tablero tablero, int fila, int columna, boolean[][] visitadas, Nave nave) {
-        Casilla[][] casillas = tablero.getTablero();
+        Casilla[][] casillas = tablero.getMatriz();
         List<Coordenada> coordenadas = new ArrayList<>();
         int tamano = nave.getTamano();
 
@@ -71,7 +71,7 @@ public class ManejadorPosicionNaves {
     }
 
     private boolean verificarAdyacencias(Tablero tablero, Coordenada coordenada, Nave naveActual) {
-        Casilla[][] casillas = tablero.getTablero();
+        Casilla[][] casillas = tablero.getMatriz();
         int fila = coordenada.fila();
         int columna = coordenada.columna();
 
