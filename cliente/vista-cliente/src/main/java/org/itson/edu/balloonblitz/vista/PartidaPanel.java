@@ -14,15 +14,18 @@ import java.awt.RenderingHints;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import org.itson.edu.balloonblitz.auxiliar.BalloonTransferHandler;
 import org.itson.edu.balloonblitz.auxiliar.GridDragDropHandler;
+import org.itson.edu.balloonblitz.auxiliar.TableroClickHandler;
 import org.itson.edu.balloonblitz.auxiliar.TableroRenderer;
+import org.itson.edu.balloonblitz.entidades.Coordenada;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.Tablero;
+import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
+import org.itson.edu.balloonblitz.entidades.eventos.Evento;
+import org.itson.edu.balloonblitz.modelo.ClienteControlador;
 
 /**
  *
@@ -31,6 +34,7 @@ import org.itson.edu.balloonblitz.entidades.Tablero;
 public class PartidaPanel extends javax.swing.JPanel {
 
     private Jugador jugador;
+    private ClienteControlador controlador;
     private Tablero tablero;
     private GridDragDropHandler gridDragDropHandler;
     private static final Logger logger = Logger.getLogger(InicioPanel.class.getName());
@@ -38,9 +42,8 @@ public class PartidaPanel extends javax.swing.JPanel {
 
     private static final String FONT_PATH = "/fonts/oetztype/OETZTYPE.TTF";
     private static final float TITLE_FONT_SIZE = 28.0F;
+    // Segun el tipo de
 
-    // Segun el tipo de 
-    private static final String BALLOON_BASE_PATH = "/images/ballons/rojo/rojo-";
     private static final int BORDER_THICKNESS = 2;
 
     /**
@@ -54,6 +57,7 @@ public class PartidaPanel extends javax.swing.JPanel {
     public PartidaPanel(FramePrincipal framePrincipal, GridDragDropHandler gridDragDropHandler, Jugador jugador) {
         this.framePrincipal = framePrincipal;
         this.gridDragDropHandler = gridDragDropHandler;
+        this.controlador = ClienteControlador.getInstancia("localhost", 1234);
         this.jugador = jugador;
         initComponents();
         try {
@@ -64,8 +68,8 @@ public class PartidaPanel extends javax.swing.JPanel {
     }
 
     private void setupUI() throws FontFormatException, IOException {
+        TableroClickHandler.configurarTableroRival(tableroRival, jugador);
         setupFonts();
-        setupBalloons();
         renderizarTableroJugador();
     }
 
@@ -122,37 +126,6 @@ public class PartidaPanel extends javax.swing.JPanel {
                 g2d.dispose();
             }
         });
-    }
-
-    private void setupBalloons() {
-        tableroJugador.setLayout(null);
-
-        // Tipos de barco
-        String[] balloonTypes = {"barco", "submarino", "crucero", "portaAviones"};
-        int baseX = 150;
-        int baseY = 25;
-        int yOffset = 50;
-
-        for (int i = 0; i < balloonTypes.length; i++) {
-            JLabel balloon = createBalloon(i + 1, balloonTypes[i]);
-
-            ImageIcon icon = (ImageIcon) balloon.getIcon();
-            int x = baseX - tableroJugador.getX();
-            int y = baseY + (i * yOffset) - tableroJugador.getY();
-
-            balloon.setBounds(x, y, icon.getIconWidth(), icon.getIconHeight());
-            tableroJugador.add(balloon);
-        }
-
-        tableroJugador.repaint();
-    }
-
-    private JLabel createBalloon(int size, String type) {
-        String imagePath = BALLOON_BASE_PATH + size + ".png";
-        ImageIcon icon = new ImageIcon(getClass().getResource(imagePath));
-        JLabel balloon = new JLabel(icon);
-        balloon.setTransferHandler(new BalloonTransferHandler(balloon, type));
-        return balloon;
     }
 
     /**
