@@ -5,10 +5,7 @@ import org.itson.edu.balloonblitz.entidades.Partida;
 import org.itson.edu.balloonblitz.entidades.Tablero;
 import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoPartida;
 import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
-import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
-import org.itson.edu.balloonblitz.entidades.eventos.EnvioJugadorEvento;
-import org.itson.edu.balloonblitz.entidades.eventos.Evento;
-import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
+import org.itson.edu.balloonblitz.entidades.eventos.*;
 import org.itson.edu.balloonblitz.modelo.servidor.ControladorStreams;
 import org.itson.edu.balloonblitz.modelo.servidor.EventoObserver;
 import org.itson.edu.balloonblitz.modelo.servidor.Servidor;
@@ -124,8 +121,8 @@ public class ManejadorPartida implements EventoObserver {
         }
 
         if (evento.getTipoEvento() == TipoEvento.POSICION_NAVES) {
-            ManejadorPosicionNaves manejadorPosicion = new ManejadorPosicionNaves(evento);
-            return manejadorPosicion.obtenerEvento();
+            ManejadorPosicionNavesDeprecado manejadorPosicion = new ManejadorPosicionNavesDeprecado((PosicionNavesEvento) evento);
+            return manejadorPosicion.procesarEvento();
 
         } else if (evento.getTipoEvento() == TipoEvento.DISPARO) {
             //Obtiene el jugador rival y su tablero correspondientes al servidor

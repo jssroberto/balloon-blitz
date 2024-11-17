@@ -9,5 +9,5 @@ package org.itson.edu.balloonblitz.entidades.enumeradores;
  * @author elimo
  */
 public enum TipoEvento {
-    POSICION_NAVES, DISPARO, ENVIO_JUGADOR, RESULTADO, TIMEOUT;
+    POSICION_NAVES, DISPARO, ENVIO_JUGADOR, RESULTADO_DISPARO, TIMEOUT, RESULTADO_POSICION_NAVES;
 }

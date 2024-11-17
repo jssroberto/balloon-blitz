@@ -8,7 +8,7 @@ import org.itson.edu.balloonblitz.entidades.*;
 import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoCasilla;
 import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoNave;
 import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
-import org.itson.edu.balloonblitz.entidades.eventos.ResultadoEvento;
+import org.itson.edu.balloonblitz.entidades.eventos.ResultadoDisparoEvento;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public class ManejadorDisparo {
     }
 
     //Los cambios que se le hagan al tablero y jugador en esta clase se reflejarán en la partida que tiene el servidor (i hope)
-    public ResultadoEvento procesarEvento() {
+    public ResultadoDisparoEvento procesarEvento() {
         Casilla casilla = tableroRival.getCasilla(disparoEvento.getCoordenada());
 
         // Verificar si la casilla ya fue golpeada
@@ -43,7 +43,7 @@ public class ManejadorDisparo {
         // Usar Optional para obtener la nave en la casilla
         if (casilla.getNave().isEmpty()) {
             // Si no hay nave en la casilla, retornar un evento de resultado sin impacto
-            return new ResultadoEvento(null, false);
+            return new ResultadoDisparoEvento(null, false);
         }
         return procesarDisparo(casilla);
     }
@@ -53,7 +53,7 @@ public class ManejadorDisparo {
      *
      * @return Resultado del evento de disparo.
      */
-    private ResultadoEvento procesarDisparo(Casilla casilla) {
+    private ResultadoDisparoEvento procesarDisparo(Casilla casilla) {
         Nave nave = casilla.getNave().orElseThrow();
         int impactos = nave.recibirImpacto();
 
@@ -65,7 +65,7 @@ public class ManejadorDisparo {
             // Si la nave está hundida, procesar el hundimiento
             procesarNaveHundida(tableroRival, jugadorRival, casilla);
         }
-        return new ResultadoEvento(casillasAtacadas, true);
+        return new ResultadoDisparoEvento(casillasAtacadas, true);
     }
 
     private void procesarNaveAveriada(Casilla casilla, Nave nave) {

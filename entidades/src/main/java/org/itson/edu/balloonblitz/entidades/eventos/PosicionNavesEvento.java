@@ -1,10 +1,7 @@
 package org.itson.edu.balloonblitz.entidades.eventos;
 
-import java.io.Serializable;
-import org.itson.edu.balloonblitz.entidades.Coordenada;
-import org.itson.edu.balloonblitz.entidades.enumeradores.OrientacionNave;
+import org.itson.edu.balloonblitz.entidades.Tablero;
 import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
-import org.itson.edu.balloonblitz.entidades.enumeradores.TipoNave;
 
 /**
  *
@@ -12,26 +9,15 @@ import org.itson.edu.balloonblitz.entidades.enumeradores.TipoNave;
  */
 public class PosicionNavesEvento extends Evento {
 
-    private final TipoNave tipoNave;
-    private final Coordenada coordenadaCabecera;
-    private final OrientacionNave orientacionNave;
+    private final Tablero tablero;
     
-    public PosicionNavesEvento(TipoNave tipoNave, Coordenada coordenadaCabecera, OrientacionNave orientacionNave) {
+    public PosicionNavesEvento(Tablero tablero) {
         super(TipoEvento.POSICION_NAVES);
-        this.tipoNave = tipoNave;
-        this.orientacionNave = orientacionNave;
-        this.coordenadaCabecera = coordenadaCabecera;
+        this.tablero = tablero;
     }
 
-    public TipoNave getTipoNave() {
-        return tipoNave;
+    public Tablero getTablero() {
+        return tablero;
     }
 
-    public Coordenada getCoordenadaCabecera() {
-        return coordenadaCabecera;
-    }
-
-    public OrientacionNave getOrientacionNave() {
-        return orientacionNave;
-    }
 }

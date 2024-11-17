@@ -4,7 +4,7 @@ import org.itson.edu.balloonblitz.entidades.*;
 import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoCasilla;
 import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoNave;
 import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
-import org.itson.edu.balloonblitz.entidades.eventos.ResultadoEvento;
+import org.itson.edu.balloonblitz.entidades.eventos.ResultadoDisparoEvento;
 import org.itson.edu.balloonblitz.entidades.navefactory.Crucero;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -59,7 +59,7 @@ class ManejadorDisparoTest {
         ManejadorDisparo manejador = new ManejadorDisparo(disparoEvento, tableroRival, jugadorRival);
 
         // Procesar evento
-        ResultadoEvento resultado = manejador.procesarEvento();
+        ResultadoDisparoEvento resultado = manejador.procesarEvento();
 
         // Verificar resultado
         assertFalse(resultado.isAcertado());
@@ -73,7 +73,7 @@ class ManejadorDisparoTest {
         ManejadorDisparo manejador = new ManejadorDisparo(disparoEvento, tableroRival, jugadorRival);
 
         // Procesar evento
-        ResultadoEvento resultado = manejador.procesarEvento();
+        ResultadoDisparoEvento resultado = manejador.procesarEvento();
 
         // Verificar resultado
         assertTrue(resultado.isAcertado());
@@ -93,7 +93,7 @@ class ManejadorDisparoTest {
         ManejadorDisparo manejador = new ManejadorDisparo(disparoEvento, tableroRival, jugadorRival);
 
         // Procesar evento
-        ResultadoEvento resultado = manejador.procesarEvento();
+        ResultadoDisparoEvento resultado = manejador.procesarEvento();
 
         // Verificar resultado
         assertTrue(resultado.isAcertado());
@@ -145,7 +145,7 @@ class ManejadorDisparoTest {
         // Procesar eventos (disparos)
         manejador1.procesarEvento();
         manejador2.procesarEvento();
-        ResultadoEvento resultado3 = manejador3.procesarEvento(); // Tercer disparo que hundirá la nave
+        ResultadoDisparoEvento resultado3 = manejador3.procesarEvento(); // Tercer disparo que hundirá la nave
 
         // Verificar que todas las casillas de la nave estén golpeadas
         assertEquals(EstadoCasilla.GOLPEADA, casilla1.getEstado());
