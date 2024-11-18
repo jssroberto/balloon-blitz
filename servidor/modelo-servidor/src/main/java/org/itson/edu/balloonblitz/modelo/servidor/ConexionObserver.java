@@ -15,6 +15,4 @@ public interface ConexionObserver {
      * @param streams Streams del cliente
      */
     void clienteConectado(ControladorStreams streams);
-    
-   
 }

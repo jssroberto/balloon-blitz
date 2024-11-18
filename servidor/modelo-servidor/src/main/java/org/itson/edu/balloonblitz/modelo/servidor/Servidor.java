@@ -1,8 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package org.itson.edu.balloonblitz.modelo.servidor;
+
+import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -13,7 +11,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 
 /**
  * Clase que representa el servidor
@@ -25,7 +22,6 @@ public final class Servidor {
     private static Servidor instancia;
     private ConexionObserver observadorConexion;
     private EventoObserver observadorEventos;
-    private ControladorStreams streams;
     private final ExecutorService executorService = Executors.newFixedThreadPool(10);
     private ServerSocket serverSocket;
 
@@ -80,9 +76,8 @@ public final class Servidor {
      * Metodo que crea un hilo para la recepcion continua de clientes
      */
     private void iniciarHiloDeAceptacion() {
-        executorService.submit(() -> {
-            aceptarClientes(); // Puedes decidir si quieres reiniciar el hilo o detenerlo completamente
-        });
+        // Puedes decidir si quieres reiniciar el hilo o detenerlo completamente
+        executorService.submit(this::aceptarClientes);
     }
 
     /**
@@ -97,7 +92,7 @@ public final class Servidor {
                 Socket socketCliente = serverSocket.accept();
 
                 // Crear flujos de entrada y salida para el cliente
-                streams = new ControladorStreams(
+                ControladorStreams streams = new ControladorStreams(
                         new ObjectOutputStream(socketCliente.getOutputStream()),
                         new ObjectInputStream(socketCliente.getInputStream())
                 );
@@ -142,11 +137,9 @@ public final class Servidor {
 
                 } catch (IOException e) {
                     System.err.println("Error al recibir datos del cliente: " + e.getMessage());
-                    e.printStackTrace();
                     break; // Salir del bucle si hay un error de conexión o I/O
                 } catch (ClassNotFoundException e) {
                     System.err.println("Clase de evento desconocida: " + e.getMessage());
-                    e.printStackTrace();
                 }
             }
         } finally {

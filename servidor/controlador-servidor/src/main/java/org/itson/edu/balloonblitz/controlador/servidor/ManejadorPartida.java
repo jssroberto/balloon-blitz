@@ -51,6 +51,45 @@ public class ManejadorPartida implements EventoObserver {
     }
 
     /**
+     * Metodo suscriptor que maneja el evento obtenido del servidor
+     *
+     * @param evento  Evento enviado por el cliente
+     * @param entrada
+     */
+    @Override
+    public void manejarEvento(Evento evento, ObjectInputStream entrada) {
+
+        if (evento.getTipoEvento() == TipoEvento.ENVIO_JUGADOR) {
+            if (entrada.equals(streamsJugador1.getEntrada())) {
+                partida.setJugador1(evento.getEmisor());
+                verificarYCrearPartida();
+
+            } else if (entrada.equals(streamsJugador2.getEntrada())) {
+                partida.setJugador2(evento.getEmisor());
+                verificarYCrearPartida();
+            }
+        } else {
+            //TODO: Manejar eventos de disparo
+            enviarEventoAJugador(streamsJugador1.getSalida(), manejarPartida(evento, entrada));
+            enviarEventoAJugador(streamsJugador2.getSalida(), manejarPartida(evento, entrada));
+
+            if (partida.getJugador1().isTurno()) {
+                enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(30));
+                iniciarTemporizador(30);
+                enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(0));
+                partida.getJugador1().setTurno(false);
+                partida.getJugador2().setTurno(true);
+            } else if (partida.getJugador2().isTurno()) {
+                enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(30));
+                iniciarTemporizador(30);
+                enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(0));
+                partida.getJugador2().setTurno(false);
+                partida.getJugador1().setTurno(true);
+            }
+        }
+    }
+
+    /**
      * Manda a manejar el evento enviado por el jugador 1
      */
     public void obtenerEventoJugador1() {
@@ -71,44 +110,6 @@ public class ManejadorPartida implements EventoObserver {
      */
     public void enviarEventoAJugador(ObjectOutputStream salida, Evento evento) {
         servidor.mandarDatosCliente(salida, evento);
-    }
-
-    /**
-     * Metodo suscriptor que maneja el evento obtenido del servidor
-     *
-     * @param evento Evento enviado por el cliente
-     * @param entrada
-     */
-    @Override
-    public void manejarEvento(Evento evento, ObjectInputStream entrada) {
-
-        if (evento.getTipoEvento() == TipoEvento.ENVIO_JUGADOR) {
-            if (entrada.equals(streamsJugador1.getEntrada())) {
-                partida.setJugador1(evento.getEmisor());
-                verificarYCrearPartida();
-
-            } else if (entrada.equals(streamsJugador2.getEntrada())) {
-                partida.setJugador2(evento.getEmisor());
-                verificarYCrearPartida();
-            }
-        } else {
-            enviarEventoAJugador(streamsJugador1.getSalida(), manejarPartida(evento, entrada));
-            enviarEventoAJugador(streamsJugador2.getSalida(), manejarPartida(evento, entrada));
-
-            if (partida.getJugador1().isTurno()) {
-                enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(30));
-                iniciarTemporizador(30);
-                enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(0));
-                partida.getJugador1().setTurno(false);
-                partida.getJugador2().setTurno(true);
-            } else if (partida.getJugador2().isTurno()) {
-                enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(30));
-                iniciarTemporizador(30);
-                enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(0));
-                partida.getJugador2().setTurno(false);
-                partida.getJugador1().setTurno(true);
-            }
-        }
     }
 
     private void verificarYCrearPartida() {
