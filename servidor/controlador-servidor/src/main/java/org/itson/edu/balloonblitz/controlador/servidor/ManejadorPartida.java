@@ -9,16 +9,12 @@ import org.itson.edu.balloonblitz.entidades.eventos.*;
 import org.itson.edu.balloonblitz.modelo.servidor.ControladorStreams;
 import org.itson.edu.balloonblitz.modelo.servidor.EventoObserver;
 import org.itson.edu.balloonblitz.modelo.servidor.Servidor;
+import org.tinylog.Logger;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * Clase que representa el manejador de la partida
@@ -26,7 +22,6 @@ import java.util.concurrent.TimeUnit;
  * @author elimo
  */
 public class ManejadorPartida implements EventoObserver {
-
     private final ControladorStreams streamsJugador1;
     private final ControladorStreams streamsJugador2;
     private final ExecutorService executorService = Executors.newFixedThreadPool(10);
@@ -36,11 +31,11 @@ public class ManejadorPartida implements EventoObserver {
     private boolean tiempoExcedido;
 
     public ManejadorPartida(List<ControladorStreams> jugadores) {
+        partida = new Partida();
         servidor = Servidor.getInstance();
         streamsJugador1 = jugadores.get(0);
         streamsJugador2 = jugadores.get(1);
         iniciarStreams();
-        partida = new Partida();
     }
 
     private void iniciarStreams() {
@@ -53,55 +48,17 @@ public class ManejadorPartida implements EventoObserver {
     /**
      * Metodo suscriptor que maneja el evento obtenido del servidor
      *
-     * @param evento  Evento enviado por el cliente
-     * @param entrada
+     * @param evento Evento enviado por el cliente
+     * @param entrada Stream de entrada del cliente
      */
     @Override
     public void manejarEvento(Evento evento, ObjectInputStream entrada) {
-
-        if (evento.getTipoEvento() == TipoEvento.ENVIO_JUGADOR) {
-            if (entrada.equals(streamsJugador1.getEntrada())) {
-                partida.setJugador1(evento.getEmisor());
-                verificarYCrearPartida();
-
-            } else if (entrada.equals(streamsJugador2.getEntrada())) {
-                partida.setJugador2(evento.getEmisor());
-                verificarYCrearPartida();
-            }
-        } else {
-            //TODO: Manejar eventos de disparo
-            enviarEventoAJugador(streamsJugador1.getSalida(), manejarPartida(evento, entrada));
-            enviarEventoAJugador(streamsJugador2.getSalida(), manejarPartida(evento, entrada));
-
-            if (partida.getJugador1().isTurno()) {
-                enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(30));
-                iniciarTemporizador(30);
-                enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(0));
-                partida.getJugador1().setTurno(false);
-                partida.getJugador2().setTurno(true);
-            } else if (partida.getJugador2().isTurno()) {
-                enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(30));
-                iniciarTemporizador(30);
-                enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(0));
-                partida.getJugador2().setTurno(false);
-                partida.getJugador1().setTurno(true);
-            }
-        }
+        Evento eventoProcesado = procesarEvento(evento, entrada);
+        enviarEventoAJugador(streamsJugador1.getSalida(), eventoProcesado);
+        enviarEventoAJugador(streamsJugador2.getSalida(), eventoProcesado);
+        manejarTurnos();
     }
 
-    /**
-     * Manda a manejar el evento enviado por el jugador 1
-     */
-    public void obtenerEventoJugador1() {
-        servidor.recibirDatosCiente(streamsJugador1.getEntrada());
-    }
-
-    /**
-     * Manda a manejar el evento enviado por el jugador2
-     */
-    public void obtenerEventoJugador2() {
-        servidor.recibirDatosCiente(streamsJugador2.getEntrada());
-    }
 
     /**
      * Manda a enviar el resultado de los eventos a los jugadores
@@ -129,29 +86,37 @@ public class ManejadorPartida implements EventoObserver {
 
     }
 
-    public Evento manejarPartida(Evento evento, ObjectInputStream entrada) {
-
-        if (entrada.equals(streamsJugador1.getEntrada())) {
-            evento.setEmisor(partida.getJugador1());
-        } else if (entrada.equals(streamsJugador2.getEntrada())) {
-            evento.setEmisor(partida.getJugador2());
+    public Evento procesarEvento(Evento evento, ObjectInputStream entrada) {
+        Jugador emisor = obtenerEmisor(entrada);
+        TipoEvento tipoEvento = evento.getTipoEvento();
+        if (emisor == null) {
+            Logger.error("No se pudo identificar el emisor del evento");
+            return null;
         }
+        evento.setEmisor(emisor);
 
-        if (evento.getTipoEvento() == TipoEvento.POSICION_NAVES) {
+        if (tipoEvento == TipoEvento.ENVIO_JUGADOR) {
+            verificarYCrearPartida();
+            //TODO: Enviar mensaje de inicio de partida
+            return null;
+        } else if (tipoEvento == TipoEvento.POSICION_NAVES) {
             ManejadorPosicionNaves manejadorPosicion = new ManejadorPosicionNaves((PosicionNavesEvento) evento);
             return manejadorPosicion.procesarEvento();
 
-        } else if (evento.getTipoEvento() == TipoEvento.DISPARO) {
+        } else if (tipoEvento == TipoEvento.DISPARO) {
             //Obtiene el jugador rival y su tablero correspondientes al servidor
             Tablero tableroRival = obtenerTableroRival(evento.getEmisor());
             Jugador jugadorRival = obtenerJugadorRival(evento.getEmisor());
             ManejadorDisparo manejadorDisparo = new ManejadorDisparo((DisparoEvento) evento, tableroRival, jugadorRival);
             return manejadorDisparo.procesarEvento();
+        } else {
+            Logger.error("No se reconoció el tipo de evento");
+            return null;
         }
-        return null;
+
     }
 
-    public String iniciarTemporizador(int segundos) {
+    public void iniciarTemporizador(int segundos) {
         CompletableFuture<String> futuro = new CompletableFuture<>();
         tiempoExcedido = false;
 
@@ -162,16 +127,40 @@ public class ManejadorPartida implements EventoObserver {
 
         try {
             // Esperamos el resultado del CompletableFuture
-            return futuro.get(); // Bloquea hasta que el temporizador termine
+            futuro.get();
         } catch (InterruptedException | ExecutionException e) {
             Thread.currentThread().interrupt(); // Restablece el estado de interrupción
-            return "Error al iniciar el temporizador";
         }
     }
 
+    /**
+     * Metodo que maneja los turnos de los jugadores
+     */
+    private void manejarTurnos() {
+        if (partida.getJugador1().isTurno()) {
+            manejarTurnoJugador(streamsJugador1, partida.getJugador1(), partida.getJugador2());
+        } else if (partida.getJugador2().isTurno()) {
+            manejarTurnoJugador(streamsJugador2, partida.getJugador2(), partida.getJugador1());
+        }
+    }
+
+    /**
+     * Metodo que maneja el turno de un jugador
+     *
+     * @param streamsJugador   Streams del jugador
+     * @param jugadorActual    Jugador actual
+     * @param jugadorSiguiente Jugador siguiente
+     */
+    private void manejarTurnoJugador(ControladorStreams streamsJugador, Jugador jugadorActual, Jugador jugadorSiguiente) {
+        enviarEventoAJugador(streamsJugador.getSalida(), new TimeOutEvento(30));
+        iniciarTemporizador(30);
+        enviarEventoAJugador(streamsJugador.getSalida(), new TimeOutEvento(0));
+        jugadorActual.setTurno(false);
+        jugadorSiguiente.setTurno(true);
+    }
+
     private String mostrarMensajeTiempoExcedido() {
-        String mensaje = "El tiempo ha expirado.";
-        return mensaje;
+        return "El tiempo ha expirado.";
     }
 
     private Jugador obtenerJugadorRival(Jugador jugador) {
@@ -180,5 +169,10 @@ public class ManejadorPartida implements EventoObserver {
 
     private Tablero obtenerTableroRival(Jugador jugador) {
         return jugador.equals(partida.getJugador1()) ? partida.getTableroJugador2() : partida.getTableroJugador1();
+    }
+
+    private Jugador obtenerEmisor(ObjectInputStream entrada) {
+        return entrada.equals(streamsJugador1.getEntrada()) ? partida.getJugador1() :
+                entrada.equals(streamsJugador2.getEntrada()) ? partida.getJugador2() : null;
     }
 }

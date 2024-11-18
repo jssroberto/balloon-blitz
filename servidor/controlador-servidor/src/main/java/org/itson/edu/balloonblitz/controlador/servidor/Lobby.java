@@ -57,20 +57,18 @@ public class Lobby implements ConexionObserver {
      * Metodo que simula el emparejamiento de jugadores en una partida
      */
     private synchronized void verificarYCrearPartida() {
-        if (clientesEnLobby.size() >= NUMERO_JUGADORES_NECESARIOS) {
-            List<ControladorStreams> nuevaPartida = new ArrayList<>();
+        if (clientesEnLobby.size() == NUMERO_JUGADORES_NECESARIOS) {
+            // Crear una lista a partir del Set
+            List<ControladorStreams> nuevaPartida = clientesEnLobby.stream()
+                    .limit(NUMERO_JUGADORES_NECESARIOS)
+                    .toList();
 
-            for (ControladorStreams cliente : clientesEnLobby) {
-                nuevaPartida.add(cliente);
-                if (nuevaPartida.size() == NUMERO_JUGADORES_NECESARIOS) {
-                    break;
-                }
-            }
+            // Eliminar los jugadores seleccionados del Set
             nuevaPartida.forEach(clientesEnLobby::remove);
+
             partidas.add(nuevaPartida);
             EventoObserver evento = new ManejadorPartida(nuevaPartida);
             Servidor.getInstance().setObservadorEventos(evento);
-
         }
     }
 
@@ -83,5 +81,4 @@ public class Lobby implements ConexionObserver {
     public void clienteConectado(ControladorStreams streams) {
         agregarCliente(streams);
     }
-
 }
