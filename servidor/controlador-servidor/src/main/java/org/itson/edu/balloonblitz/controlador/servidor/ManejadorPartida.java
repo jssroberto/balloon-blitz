@@ -83,6 +83,8 @@ public class ManejadorPartida implements EventoObserver {
         partida.setTableroJugador1(new Tablero());
         partida.setTableroJugador2(new Tablero());
         partida.setEstadoPartida(EstadoPartida.ACTIVA);
+        enviarEventoAJugador(streamsJugador1.getSalida(), new ResultadoEvento(true));
+        enviarEventoAJugador(streamsJugador2.getSalida(),new ResultadoEvento(true));
 
     }
 

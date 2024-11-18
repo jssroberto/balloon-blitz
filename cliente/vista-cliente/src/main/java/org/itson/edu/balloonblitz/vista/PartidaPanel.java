@@ -20,11 +20,8 @@ import javax.swing.JLabel;
 import org.itson.edu.balloonblitz.auxiliar.GridDragDropHandler;
 import org.itson.edu.balloonblitz.auxiliar.TableroClickHandler;
 import org.itson.edu.balloonblitz.auxiliar.TableroRenderer;
-import org.itson.edu.balloonblitz.entidades.Coordenada;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.Tablero;
-import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
-import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.modelo.ClienteControlador;
 
 /**

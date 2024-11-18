@@ -2,11 +2,11 @@ package org.itson.edu.balloonblitz.entidades.eventos;
 
 import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
 
-public class ResultadoPosicionNavesEvento extends Evento {
+public class ResultadoEvento extends Evento {
     private final boolean resultado;
 
-    public ResultadoPosicionNavesEvento(boolean resultado) {
-        super(TipoEvento.RESULTADO_POSICION_NAVES);
+    public ResultadoEvento(boolean resultado) {
+        super(TipoEvento.RESULTADO);
         this.resultado = resultado;
     }
 

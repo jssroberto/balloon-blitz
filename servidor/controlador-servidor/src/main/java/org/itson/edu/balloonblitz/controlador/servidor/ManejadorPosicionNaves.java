@@ -6,9 +6,9 @@ import org.itson.edu.balloonblitz.entidades.Nave;
 import org.itson.edu.balloonblitz.entidades.Tablero;
 import org.itson.edu.balloonblitz.entidades.enumeradores.TipoNave;
 import org.itson.edu.balloonblitz.entidades.eventos.PosicionNavesEvento;
-import org.itson.edu.balloonblitz.entidades.eventos.ResultadoPosicionNavesEvento;
 
 import java.util.*;
+import org.itson.edu.balloonblitz.entidades.eventos.ResultadoEvento;
 
 public class ManejadorPosicionNaves {
     private final Tablero tablero;
@@ -17,8 +17,8 @@ public class ManejadorPosicionNaves {
         this.tablero = evento.getTablero();
     }
 
-    public ResultadoPosicionNavesEvento procesarEvento() {
-        return new ResultadoPosicionNavesEvento(validarTablero());
+    public ResultadoEvento procesarEvento() {
+        return new ResultadoEvento(validarTablero());
     }
 
     private boolean validarTablero() {

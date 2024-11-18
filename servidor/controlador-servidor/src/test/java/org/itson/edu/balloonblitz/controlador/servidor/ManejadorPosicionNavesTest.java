@@ -4,7 +4,7 @@ import org.itson.edu.balloonblitz.entidades.Casilla;
 import org.itson.edu.balloonblitz.entidades.Nave;
 import org.itson.edu.balloonblitz.entidades.Tablero;
 import org.itson.edu.balloonblitz.entidades.eventos.PosicionNavesEvento;
-import org.itson.edu.balloonblitz.entidades.eventos.ResultadoPosicionNavesEvento;
+import org.itson.edu.balloonblitz.entidades.eventos.ResultadoEvento;
 import org.itson.edu.balloonblitz.entidades.navefactory.Barco;
 import org.itson.edu.balloonblitz.entidades.navefactory.Crucero;
 import org.itson.edu.balloonblitz.entidades.navefactory.PortaAviones;
@@ -50,7 +50,7 @@ public class ManejadorPosicionNavesTest {
         ManejadorPosicionNaves manejador = new ManejadorPosicionNaves(evento);
 
         // Procesar el evento y validar el resultado
-        ResultadoPosicionNavesEvento resultado = manejador.procesarEvento();
+        ResultadoEvento resultado = manejador.procesarEvento();
         assertTrue(resultado.isValid(), "El tablero debería ser válido con las naves correctamente posicionadas.");
     }
 
@@ -64,7 +64,7 @@ public class ManejadorPosicionNavesTest {
         ManejadorPosicionNaves manejador = new ManejadorPosicionNaves(evento);
 
         // Procesar el evento y validar el resultado
-        ResultadoPosicionNavesEvento resultado = manejador.procesarEvento();
+        ResultadoEvento resultado = manejador.procesarEvento();
         assertFalse(resultado.isValid(), "El tablero debería ser inválido porque hay un barco enseguida de un portaavion.");
     }
 
@@ -75,7 +75,7 @@ public class ManejadorPosicionNavesTest {
         PosicionNavesEvento evento = new PosicionNavesEvento(tablero);
         ManejadorPosicionNaves manejador = new ManejadorPosicionNaves(evento);
 
-        ResultadoPosicionNavesEvento resultado = manejador.procesarEvento();
+        ResultadoEvento resultado = manejador.procesarEvento();
         assertTrue(resultado.isValid(), "Un tablero vacío debería ser válido si no hay restricciones de cantidad mínima.");
     }
 

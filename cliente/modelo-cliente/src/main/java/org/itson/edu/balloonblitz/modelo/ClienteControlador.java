@@ -7,12 +7,12 @@ import java.net.Socket;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import static org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento.DISPARO;
 import static org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento.ENVIO_JUGADOR;
-import static org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento.POSICION_NAVES;
-import static org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento.RESULTADO_POSICION_NAVES;
+import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
+import org.itson.edu.balloonblitz.entidades.eventos.EnvioJugadorEvento;
 
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
+import org.itson.edu.balloonblitz.entidades.eventos.ResultadoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
 
 /**
@@ -25,7 +25,10 @@ public class ClienteControlador extends Thread {
     private Socket socket;
     private ObjectOutputStream salida;
     private ObjectInputStream entrada;
-    private TimeOutEvento timeOut;
+    private ObservadorDisparo observadorDisparo;
+    private ObservadorTiempo observadorTiempo;
+    private ObservadorResultado observadorResultado;
+    private ObservadorJugador observadorJugador;
     private boolean conectado;
     Evento mensajeRecibido;
     int tiempoRestante;
@@ -64,20 +67,16 @@ public class ClienteControlador extends Thread {
         desconectar();
     }
 
-    private void procesarMensaje(Evento mensajeRecibido) {
+    private void procesarMensaje(Evento evento) {
         switch (mensajeRecibido.getTipoEvento()) {
             case TIMEOUT ->
-                manejarTimeOut((TimeOutEvento) mensajeRecibido);
+                observadorTiempo.manejarDisparo((TimeOutEvento)evento);
             case ENVIO_JUGADOR ->
-                manejarEnvioJugador(mensajeRecibido);
-            case POSICION_NAVES ->
-                manejarPosicionarNaves(mensajeRecibido);
-            case DISPARO ->
-                manejarDisparo(mensajeRecibido);
-            case RESULTADO_POSICION_NAVES ->
-                manejarResultadoPosicion(mensajeRecibido);
+                observadorJugador.manejarDisparo((EnvioJugadorEvento)evento);
+            case RESULTADO ->
+               observadorResultado.manejarDisparo((ResultadoEvento)evento);
             case RESULTADO_DISPARO ->
-                manejarResultadoDisparo(mensajeRecibido);
+                 observadorDisparo.manejarDisparo((DisparoEvento)evento);
             default ->
                 System.out.println("Tipo de evento no reconocido: " + mensajeRecibido.getTipoEvento());
         }
@@ -101,30 +100,19 @@ public class ClienteControlador extends Thread {
         }
     }
 
-    private void manejarEnvioJugador(Evento mensajeRecibido) {
-        System.out.println("1");
-        System.out.println(mensajeRecibido.getEmisor());
+    
+    public void setObservadorConexion(ObservadorTiempo observadorTiempo) {
+        this.observadorTiempo = observadorTiempo;
     }
 
-    private void manejarPosicionarNaves(Evento mensajeRecibido) {
-        System.out.println("2");
-        System.out.println(mensajeRecibido.getEmisor());
+    
+    public void setObservadorDisparo(ObservadorResultado observadorResultado) {
+        this.observadorResultado = observadorResultado;
+    }
+    public void setObservadorDisparo(ObservadorJugador observadorJugador) {
+        this.observadorJugador = observadorJugador;
     }
 
-    private void manejarDisparo(Evento mensajeRecibido) {
-        System.out.println("3");
-        System.out.println(mensajeRecibido.getEmisor());
-    }
-
-    private void manejarResultadoPosicion(Evento mensajeRecibido) {
-        System.out.println("4");
-        System.out.println(mensajeRecibido.getEmisor());
-    }
-
-    private void manejarResultadoDisparo(Evento mensajeRecibido) {
-        System.out.println("5");
-        System.out.println(mensajeRecibido.getEmisor());
-    }
 
     public void enviarMensaje(Evento evento) {
         try {
@@ -135,9 +123,6 @@ public class ClienteControlador extends Thread {
         }
     }
 
-    private Evento obtenerEvento() {
-        return mensajeRecibido;
-    }
 
     private void desconectar() {
         try {
