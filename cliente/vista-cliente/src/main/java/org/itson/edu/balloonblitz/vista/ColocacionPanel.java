@@ -40,6 +40,7 @@ public class ColocacionPanel extends javax.swing.JPanel {
     private static final float TITLE_FONT_SIZE = 28.0F;
     private static final float TEXT_FONT_SIZE = 20.0F;
 
+    //TODO: portaaviones son 2 no 1
     private static final Map<String, Integer> BALLOON_LIMITS = Map.of(
             "barco", 4, // 4 barcos de 1 casilla
             "submarino", 3, // 3 submarinos de 2 casillas

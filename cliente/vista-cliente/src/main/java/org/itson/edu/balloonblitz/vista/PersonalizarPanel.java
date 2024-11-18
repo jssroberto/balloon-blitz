@@ -129,12 +129,7 @@ public class PersonalizarPanel extends javax.swing.JPanel {
     }
 
     private void crearJugador() {
-        this.jugador = new Jugador.Builder()
-                .nombre(txtNombre.getText())
-                .colorPropio(colorNaves)
-                .colorRival(colorNavesRival)
-                .fotoPerfil(fotoPerfil)
-                .build();
+        this.jugador = new Jugador(txtNombre.getText(), colorNaves, colorNavesRival, fotoPerfil);
 
         Evento jugador2 = new EnvioJugadorEvento();
         jugador2.setEmisor(jugador);

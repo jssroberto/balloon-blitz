@@ -48,7 +48,9 @@ class ManejadorDisparoTest {
         tableroRival.setCasilla(casillaSinNave);
 
         // Crear jugador rival y asignar la nave a su lista
-        jugadorRival = new Jugador.Builder().nombre("Pepe").naves(new ArrayList<>()).build();
+        jugadorRival = new Jugador();
+        jugadorRival.setNombre("Pepe");
+        jugadorRival.setNaves(new ArrayList<>());
         jugadorRival.getNaves().add(nave);
     }
 
@@ -62,7 +64,7 @@ class ManejadorDisparoTest {
         ResultadoDisparoEvento resultado = manejador.procesarEvento();
 
         // Verificar resultado
-        assertFalse(resultado.isAcertado());
+        assertFalse(resultado.getCasillas().isPresent());
         assertEquals(EstadoCasilla.GOLPEADA, casillaSinNave.getEstado());
     }
 
@@ -76,7 +78,7 @@ class ManejadorDisparoTest {
         ResultadoDisparoEvento resultado = manejador.procesarEvento();
 
         // Verificar resultado
-        assertTrue(resultado.isAcertado());
+        assertTrue(resultado.getCasillas().isPresent());
         assertEquals(EstadoCasilla.GOLPEADA, casilla1.getEstado());
         assertEquals(1, nave.getImpactos());
         assertEquals(EstadoNave.AVERIADA, nave.getEstadoNave());
@@ -96,7 +98,7 @@ class ManejadorDisparoTest {
         ResultadoDisparoEvento resultado = manejador.procesarEvento();
 
         // Verificar resultado
-        assertTrue(resultado.isAcertado());
+        assertTrue(resultado.getCasillas().isPresent());
         assertEquals(EstadoCasilla.GOLPEADA, casilla1.getEstado());
         assertEquals(3, nave.getImpactos());
         assertEquals(EstadoNave.HUNDIDA, nave.getEstadoNave());
@@ -168,7 +170,7 @@ class ManejadorDisparoTest {
         );
 
         // Verificar el resultado
-        assertTrue(resultado3.isAcertado());
+        assertTrue(resultado3.getCasillas().isPresent());
     }
 
     @Test

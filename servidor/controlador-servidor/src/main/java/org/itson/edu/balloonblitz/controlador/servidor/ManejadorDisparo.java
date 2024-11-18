@@ -43,7 +43,7 @@ public class ManejadorDisparo {
         // Usar Optional para obtener la nave en la casilla
         if (casilla.getNave().isEmpty()) {
             // Si no hay nave en la casilla, retornar un evento de resultado sin impacto
-            return new ResultadoDisparoEvento(null, false);
+            return new ResultadoDisparoEvento(null);
         }
         return procesarDisparo(casilla);
     }
@@ -65,7 +65,7 @@ public class ManejadorDisparo {
             // Si la nave está hundida, procesar el hundimiento
             procesarNaveHundida(tableroRival, jugadorRival, casilla);
         }
-        return new ResultadoDisparoEvento(casillasAtacadas, true);
+        return new ResultadoDisparoEvento(casillasAtacadas);
     }
 
     private void procesarNaveAveriada(Casilla casilla, Nave nave) {

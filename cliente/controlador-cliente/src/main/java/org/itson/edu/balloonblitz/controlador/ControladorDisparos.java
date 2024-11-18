@@ -4,6 +4,7 @@
  */
 package org.itson.edu.balloonblitz.controlador;
 
+import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.entidades.eventos.ResultadoDisparoEvento;
@@ -28,6 +29,9 @@ public class ControladorDisparos implements ObservadorDisparo {
 
     @Override
     public void manejarEvento(ResultadoDisparoEvento evento) {
+//        Jugador jugador = evento.getEmisor();
+//        if (jugador.equals
+//        }
     }
 
 }

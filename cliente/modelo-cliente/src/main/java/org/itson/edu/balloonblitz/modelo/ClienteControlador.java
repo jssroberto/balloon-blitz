@@ -1,18 +1,13 @@
 package org.itson.edu.balloonblitz.modelo;
 
+import org.itson.edu.balloonblitz.entidades.eventos.*;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import static org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento.ENVIO_JUGADOR;
-import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
-import org.itson.edu.balloonblitz.entidades.eventos.EnvioJugadorEvento;
-import org.itson.edu.balloonblitz.entidades.eventos.Evento;
-import org.itson.edu.balloonblitz.entidades.eventos.ResultadoDisparoEvento;
-import org.itson.edu.balloonblitz.entidades.eventos.ResultadoEvento;
-import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
 
 /**
  * @author elimo
