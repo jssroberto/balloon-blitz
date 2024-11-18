@@ -6,6 +6,7 @@ package org.itson.edu.balloonblitz.controlador;
 
 import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
+import org.itson.edu.balloonblitz.entidades.eventos.ResultadoDisparoEvento;
 import org.itson.edu.balloonblitz.modelo.ClienteControlador;
 import org.itson.edu.balloonblitz.modelo.ObservadorDisparo;
 
@@ -26,8 +27,7 @@ public class ControladorDisparos implements ObservadorDisparo {
     }
 
     @Override
-    public void manejarEvento(DisparoEvento evento) {
-        evento.
+    public void manejarEvento(ResultadoDisparoEvento evento) {
     }
 
 }

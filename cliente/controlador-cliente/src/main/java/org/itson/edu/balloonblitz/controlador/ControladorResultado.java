@@ -22,7 +22,6 @@ public class ControladorResultado implements ObservadorResultado {
 
     @Override
     public void manejarEvento(ResultadoEvento evento) {
-        evento.
   
         }
 

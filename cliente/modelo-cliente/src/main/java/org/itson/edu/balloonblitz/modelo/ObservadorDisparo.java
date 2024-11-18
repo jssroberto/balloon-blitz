@@ -4,7 +4,7 @@
  */
 package org.itson.edu.balloonblitz.modelo;
 
-import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
+import org.itson.edu.balloonblitz.entidades.eventos.ResultadoDisparoEvento;
 
 /**
  *
@@ -12,6 +12,6 @@ import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
  */
 public interface ObservadorDisparo {
     
-   void manejarEvento(DisparoEvento evento);
+   void manejarEvento(ResultadoDisparoEvento evento);
     
 }

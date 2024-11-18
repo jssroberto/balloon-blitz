@@ -10,6 +10,7 @@ import static org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento.ENVIO
 import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.EnvioJugadorEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
+import org.itson.edu.balloonblitz.entidades.eventos.ResultadoDisparoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.ResultadoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
 
@@ -97,7 +98,7 @@ public class ClienteControlador {
             case RESULTADO ->
                 observadorResultado.manejarEvento((ResultadoEvento) evento);
             case RESULTADO_DISPARO ->
-                observadorDisparo.manejarEvento((DisparoEvento) evento);
+                observadorDisparo.manejarEvento((ResultadoDisparoEvento) evento);
             default ->
                 System.out.println("Tipo de evento no reconocido: " + mensajeRecibido.getTipoEvento());
         }
