@@ -12,6 +12,6 @@ import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
  */
 public interface ObservadorDisparo {
     
-   void manejarDisparo(DisparoEvento evento);
+   void manejarEvento(DisparoEvento evento);
     
 }

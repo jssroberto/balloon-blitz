@@ -12,6 +12,6 @@ import org.itson.edu.balloonblitz.entidades.eventos.ResultadoEvento;
  */
 public interface ObservadorResultado {
     
-    void manejarDisparo(ResultadoEvento evento);
+    void manejarEvento(ResultadoEvento evento);
     
 }

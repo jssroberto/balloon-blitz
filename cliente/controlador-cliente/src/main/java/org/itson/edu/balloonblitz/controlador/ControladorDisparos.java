@@ -26,8 +26,8 @@ public class ControladorDisparos implements ObservadorDisparo {
     }
 
     @Override
-    public void manejarDisparo(DisparoEvento evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void manejarEvento(DisparoEvento evento) {
+        evento.
     }
 
 }

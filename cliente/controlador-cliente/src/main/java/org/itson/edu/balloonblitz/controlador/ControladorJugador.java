@@ -26,7 +26,7 @@ public class ControladorJugador implements ObservadorJugador {
     }
 
     @Override
-    public void manejarDisparo(EnvioJugadorEvento evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void manejarEvento(EnvioJugadorEvento evento) {
+        
     }
 }

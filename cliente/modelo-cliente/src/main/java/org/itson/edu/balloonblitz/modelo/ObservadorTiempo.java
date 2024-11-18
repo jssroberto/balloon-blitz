@@ -12,6 +12,6 @@ import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
  */
 public interface ObservadorTiempo {
     
-    void manejarDisparo(TimeOutEvento evento);
+    void manejarEvento(TimeOutEvento evento);
     
 }

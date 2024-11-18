@@ -4,13 +4,11 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import static org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento.ENVIO_JUGADOR;
 import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.EnvioJugadorEvento;
-
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.entidades.eventos.ResultadoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
@@ -18,7 +16,7 @@ import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
 /**
  * @author elimo
  */
-public class ClienteControlador extends Thread {
+public class ClienteControlador {
 
     private static ClienteControlador instancia;
 
@@ -31,9 +29,11 @@ public class ClienteControlador extends Thread {
     private ObservadorJugador observadorJugador;
     private boolean conectado;
     Evento mensajeRecibido;
-    int tiempoRestante;
+    private final ExecutorService executorService = Executors.newFixedThreadPool(10);
 
     public ClienteControlador() {
+        executorService.submit(() -> enviarMensaje(null));
+        executorService.submit(() -> recibirEvento());
     }
 
     public static synchronized ClienteControlador getInstancia(String host, int puerto) {
@@ -41,6 +41,18 @@ public class ClienteControlador extends Thread {
             instancia = new ClienteControlador(host, puerto);
         }
         return instancia;
+    }
+
+    public void setObservadorConexion(ObservadorTiempo observadorTiempo) {
+        this.observadorTiempo = observadorTiempo;
+    }
+
+    public void setObservadorDisparo(ObservadorResultado observadorResultado) {
+        this.observadorResultado = observadorResultado;
+    }
+
+    public void setObservadorDisparo(ObservadorJugador observadorJugador) {
+        this.observadorJugador = observadorJugador;
     }
 
     private ClienteControlador(String host, int puerto) {
@@ -54,8 +66,7 @@ public class ClienteControlador extends Thread {
         }
     }
 
-    @Override
-    public void run() {
+    public void recibirEvento() {
         while (conectado) {
             try {
                 mensajeRecibido = (Evento) entrada.readObject();
@@ -67,62 +78,30 @@ public class ClienteControlador extends Thread {
         desconectar();
     }
 
-    private void procesarMensaje(Evento evento) {
-        switch (mensajeRecibido.getTipoEvento()) {
-            case TIMEOUT ->
-                observadorTiempo.manejarDisparo((TimeOutEvento)evento);
-            case ENVIO_JUGADOR ->
-                observadorJugador.manejarDisparo((EnvioJugadorEvento)evento);
-            case RESULTADO ->
-               observadorResultado.manejarDisparo((ResultadoEvento)evento);
-            case RESULTADO_DISPARO ->
-                 observadorDisparo.manejarDisparo((DisparoEvento)evento);
-            default ->
-                System.out.println("Tipo de evento no reconocido: " + mensajeRecibido.getTipoEvento());
-        }
-    }
-
-    private void manejarTimeOut(TimeOutEvento timeOut) {
-        tiempoRestante = timeOut.getTiempoRestante();
-        if (tiempoRestante > 0) {
-            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-            scheduler.scheduleAtFixedRate(() -> {
-                if (tiempoRestante > 0) {
-                    System.out.println("El temporizador está corriendo. Tiempo restante: " + tiempoRestante + " minutos.");
-                    tiempoRestante--;
-                } else {
-                    System.out.println("El tiempo ha expirado. Has perdido tu turno.");
-                    scheduler.shutdown();
-                }
-            }, 0, 1, TimeUnit.SECONDS);
-        } else {
-            System.out.println("El tiempo ha expirado. Has perdido tu turno.");
-        }
-    }
-
-    
-    public void setObservadorConexion(ObservadorTiempo observadorTiempo) {
-        this.observadorTiempo = observadorTiempo;
-    }
-
-    
-    public void setObservadorDisparo(ObservadorResultado observadorResultado) {
-        this.observadorResultado = observadorResultado;
-    }
-    public void setObservadorDisparo(ObservadorJugador observadorJugador) {
-        this.observadorJugador = observadorJugador;
-    }
-
-
     public void enviarMensaje(Evento evento) {
         try {
-            System.out.println(evento.getTipoEvento());
-            salida.writeObject(evento);
-            salida.flush();
+            if (evento != null) {
+                salida.writeObject(evento);
+                salida.flush();
+            }
         } catch (IOException e) {
         }
     }
 
+    private void procesarMensaje(Evento evento) {
+        switch (mensajeRecibido.getTipoEvento()) {
+            case TIMEOUT ->
+                observadorTiempo.manejarEvento((TimeOutEvento) evento);
+            case ENVIO_JUGADOR ->
+                observadorJugador.manejarEvento((EnvioJugadorEvento) evento);
+            case RESULTADO ->
+                observadorResultado.manejarEvento((ResultadoEvento) evento);
+            case RESULTADO_DISPARO ->
+                observadorDisparo.manejarEvento((DisparoEvento) evento);
+            default ->
+                System.out.println("Tipo de evento no reconocido: " + mensajeRecibido.getTipoEvento());
+        }
+    }
 
     private void desconectar() {
         try {
