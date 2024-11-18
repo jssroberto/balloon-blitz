@@ -54,7 +54,6 @@ public class PartidaPanel extends javax.swing.JPanel {
     public PartidaPanel(FramePrincipal framePrincipal, GridDragDropHandler gridDragDropHandler, Jugador jugador) {
         this.framePrincipal = framePrincipal;
         this.gridDragDropHandler = gridDragDropHandler;
-        this.controlador = ClienteControlador.getInstancia("localhost", 1234);
         this.jugador = jugador;
         initComponents();
         try {

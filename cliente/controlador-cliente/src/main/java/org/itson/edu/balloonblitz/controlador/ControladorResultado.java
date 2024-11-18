@@ -15,14 +15,23 @@ import org.itson.edu.balloonblitz.modelo.ObservadorResultado;
 public class ControladorResultado implements ObservadorResultado {
 
     ClienteControlador cliente;
+    boolean valido;
 
     public ControladorResultado() {
-        cliente = new ClienteControlador();
+        valido = false;
+        ClienteControlador.getInstancia().setObservadorResultado(this);
     }
 
     @Override
     public void manejarEvento(ResultadoEvento evento) {
-  
-        }
+        valido = evento.isValid();
+    }
 
+    public boolean isValido() {
+        return valido;
+    }
+
+    public void setValido(boolean valido) {
+        this.valido = valido;
+    }
 }

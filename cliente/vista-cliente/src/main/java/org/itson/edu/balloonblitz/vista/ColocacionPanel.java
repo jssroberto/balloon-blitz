@@ -65,7 +65,6 @@ public class ColocacionPanel extends javax.swing.JPanel {
      */
     public ColocacionPanel(FramePrincipal framePrincipal, Jugador jugador) {
         initComponents();
-        this.controlador = ClienteControlador.getInstancia("localhost", 1234);
         this.framePrincipal = framePrincipal;
         this.gridDragDropHandler = new GridDragDropHandler(panelTablero);
         this.jugador = jugador;
@@ -381,7 +380,7 @@ public class ColocacionPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        framePrincipal.cambiarPanel(new EsperandoJugador(framePrincipal, jugador));
+//        framePrincipal.cambiarPanel(new EsperandoJugador(framePrincipal, jugador));
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnConfirmarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConfirmarMouseClicked

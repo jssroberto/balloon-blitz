@@ -17,7 +17,6 @@ public class TableroClickHandler {
     private static final int GRID_SIZE = 10;
     private static final int GRID_OFFSET_X = 0;
     private static final int GRID_OFFSET_Y = 0;
-    private static final ClienteControlador controlador = ClienteControlador.getInstancia("localhost", 1234);
 
     public static void configurarTableroRival(JLabel tableroRival, Jugador jugador) {
         // Create an overlay panel for the grid
@@ -72,7 +71,6 @@ public class TableroClickHandler {
         DisparoEvento disparo = new DisparoEvento(new Coordenada(row, col));
         disparo.setEmisor(jugador);
 
-        controlador.enviarMensaje(disparo);
 
         System.out.println("Disparo realizado en posicion: " + row + ", " + col);
     }

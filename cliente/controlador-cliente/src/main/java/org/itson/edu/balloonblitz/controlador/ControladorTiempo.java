@@ -22,7 +22,6 @@ public class ControladorTiempo implements ObservadorTiempo {
     int tiempoRestante;
 
     public ControladorTiempo() {
-        cliente = new ClienteControlador();
     }
 
     public void enviarEvento(Evento evento) {

@@ -14,8 +14,7 @@ import org.itson.edu.balloonblitz.vista.InicioPanel;
 public class MainCliente {
 
     public static void main(String[] args) {
-        ClienteControlador controlador = ClienteControlador.getInstancia("localhost", 1234);
-
+   
         javax.swing.SwingUtilities.invokeLater(() -> {
             FramePrincipal framePrincipal = new FramePrincipal();
             framePrincipal.cambiarPanel(new InicioPanel(framePrincipal));

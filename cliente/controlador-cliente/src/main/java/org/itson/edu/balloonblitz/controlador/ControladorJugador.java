@@ -4,6 +4,7 @@
  */
 package org.itson.edu.balloonblitz.controlador;
 
+import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.eventos.EnvioJugadorEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.modelo.ClienteControlador;
@@ -15,18 +16,14 @@ import org.itson.edu.balloonblitz.modelo.ObservadorJugador;
  */
 public class ControladorJugador implements ObservadorJugador {
 
-    ClienteControlador cliente;
+    Jugador jugador;
 
     public ControladorJugador() {
-        cliente = new ClienteControlador();
-    }
 
-    public void enviarEvento(Evento evento) {
-        cliente.enviarMensaje(evento);
     }
 
     @Override
     public void manejarEvento(EnvioJugadorEvento evento) {
-        
+        jugador = evento.getEmisor();
     }
 }

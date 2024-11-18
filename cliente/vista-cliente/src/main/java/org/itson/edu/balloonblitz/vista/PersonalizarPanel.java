@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import org.itson.edu.balloonblitz.controlador.ControladorResultado;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.enumeradores.ColorNaves;
 import org.itson.edu.balloonblitz.entidades.eventos.EnvioJugadorEvento;
@@ -37,7 +38,7 @@ public class PersonalizarPanel extends javax.swing.JPanel {
     private ColorNaves colorNaves;
     private ColorNaves colorNavesRival;
     private String fotoPerfil;
-
+    ControladorResultado resultado;
     private ClienteControlador controlador;
     private Jugador jugador;
 
@@ -65,7 +66,6 @@ public class PersonalizarPanel extends javax.swing.JPanel {
      * @param framePrincipal
      */
     public PersonalizarPanel(FramePrincipal framePrincipal) {
-        this.controlador = ClienteControlador.getInstancia("localhost", 1234);
         this.framePrincipal = framePrincipal;
         initComponents();
         try {
@@ -131,13 +131,14 @@ public class PersonalizarPanel extends javax.swing.JPanel {
     private void crearJugador() {
         this.jugador = new Jugador(txtNombre.getText(), colorNaves, colorNavesRival, fotoPerfil);
 
-        Evento jugador2 = new EnvioJugadorEvento();
-        jugador2.setEmisor(jugador);
+//        Evento jugador2 = new EnvioJugadorEvento();
+//        jugador2.setEmisor(jugador);
+//
+//        System.out.println("Emisor antes de enviar: " + jugador2.getEmisor().getNombre());
+//
+//        controlador.enviarMensaje(jugador2);
+//        System.out.println("Evento enviado al servidor.");
 
-        System.out.println("Emisor antes de enviar: " + jugador2.getEmisor().getNombre());
-
-        controlador.enviarMensaje(jugador2);
-        System.out.println("Evento enviado al servidor.");
     }
 
     private void restaurarImagenesPFP(String imagenExcluida) {
@@ -504,7 +505,9 @@ public class PersonalizarPanel extends javax.swing.JPanel {
 
     private void lblContinuarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblContinuarMouseClicked
         crearJugador();
-        framePrincipal.cambiarPanel(new EsperandoJugador(framePrincipal, jugador));
+         controlador = ClienteControlador.getInstancia();
+        resultado = new ControladorResultado();
+        framePrincipal.cambiarPanel(new EsperandoJugador(framePrincipal, jugador, resultado));
     }//GEN-LAST:event_lblContinuarMouseClicked
 
     private void txtNombreFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNombreFocusGained

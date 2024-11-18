@@ -16,7 +16,7 @@ public class ControladorEnvio {
     ClienteControlador cliente;
 
     public ControladorEnvio() {
-        cliente = new ClienteControlador();
+        cliente = ClienteControlador.getInstancia();
     }
 
     public void enviarEvento(Evento evento) {

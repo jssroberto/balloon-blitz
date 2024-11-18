@@ -20,7 +20,7 @@ public class ControladorDisparos implements ObservadorDisparo {
     ClienteControlador cliente;
 
     public ControladorDisparos() {
-        cliente = new ClienteControlador();
+        cliente.setObservadorDisparo(this);
     }
 
     public void enviarEvento(Evento evento) {

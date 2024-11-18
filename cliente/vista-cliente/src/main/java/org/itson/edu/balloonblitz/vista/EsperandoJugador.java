@@ -11,11 +11,18 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
+import org.itson.edu.balloonblitz.controlador.ControladorEnvio;
+import org.itson.edu.balloonblitz.controlador.ControladorResultado;
 import org.itson.edu.balloonblitz.entidades.Jugador;
+import org.itson.edu.balloonblitz.entidades.eventos.EnvioJugadorEvento;
+import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 
 /**
  *
@@ -26,6 +33,10 @@ public class EsperandoJugador extends javax.swing.JPanel {
     private static final Logger logger = Logger.getLogger(InicioPanel.class.getName());
     private final FramePrincipal framePrincipal;
     private final Jugador jugador;
+    ControladorResultado resultado;
+    int contador = 0;
+    private final ExecutorService executorService = Executors.newFixedThreadPool(1);
+    ControladorEnvio envio;
 
     /**
      * Creates new form PersonalizarPanel
@@ -33,10 +44,12 @@ public class EsperandoJugador extends javax.swing.JPanel {
      * @param framePrincipal
      * @param jugador
      */
-    public EsperandoJugador(FramePrincipal framePrincipal, Jugador jugador) {
+    public EsperandoJugador(FramePrincipal framePrincipal, Jugador jugador, ControladorResultado resultado) {
+        this.resultado = resultado;
         this.jugador = jugador;
         this.framePrincipal = framePrincipal;
         initComponents();
+        envio = new ControladorEnvio();
         try {
             setFuentes();
         } catch (FontFormatException | IOException e) {
@@ -50,6 +63,7 @@ public class EsperandoJugador extends javax.swing.JPanel {
 
         addTextBorder(lblMenu);
         addTextBorder(lblEsperando);
+        unirsePartida();
     }
 
     // Método para añadir borde al texto en JLabel
@@ -84,6 +98,42 @@ public class EsperandoJugador extends javax.swing.JPanel {
                 g2d.drawString(text, x, y);
 
                 g2d.dispose();
+            }
+        });
+    }
+
+    private void unirsePartida() {
+        executorService.submit(() -> {
+            try {
+
+                while (!resultado.isValido()) {
+                    // Actualizar la UI de forma segura
+                    SwingUtilities.invokeLater(() -> {
+                        switch (contador % 3) {
+                            case 0 ->
+                                lblEsperando.setText("Esperando jugador.");
+                            case 1 ->
+                                lblEsperando.setText("Esperando jugador..");
+                            case 2 ->
+                                lblEsperando.setText("Esperando jugador...");
+                        }
+                    });
+
+                    contador++;
+                    Thread.sleep(500); // Simula la espera (medio segundo entre cambios)
+                }
+
+                // Si es válido, proceder
+                Evento jugador2 = new EnvioJugadorEvento();
+                jugador2.setEmisor(jugador);
+                envio.enviarEvento(jugador2);
+                lblEsperando.setText("Partida encontrada");
+                Thread.sleep(5000);
+                // Cambiar al panel de colocación en el hilo principal
+                SwingUtilities.invokeLater(() -> framePrincipal.cambiarPanel(new ColocacionPanel(framePrincipal, jugador)));
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                logger.log(Level.SEVERE, "Hilo interrumpido durante la espera del jugador.", e);
             }
         });
     }

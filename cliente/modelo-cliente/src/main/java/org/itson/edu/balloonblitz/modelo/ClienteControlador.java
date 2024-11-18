@@ -27,33 +27,9 @@ public class ClienteControlador {
     Evento mensajeRecibido;
     private final ExecutorService executorService = Executors.newFixedThreadPool(10);
 
-    public ClienteControlador() {
-        executorService.submit(() -> enviarMensaje(null));
-        executorService.submit(() -> recibirEvento());
-    }
-
-    public static synchronized ClienteControlador getInstancia(String host, int puerto) {
-        if (instancia == null) {
-            instancia = new ClienteControlador(host, puerto);
-        }
-        return instancia;
-    }
-
-    public void setObservadorConexion(ObservadorTiempo observadorTiempo) {
-        this.observadorTiempo = observadorTiempo;
-    }
-
-    public void setObservadorDisparo(ObservadorResultado observadorResultado) {
-        this.observadorResultado = observadorResultado;
-    }
-
-    public void setObservadorDisparo(ObservadorJugador observadorJugador) {
-        this.observadorJugador = observadorJugador;
-    }
-
-    private ClienteControlador(String host, int puerto) {
+    private ClienteControlador() {
         try {
-            socket = new Socket(host, puerto);
+            socket = new Socket("localhost", 1234);
             salida = new ObjectOutputStream(socket.getOutputStream());
             entrada = new ObjectInputStream(socket.getInputStream());
             salida.flush();
@@ -62,11 +38,45 @@ public class ClienteControlador {
         }
     }
 
+    
+    
+
+    public static synchronized ClienteControlador getInstancia() {
+        if (instancia == null) {
+            instancia = new ClienteControlador();
+            instancia.iniciarStreams();
+        }
+        return instancia;
+    }
+
+
+    private void iniciarStreams() {
+        executorService.submit(() -> recibirEvento());
+        executorService.submit(() -> enviarMensaje(null));
+    }
+
+    public void setObservadorTiempo(ObservadorTiempo observadorTiempo) {
+        this.observadorTiempo = observadorTiempo;
+    }
+
+    public void setObservadorResultado(ObservadorResultado observadorResultado) {
+        this.observadorResultado = observadorResultado;
+    }
+
+    public void setObservadorDisparo(ObservadorDisparo observadorDisparo) {
+        this.observadorDisparo = observadorDisparo;
+    }
+
+    public void setObservadorJUgador(ObservadorJugador observadorJugador) {
+        this.observadorJugador = observadorJugador;
+    }
+
     public void recibirEvento() {
         while (conectado) {
             try {
                 mensajeRecibido = (Evento) entrada.readObject();
                 procesarMensaje(mensajeRecibido);
+
             } catch (IOException | ClassNotFoundException ex) {
                 ex.getMessage();
             }
@@ -85,16 +95,19 @@ public class ClienteControlador {
     }
 
     private void procesarMensaje(Evento evento) {
-        switch (mensajeRecibido.getTipoEvento()) {
-            case TIMEOUT ->
+        switch (evento.getTipoEvento()) {
+            case TIMEOUT:
                 observadorTiempo.manejarEvento((TimeOutEvento) evento);
-            case ENVIO_JUGADOR ->
+            case ENVIO_JUGADOR:
                 observadorJugador.manejarEvento((EnvioJugadorEvento) evento);
-            case RESULTADO ->
-                observadorResultado.manejarEvento((ResultadoEvento) evento);
-            case RESULTADO_DISPARO ->
+            case RESULTADO:
+                if (observadorResultado != null) {
+                    observadorResultado.manejarEvento((ResultadoEvento) evento);
+                }
+                break;
+            case RESULTADO_DISPARO:
                 observadorDisparo.manejarEvento((ResultadoDisparoEvento) evento);
-            default ->
+            default:
                 System.out.println("Tipo de evento no reconocido: " + mensajeRecibido.getTipoEvento());
         }
     }

@@ -36,6 +36,7 @@ public class ManejadorPartida implements EventoObserver {
         streamsJugador1 = jugadores.get(0);
         streamsJugador2 = jugadores.get(1);
         iniciarStreams();
+        
     }
 
     private void iniciarStreams() {
@@ -43,6 +44,8 @@ public class ManejadorPartida implements EventoObserver {
         executorService.submit(() -> servidor.recibirDatosCiente(streamsJugador2.getEntrada()));
         executorService.submit(() -> servidor.mandarDatosCliente(streamsJugador1.getSalida(), new EnvioJugadorEvento()));
         executorService.submit(() -> servidor.mandarDatosCliente(streamsJugador2.getSalida(), new EnvioJugadorEvento()));
+        enviarEventoAJugador(streamsJugador2.getSalida(),new ResultadoEvento(true));
+        enviarEventoAJugador(streamsJugador1.getSalida(), new ResultadoEvento(true));
     }
 
     /**
@@ -83,8 +86,8 @@ public class ManejadorPartida implements EventoObserver {
         partida.setTableroJugador1(new Tablero());
         partida.setTableroJugador2(new Tablero());
         partida.setEstadoPartida(EstadoPartida.ACTIVA);
-        enviarEventoAJugador(streamsJugador1.getSalida(), new ResultadoEvento(true));
-        enviarEventoAJugador(streamsJugador2.getSalida(),new ResultadoEvento(true));
+//        enviarEventoAJugador(streamsJugador1.getSalida(), new ResultadoEvento(true));
+//        enviarEventoAJugador(streamsJugador2.getSalida(),new ResultadoEvento(true));
 
     }
 
@@ -99,7 +102,6 @@ public class ManejadorPartida implements EventoObserver {
 
         if (tipoEvento == TipoEvento.ENVIO_JUGADOR) {
             verificarYCrearPartida();
-            //TODO: Enviar mensaje de inicio de partida
             return null;
         } else if (tipoEvento == TipoEvento.POSICION_NAVES) {
             ManejadorPosicionNaves manejadorPosicion = new ManejadorPosicionNaves((PosicionNavesEvento) evento);
