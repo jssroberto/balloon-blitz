@@ -23,7 +23,7 @@ public class GridDragDropHandler extends DropTargetAdapter {
     private final Tablero tablero;
     private final Casilla[][] matriz;
     private static final int GRID_SIZE = 10;
-    private static final int CELL_SIZE = 46;
+    private static final int CELL_SIZE = 45;
     private static final int OFFSET_X = 0;
     private static final int OFFSET_Y = 0;
 

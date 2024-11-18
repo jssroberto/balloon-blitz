@@ -13,7 +13,7 @@ import org.itson.edu.balloonblitz.modelo.ClienteControlador;
 
 public class TableroClickHandler {
 
-    private static final int CELL_SIZE = 46;
+    private static final int CELL_SIZE = 45;
     private static final int GRID_SIZE = 10;
     private static final int GRID_OFFSET_X = 0;
     private static final int GRID_OFFSET_Y = 0;

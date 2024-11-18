@@ -145,6 +145,8 @@ public class PartidaPanel extends javax.swing.JPanel {
         pfpJugador = new javax.swing.JLabel();
         tableroJugador = new javax.swing.JLabel();
         tableroRival = new javax.swing.JLabel();
+        panelBorde = new javax.swing.JLabel();
+        panelBorde1 = new javax.swing.JLabel();
         lblFondo = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -189,11 +191,17 @@ public class PartidaPanel extends javax.swing.JPanel {
         pfpJugador.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/patFusty.png"))); // NOI18N
         jPanel1.add(pfpJugador, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
-        tableroJugador.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/tablero.png"))); // NOI18N
-        jPanel1.add(tableroJugador, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 160, -1, 460));
+        tableroJugador.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/cuadricula.png"))); // NOI18N
+        jPanel1.add(tableroJugador, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 160, 450, 450));
 
-        tableroRival.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/tablero.png"))); // NOI18N
-        jPanel1.add(tableroRival, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 160, 460, 460));
+        tableroRival.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/cuadricula.png"))); // NOI18N
+        jPanel1.add(tableroRival, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 160, 450, 450));
+
+        panelBorde.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/borde.png"))); // NOI18N
+        jPanel1.add(panelBorde, new org.netbeans.lib.awtextra.AbsoluteConstraints(156, 156, 458, 458));
+
+        panelBorde1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/borde.png"))); // NOI18N
+        jPanel1.add(panelBorde1, new org.netbeans.lib.awtextra.AbsoluteConstraints(656, 156, 458, 458));
 
         lblFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/partidaSinTablero.png"))); // NOI18N
         jPanel1.add(lblFondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1280, -1));
@@ -232,6 +240,8 @@ public class PartidaPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lblFondo;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblNombreEnemigo;
+    private javax.swing.JLabel panelBorde;
+    private javax.swing.JLabel panelBorde1;
     private javax.swing.JLabel pfpJugador;
     private javax.swing.JLabel pfpRival;
     private javax.swing.JLabel tableroJugador;

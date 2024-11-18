@@ -301,6 +301,7 @@ public class ColocacionPanel extends javax.swing.JPanel {
         lblPortaAviones = new javax.swing.JLabel();
         lblNaves = new javax.swing.JLabel();
         panelContenedorGlobos = new javax.swing.JLabel();
+        panelBorde = new javax.swing.JLabel();
         lblFondo = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -324,8 +325,8 @@ public class ColocacionPanel extends javax.swing.JPanel {
         lblTitulo2.setText("derecho para rotarlas.");
         jPanel1.add(lblTitulo2, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 50, -1, 40));
 
-        panelTablero.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/tablero.png"))); // NOI18N
-        jPanel1.add(panelTablero, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 140, -1, 460));
+        panelTablero.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/cuadricula.png"))); // NOI18N
+        jPanel1.add(panelTablero, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 140, 450, 450));
 
         btnConfirmar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/buttons/confirmar.png"))); // NOI18N
         btnConfirmar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -359,6 +360,9 @@ public class ColocacionPanel extends javax.swing.JPanel {
 
         panelContenedorGlobos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/contenedorGlobos.png"))); // NOI18N
         jPanel1.add(panelContenedorGlobos, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 150, 300, 240));
+
+        panelBorde.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/borde.png"))); // NOI18N
+        jPanel1.add(panelBorde, new org.netbeans.lib.awtextra.AbsoluteConstraints(576, 136, 458, 458));
 
         lblFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/colocacionSinTablero.png"))); // NOI18N
         jPanel1.add(lblFondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1280, 680));
@@ -406,6 +410,7 @@ public class ColocacionPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lblPortaAviones;
     private javax.swing.JLabel lblTitulo1;
     private javax.swing.JLabel lblTitulo2;
+    private javax.swing.JLabel panelBorde;
     private javax.swing.JLabel panelContenedorGlobos;
     private javax.swing.JLabel panelTablero;
     // End of variables declaration//GEN-END:variables

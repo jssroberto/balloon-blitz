@@ -12,7 +12,7 @@ import org.itson.edu.balloonblitz.entidades.Tablero;
 public class TableroRenderer {
 
     private static final String BALLOON_BASE_PATH = "/images/ballons/";
-    private static final int CELL_SIZE = 46;
+    private static final int CELL_SIZE = 45;
     private static final int GRID_OFFSET_X = 0;
     private static final int GRID_OFFSET_Y = 0;
 
@@ -56,8 +56,8 @@ public class TableroRenderer {
     }
 
     private static void posicionarGlobo(JLabel globoLabel, int fila, int columna, Nave nave) {
-        int x = GRID_OFFSET_X + (columna * CELL_SIZE);
-        int y = GRID_OFFSET_Y + (fila * CELL_SIZE);
+        int x = GRID_OFFSET_X + (columna * CELL_SIZE) + 2;  // Añadimos +8 aquí
+        int y = GRID_OFFSET_Y + (fila * CELL_SIZE) + 2;
         globoLabel.setLocation(x, y);
     }
 }
