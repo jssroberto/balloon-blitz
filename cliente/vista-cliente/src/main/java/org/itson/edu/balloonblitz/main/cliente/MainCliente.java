@@ -15,7 +15,6 @@ public class MainCliente {
 
     public static void main(String[] args) {
         ClienteControlador controlador = ClienteControlador.getInstancia("localhost", 1234);
-        controlador.start();
 
         javax.swing.SwingUtilities.invokeLater(() -> {
             FramePrincipal framePrincipal = new FramePrincipal();
