@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -39,7 +40,7 @@ public class FramePrincipal extends javax.swing.JFrame {
         }
         initComponents();
         setIcons();
-        iniciarMusica(80.0F);
+        iniciarMusica();
     }
 
     /**
@@ -86,18 +87,18 @@ public class FramePrincipal extends javax.swing.JFrame {
 
     private void setIcons() {
         List<Image> iconImages = new ArrayList<>();
-        iconImages.add(new ImageIcon(FramePrincipal.class.getResource("/images/icons/icon16.png")).getImage());
-        iconImages.add(new ImageIcon(FramePrincipal.class.getResource("/images/icons/icon32.png")).getImage());
-        iconImages.add(new ImageIcon(FramePrincipal.class.getResource("/images/icons/icon64.png")).getImage());
-        iconImages.add(new ImageIcon(FramePrincipal.class.getResource("/images/icons/icon128.png")).getImage());
+        iconImages.add(new ImageIcon(Objects.requireNonNull(FramePrincipal.class.getResource("/images/icons/icon16.png"))).getImage());
+        iconImages.add(new ImageIcon(Objects.requireNonNull(FramePrincipal.class.getResource("/images/icons/icon32.png"))).getImage());
+        iconImages.add(new ImageIcon(Objects.requireNonNull(FramePrincipal.class.getResource("/images/icons/icon64.png"))).getImage());
+        iconImages.add(new ImageIcon(Objects.requireNonNull(FramePrincipal.class.getResource("/images/icons/icon128.png"))).getImage());
         initComponents();
         this.setIconImages(iconImages);
     }
 
-    private void iniciarMusica(float volume) {
+    private void iniciarMusica() {
         MusicPlayer musicPlayer = new MusicPlayer("/audio/main-theme.wav");
         musicPlayer.play();
-        musicPlayer.setVolume(volume);
+        musicPlayer.setVolume((float) 80.0);
     }
 
     // Métodos de aviso, confirmación, etc., sin cambios
@@ -116,6 +117,7 @@ public class FramePrincipal extends javax.swing.JFrame {
 
     public Font cargarFuente(String fontPath, float fontSize) throws FontFormatException, IOException {
         InputStream fontStream = this.getClass().getResourceAsStream(fontPath);
+        assert fontStream != null;
         Font font = Font.createFont(Font.TRUETYPE_FONT, fontStream);
         return font.deriveFont(fontSize);
     }

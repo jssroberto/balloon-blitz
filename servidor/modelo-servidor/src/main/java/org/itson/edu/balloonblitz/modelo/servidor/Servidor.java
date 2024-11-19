@@ -92,10 +92,6 @@ public final class Servidor {
                         new ObjectInputStream(socketCliente.getInputStream())
                 );
                 Logger.info("Cliente conectado con éxito: {}", socketCliente.getInetAddress());
-                Logger.trace("Clientes conectados: {}", serverSocket.getLocalPort());
-                Logger.debug("Clientes conectados: {}", serverSocket.getLocalPort());
-                Logger.warn("Clientes conectados: {}", serverSocket.getLocalPort());
-                Logger.error("Clientes conectados: {}", serverSocket.getLocalPort());
                 // Notificar al observador de conexión
                 if (observadorConexion != null) {
                     observadorConexion.clienteConectado(streams);

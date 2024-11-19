@@ -18,6 +18,7 @@ import org.itson.edu.balloonblitz.modelo.ObservadorDisparo;
 public class ControladorDisparos implements ObservadorDisparo {
 
     ClienteControlador cliente;
+//    org.itson.edu.balloonblitz.vista.PartidaPanel partidaPanel;
 
     public ControladorDisparos() {
         cliente.setObservadorDisparo(this);
@@ -29,9 +30,8 @@ public class ControladorDisparos implements ObservadorDisparo {
 
     @Override
     public void manejarEvento(ResultadoDisparoEvento evento) {
-//        Jugador jugador = evento.getEmisor();
+        Jugador jugador = evento.getEmisor();
 //        if (jugador.equals
-//        }
     }
 
 }
