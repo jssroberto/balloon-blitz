@@ -8,10 +8,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-import org.itson.edu.balloonblitz.entidades.Jugador;
-import org.itson.edu.balloonblitz.entidades.Partida;
 
 /**
  *

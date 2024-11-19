@@ -59,12 +59,9 @@ public class ModeloPosicionNaves implements ObservadorTiempo {
                 if (tiempoRestante > 0) {
                     label.setText(String.valueOf(tiempoRestante));
                     tiempoRestante--;
-                } else {
-                    label.setText("El tiempo ha expirado. Has perdido tu turno.");
-                    scheduler.shutdown();
                 }
             }, 0, 1, TimeUnit.SECONDS);
-        } else {
+        } else if(evento.getTiempoRestante() == 0){
             label.setText("El tiempo ha expirado. Has perdido tu turno.");
         }
     }

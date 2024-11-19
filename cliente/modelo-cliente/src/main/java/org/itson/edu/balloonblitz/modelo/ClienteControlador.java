@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
 
 /**
  * @author elimo
@@ -26,6 +27,8 @@ public class ClienteControlador {
     private boolean conectado;
     Evento mensajeRecibido;
     private final ExecutorService executorService = Executors.newFixedThreadPool(10);
+
+    TimeOutEvento timeOutEvento;
 
     private ClienteControlador() {
         try {
@@ -75,11 +78,22 @@ public class ClienteControlador {
         while (conectado) {
             try {
                 mensajeRecibido = (Evento) entrada.readObject();
-                if (mensajeRecibido!=null) {
-                    procesarMensaje(mensajeRecibido);
+                if (mensajeRecibido != null) {
+                    if (mensajeRecibido.getTipoEvento() == TipoEvento.TIMEOUT) {
+                        timeOutEvento = (TimeOutEvento) mensajeRecibido;
+                        if (timeOutEvento.getTiempoRestante() == 0) {
+                            procesarMensaje(mensajeRecibido);
+                        } else {
+                            procesarMensaje(mensajeRecibido);
+                        }
+                    } else {
+                        
+                            procesarMensaje(mensajeRecibido);
+                        
+                    }
                 }
             } catch (IOException | ClassNotFoundException ex) {
-                ex.getMessage();
+                System.out.println(ex.getMessage());
             }
         }
         desconectar();

@@ -118,7 +118,7 @@ public class EsperandoJugadorPanel extends javax.swing.JPanel {
                     Thread.sleep(500); // Simula la espera (medio segundo entre cambios)
                 }
                 lblEsperando.setText("Partida encontrada");
-                Thread.sleep(5000);
+                Thread.sleep(3000);
                 // Si es válido, proceder
                 // Cambiar al panel de colocación en el hilo principal
                 SwingUtilities.invokeLater(() -> framePrincipal.cambiarPanel(new ColocacionPanel(framePrincipal)));
