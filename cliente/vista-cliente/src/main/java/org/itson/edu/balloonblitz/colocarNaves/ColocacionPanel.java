@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package org.itson.edu.balloonblitz.vista;
+package org.itson.edu.balloonblitz.colocarNaves;
 
 import org.itson.edu.balloonblitz.auxiliar.BalloonTransferHandler;
 import java.awt.Color;
@@ -23,11 +23,13 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.TransferHandler;
 import org.itson.edu.balloonblitz.auxiliar.GridDragDropHandler;
-import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.Tablero;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.entidades.eventos.PosicionNavesEvento;
 import org.itson.edu.balloonblitz.modelo.ClienteControlador;
+import org.itson.edu.balloonblitz.vista.FramePrincipal;
+import org.itson.edu.balloonblitz.vista.InicioPanel;
+import org.itson.edu.balloonblitz.partida.PartidaPanel;
 
 /**
  *
@@ -55,7 +57,6 @@ public class ColocacionPanel extends javax.swing.JPanel {
     private final FramePrincipal framePrincipal;
     private GridDragDropHandler gridDragDropHandler;
     private ClienteControlador controlador;
-    private final Jugador jugador;
 
     /**
      * Creates new form PersonalizarPanel
@@ -63,12 +64,11 @@ public class ColocacionPanel extends javax.swing.JPanel {
      * @param framePrincipal
      * @param jugador
      */
-    public ColocacionPanel(FramePrincipal framePrincipal, Jugador jugador) {
+    public ColocacionPanel(FramePrincipal framePrincipal) {
         initComponents();
         this.framePrincipal = framePrincipal;
         this.gridDragDropHandler = new GridDragDropHandler(panelTablero);
-        this.jugador = jugador;
-        this.balloon_base_path = "/images/ballons/" + jugador.getColorPropio() + "/" + jugador.getColorPropio() + "-";
+//        this.balloon_base_path = "/images/ballons/" + jugador.getColorPropio() + "/" + jugador.getColorPropio() + "-";
 
         // Inicializar los labels de cantidad
         cantNave = new JLabel("x4");
@@ -161,7 +161,7 @@ public class ColocacionPanel extends javax.swing.JPanel {
 
         Tablero tablero = gridDragDropHandler.obtenerTablero();
         Evento eventoTablero = new PosicionNavesEvento(tablero);
-        eventoTablero.setEmisor(jugador);
+//        eventoTablero.setEmisor(jugador);
         controlador.enviarMensaje(eventoTablero);
 
         return true;
@@ -386,7 +386,7 @@ public class ColocacionPanel extends javax.swing.JPanel {
     private void btnConfirmarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConfirmarMouseClicked
         if (construirTablero()) {
             // Así no va quedar final, es para probar que se acomoden los globos en el tablero
-            framePrincipal.cambiarPanel(new PartidaPanel(framePrincipal, gridDragDropHandler, jugador));
+            framePrincipal.cambiarPanel(new PartidaPanel(framePrincipal, gridDragDropHandler));
         }
     }//GEN-LAST:event_btnConfirmarMouseClicked
 

@@ -38,9 +38,6 @@ public class ClienteControlador {
         }
     }
 
-    
-    
-
     public static synchronized ClienteControlador getInstancia() {
         if (instancia == null) {
             instancia = new ClienteControlador();
@@ -67,7 +64,7 @@ public class ClienteControlador {
         this.observadorDisparo = observadorDisparo;
     }
 
-    public void setObservadorJUgador(ObservadorJugador observadorJugador) {
+    public void setObservadorJugador(ObservadorJugador observadorJugador) {
         this.observadorJugador = observadorJugador;
     }
 

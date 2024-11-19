@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package org.itson.edu.balloonblitz.vista;
+package org.itson.edu.balloonblitz.esperarJugador;
 
+import org.itson.edu.balloonblitz.personalizar.PersonalizarPanel;
 import java.awt.Color;
 import java.awt.FontFormatException;
 import java.awt.FontMetrics;
@@ -19,22 +20,22 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import org.itson.edu.balloonblitz.controlador.ControladorEnvio;
-import org.itson.edu.balloonblitz.controlador.ControladorResultado;
-import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.eventos.EnvioJugadorEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
+import org.itson.edu.balloonblitz.colocarNaves.ColocacionPanel;
+import org.itson.edu.balloonblitz.vista.FramePrincipal;
+import org.itson.edu.balloonblitz.vista.InicioPanel;
 
 /**
  *
  * @author user
  */
-public class EsperandoJugador extends javax.swing.JPanel {
+public class EsperandoJugadorPanel extends javax.swing.JPanel {
 
     private static final Logger logger = Logger.getLogger(InicioPanel.class.getName());
     private final FramePrincipal framePrincipal;
-    private final Jugador jugador;
-    ControladorResultado resultado;
     int contador = 0;
+    ControladorEmparejamiento controlador;
     private final ExecutorService executorService = Executors.newFixedThreadPool(1);
     ControladorEnvio envio;
 
@@ -42,14 +43,12 @@ public class EsperandoJugador extends javax.swing.JPanel {
      * Creates new form PersonalizarPanel
      *
      * @param framePrincipal
-     * @param jugador
      */
-    public EsperandoJugador(FramePrincipal framePrincipal, Jugador jugador, ControladorResultado resultado) {
-        this.resultado = resultado;
-        this.jugador = jugador;
+    public EsperandoJugadorPanel(FramePrincipal framePrincipal) {
         this.framePrincipal = framePrincipal;
         initComponents();
         envio = new ControladorEnvio();
+        controlador = ControladorEmparejamiento.getInstancia();
         try {
             setFuentes();
         } catch (FontFormatException | IOException e) {
@@ -106,7 +105,7 @@ public class EsperandoJugador extends javax.swing.JPanel {
         executorService.submit(() -> {
             try {
 
-                while (!resultado.isValido()) {
+                while (!controlador.isValido()) {
                     // Actualizar la UI de forma segura
                     SwingUtilities.invokeLater(() -> {
                         switch (contador % 3) {
@@ -125,12 +124,12 @@ public class EsperandoJugador extends javax.swing.JPanel {
 
                 // Si es válido, proceder
                 Evento jugador2 = new EnvioJugadorEvento();
-                jugador2.setEmisor(jugador);
+                jugador2.setEmisor(controlador.obtenerJugador());
                 envio.enviarEvento(jugador2);
                 lblEsperando.setText("Partida encontrada");
                 Thread.sleep(5000);
                 // Cambiar al panel de colocación en el hilo principal
-                SwingUtilities.invokeLater(() -> framePrincipal.cambiarPanel(new ColocacionPanel(framePrincipal, jugador)));
+                SwingUtilities.invokeLater(() -> framePrincipal.cambiarPanel(new ColocacionPanel(framePrincipal)));
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 logger.log(Level.SEVERE, "Hilo interrumpido durante la espera del jugador.", e);
@@ -200,7 +199,7 @@ public class EsperandoJugador extends javax.swing.JPanel {
     }//GEN-LAST:event_lblVolverMouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        framePrincipal.cambiarPanel(new ColocacionPanel(framePrincipal, jugador));
+        framePrincipal.cambiarPanel(new ColocacionPanel(framePrincipal));
     }//GEN-LAST:event_jButton1ActionPerformed
 
 

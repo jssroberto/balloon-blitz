@@ -4,6 +4,10 @@
  */
 package org.itson.edu.balloonblitz.vista;
 
+import org.itson.edu.balloonblitz.modelo.ClienteControlador;
+import org.itson.edu.balloonblitz.personalizar.PersonalizarPanel;
+import org.itson.edu.balloonblitz.esperarJugador.ModeloResultadoEmparejamiento;
+
 /**
  *
  * @author rover
@@ -11,6 +15,7 @@ package org.itson.edu.balloonblitz.vista;
 public class InicioPanel extends javax.swing.JPanel {
 
     private final FramePrincipal framePrincipal;
+    
 
     /**
      * Creates new form InicioPanel
@@ -57,6 +62,7 @@ public class InicioPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnJugarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnJugarActionPerformed
+
         framePrincipal.cambiarPanel(new PersonalizarPanel(framePrincipal));
     }//GEN-LAST:event_btnJugarActionPerformed
 

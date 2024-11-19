@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package org.itson.edu.balloonblitz.vista;
+package org.itson.edu.balloonblitz.personalizar;
 
 import java.awt.Color;
 import java.awt.FontFormatException;
@@ -19,12 +19,13 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import org.itson.edu.balloonblitz.controlador.ControladorResultado;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.enumeradores.ColorNaves;
-import org.itson.edu.balloonblitz.entidades.eventos.EnvioJugadorEvento;
-import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.modelo.ClienteControlador;
+import org.itson.edu.balloonblitz.esperarJugador.EsperandoJugadorPanel;
+import org.itson.edu.balloonblitz.vista.FramePrincipal;
+import org.itson.edu.balloonblitz.vista.InicioPanel;
+import org.itson.edu.balloonblitz.esperarJugador.ModeloResultadoEmparejamiento;
 
 /**
  *
@@ -34,14 +35,13 @@ public class PersonalizarPanel extends javax.swing.JPanel {
 
     private static final Logger logger = Logger.getLogger(InicioPanel.class.getName());
     private final FramePrincipal framePrincipal;
-
+    private ClienteControlador cliente;
     private ColorNaves colorNaves;
     private ColorNaves colorNavesRival;
     private String fotoPerfil;
-    ControladorResultado resultado;
-    private ClienteControlador controlador;
-    private Jugador jugador;
-
+    ControladorJugador jugador;
+    ClienteControlador controlador;
+    ModeloResultadoEmparejamiento emparejamiento;
     private record ImageProperties(int width, int height, boolean isEnlarged) {
 
     }
@@ -67,6 +67,7 @@ public class PersonalizarPanel extends javax.swing.JPanel {
      */
     public PersonalizarPanel(FramePrincipal framePrincipal) {
         this.framePrincipal = framePrincipal;
+        jugador = new ControladorJugador();
         initComponents();
         try {
             setFuentes();
@@ -129,16 +130,7 @@ public class PersonalizarPanel extends javax.swing.JPanel {
     }
 
     private void crearJugador() {
-        this.jugador = new Jugador(txtNombre.getText(), colorNaves, colorNavesRival, fotoPerfil);
-
-//        Evento jugador2 = new EnvioJugadorEvento();
-//        jugador2.setEmisor(jugador);
-//
-//        System.out.println("Emisor antes de enviar: " + jugador2.getEmisor().getNombre());
-//
-//        controlador.enviarMensaje(jugador2);
-//        System.out.println("Evento enviado al servidor.");
-
+        jugador.setJugador(new Jugador(txtNombre.getText(), colorNaves, colorNavesRival, fotoPerfil));
     }
 
     private void restaurarImagenesPFP(String imagenExcluida) {
@@ -505,9 +497,10 @@ public class PersonalizarPanel extends javax.swing.JPanel {
 
     private void lblContinuarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblContinuarMouseClicked
         crearJugador();
-         controlador = ClienteControlador.getInstancia();
-        resultado = new ControladorResultado();
-        framePrincipal.cambiarPanel(new EsperandoJugador(framePrincipal, jugador, resultado));
+        controlador = ClienteControlador.getInstancia();
+        emparejamiento = ModeloResultadoEmparejamiento.getInstancia();
+        controlador.setObservadorResultado(emparejamiento);
+        framePrincipal.cambiarPanel(new EsperandoJugadorPanel(framePrincipal));
     }//GEN-LAST:event_lblContinuarMouseClicked
 
     private void txtNombreFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNombreFocusGained
