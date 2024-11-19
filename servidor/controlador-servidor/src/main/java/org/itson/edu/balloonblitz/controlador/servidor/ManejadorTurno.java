@@ -4,6 +4,8 @@
  */
 package org.itson.edu.balloonblitz.controlador.servidor;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -17,31 +19,34 @@ import org.itson.edu.balloonblitz.entidades.Partida;
  */
 public class ManejadorTurno {
 
-    Partida partida;
-    private static final int LIMITE_TIEMPO_TURNO = 3; // minutos
     private final ScheduledExecutorService temporizadorTurno = Executors.newSingleThreadScheduledExecutor();
-    private ScheduledFuture<?> temporizadorActual;
-    private Jugador jugadorActual;
-    private Jugador jugador1;
-    private Jugador jugador2;
+    private boolean tiempoExcedido;
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
 
-    public void iniciarTurno(Jugador jugador) {
-        jugadorActual = jugador;
-        temporizadorActual = temporizadorTurno.schedule(() -> {
-            System.out.println("El tiempo de turno ha expirado para " + jugadorActual.getNombre());
-            cambiarTurno();
-        }, LIMITE_TIEMPO_TURNO, TimeUnit.MINUTES);
-
+    public ManejadorTurno() {
     }
 
-    private void cambiarTurno() {
-        if (temporizadorActual != null) {
-            temporizadorActual.cancel(true); // Cancelar el temporizador del turno actual
+    public int iniciarTemporizador(int segundos) {
+        CompletableFuture<String> futuro = new CompletableFuture<>();
+        tiempoExcedido = false;
+
+        scheduler.schedule(() -> {
+            tiempoExcedido = true;
+            futuro.complete(mostrarMensajeTiempoExcedido());
+        }, segundos, TimeUnit.SECONDS);
+
+        try {
+            // Esperamos el resultado del CompletableFuture
+            futuro.get();
+            return 0;
+        } catch (InterruptedException | ExecutionException e) {
+            Thread.currentThread().interrupt(); // Restablece el estado de interrupción
         }
-
-        jugadorActual = (jugadorActual.equals(jugador1)) ? jugador2 : jugador1;
-
-        iniciarTurno(jugadorActual);
+        return -1;
     }
 
+    
+    private String mostrarMensajeTiempoExcedido() {
+        return "El tiempo ha expirado.";
+    }
 }

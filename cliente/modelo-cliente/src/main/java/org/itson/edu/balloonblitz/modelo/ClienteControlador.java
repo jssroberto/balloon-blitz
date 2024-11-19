@@ -46,7 +46,6 @@ public class ClienteControlador {
         return instancia;
     }
 
-
     private void iniciarStreams() {
         executorService.submit(() -> recibirEvento());
         executorService.submit(() -> enviarMensaje(null));
@@ -54,6 +53,10 @@ public class ClienteControlador {
 
     public void setObservadorTiempo(ObservadorTiempo observadorTiempo) {
         this.observadorTiempo = observadorTiempo;
+    }
+
+    public void eliminarObservadorTiempo() {
+        this.observadorTiempo = null;
     }
 
     public void setObservadorResultado(ObservadorResultado observadorResultado) {
@@ -72,8 +75,9 @@ public class ClienteControlador {
         while (conectado) {
             try {
                 mensajeRecibido = (Evento) entrada.readObject();
-                procesarMensaje(mensajeRecibido);
-
+                if (mensajeRecibido!=null) {
+                    procesarMensaje(mensajeRecibido);
+                }
             } catch (IOException | ClassNotFoundException ex) {
                 ex.getMessage();
             }
@@ -94,7 +98,9 @@ public class ClienteControlador {
     private void procesarMensaje(Evento evento) {
         switch (evento.getTipoEvento()) {
             case TIMEOUT:
-                observadorTiempo.manejarEvento((TimeOutEvento) evento);
+                if (observadorTiempo != null) {
+                    observadorTiempo.manejarEvento((TimeOutEvento) evento);
+                }
             case ENVIO_JUGADOR:
                 observadorJugador.manejarEvento((EnvioJugadorEvento) evento);
             case RESULTADO:

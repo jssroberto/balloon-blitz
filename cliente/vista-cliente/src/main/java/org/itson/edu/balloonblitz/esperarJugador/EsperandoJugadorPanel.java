@@ -20,8 +20,6 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import org.itson.edu.balloonblitz.controlador.ControladorEnvio;
-import org.itson.edu.balloonblitz.entidades.eventos.EnvioJugadorEvento;
-import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.colocarNaves.ColocacionPanel;
 import org.itson.edu.balloonblitz.vista.FramePrincipal;
 import org.itson.edu.balloonblitz.vista.InicioPanel;
@@ -37,7 +35,6 @@ public class EsperandoJugadorPanel extends javax.swing.JPanel {
     int contador = 0;
     ControladorEmparejamiento controlador;
     private final ExecutorService executorService = Executors.newFixedThreadPool(1);
-    ControladorEnvio envio;
 
     /**
      * Creates new form PersonalizarPanel
@@ -47,7 +44,6 @@ public class EsperandoJugadorPanel extends javax.swing.JPanel {
     public EsperandoJugadorPanel(FramePrincipal framePrincipal) {
         this.framePrincipal = framePrincipal;
         initComponents();
-        envio = new ControladorEnvio();
         controlador = ControladorEmparejamiento.getInstancia();
         try {
             setFuentes();
@@ -123,9 +119,6 @@ public class EsperandoJugadorPanel extends javax.swing.JPanel {
                 }
 
                 // Si es válido, proceder
-                Evento jugador2 = new EnvioJugadorEvento();
-                jugador2.setEmisor(controlador.obtenerJugador());
-                envio.enviarEvento(jugador2);
                 lblEsperando.setText("Partida encontrada");
                 Thread.sleep(5000);
                 // Cambiar al panel de colocación en el hilo principal

@@ -4,8 +4,13 @@
  */
 package org.itson.edu.balloonblitz.colocarNaves;
 
+import javax.swing.JLabel;
+import org.itson.edu.balloonblitz.controlador.ControladorEnvio;
 import org.itson.edu.balloonblitz.personalizar.*;
 import org.itson.edu.balloonblitz.entidades.Jugador;
+import org.itson.edu.balloonblitz.entidades.eventos.EnvioJugadorEvento;
+import org.itson.edu.balloonblitz.entidades.eventos.Evento;
+import org.itson.edu.balloonblitz.modelo.ClienteControlador;
 
 /**
  *
@@ -14,11 +19,18 @@ import org.itson.edu.balloonblitz.entidades.Jugador;
 public class ControladorPosicionarNaves {
 
     private static ControladorPosicionarNaves instancia;
+    ClienteControlador cliente;
+    private final ModeloPosicionNaves posicion;
     private final ModeloJugador modeloJugador;
+    private final ControladorEnvio controladorEnvio;
 
     public ControladorPosicionarNaves() {
+        cliente = ClienteControlador.getInstancia();
+        posicion = ModeloPosicionNaves.getInstancia();
+        cliente.setObservadorTiempo(posicion);
         modeloJugador = ModeloJugador.getInstancia();
-        
+        controladorEnvio = new ControladorEnvio();
+        enviarJugador();
     }
 
     public Jugador obtenerJugador() {
@@ -29,11 +41,31 @@ public class ControladorPosicionarNaves {
         modeloJugador.setJugador(jugador);
     }
     
+    public void enviarEvento(Evento evento){
+        controladorEnvio.enviarEvento(evento);
+    }
+    
     public static ControladorPosicionarNaves getInstancia() {
         if (instancia == null) {
             instancia = new ControladorPosicionarNaves();
         }
         return instancia;
     }
+    
+    public void setLabel(JLabel label){
+        posicion.setLabel(label);
+    }
+    
+    private void enviarJugador(){
+        Evento evento = new EnvioJugadorEvento();
+        evento.setEmisor(obtenerJugador());
+        enviarEvento(evento);
+    }
+    
+    public void cerrar(){
+        cliente.eliminarObservadorTiempo();
+    }
+    
+    
 
 }
