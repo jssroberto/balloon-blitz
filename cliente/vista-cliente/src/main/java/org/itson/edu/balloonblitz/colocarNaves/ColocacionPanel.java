@@ -66,7 +66,7 @@ public class ColocacionPanel extends javax.swing.JPanel {
     public ColocacionPanel(FramePrincipal framePrincipal) {
         initComponents();
         controlador = ControladorPosicionarNaves.getInstancia();
-        controlador.setLabel(lblTitulo2);
+        controlador.setLabel(lblTiempoRestante);
         this.framePrincipal = framePrincipal;
         this.gridDragDropHandler = new GridDragDropHandler(panelTablero);
         this.balloon_base_path = "/images/ballons/" + controlador.obtenerJugador().getColorPropio() + "/" + controlador.obtenerJugador().getColorPropio() + "-";
@@ -95,6 +95,8 @@ public class ColocacionPanel extends javax.swing.JPanel {
         Font titleFont = framePrincipal.cargarFuente(FONT_PATH, TITLE_FONT_SIZE);
         Font textFont = framePrincipal.cargarFuente(FONT_PATH, TEXT_FONT_SIZE);
 
+        lblTiempo.setFont(titleFont);
+        lblTiempoRestante.setFont(titleFont);
         lblTitulo1.setFont(titleFont);
         lblTitulo2.setFont(titleFont);
 
@@ -254,7 +256,7 @@ public class ColocacionPanel extends javax.swing.JPanel {
     // Aqui el numero de la foto define el tamaño de la nave
     private JLabel createBalloon(int size, String type) {
         String imagePath = balloon_base_path + size + ".png";
-        ImageIcon icon = new ImageIcon(getClass().getResource(imagePath));
+        ImageIcon icon = new ImageIcon(getClass().getResource(imagePath.toLowerCase()));
         JLabel balloon = new JLabel(icon);
         balloon.setTransferHandler(new BalloonTransferHandler(balloon, type));
         return balloon;
@@ -300,6 +302,8 @@ public class ColocacionPanel extends javax.swing.JPanel {
         lblBarcos = new javax.swing.JLabel();
         lblCruceros = new javax.swing.JLabel();
         lblPortaAviones = new javax.swing.JLabel();
+        lblTiempoRestante = new javax.swing.JLabel();
+        lblTiempo = new javax.swing.JLabel();
         lblNaves = new javax.swing.JLabel();
         panelContenedorGlobos = new javax.swing.JLabel();
         panelBorde = new javax.swing.JLabel();
@@ -326,6 +330,7 @@ public class ColocacionPanel extends javax.swing.JPanel {
         lblTitulo2.setText("derecho para rotarlas.");
         jPanel1.add(lblTitulo2, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 50, -1, 40));
 
+        panelTablero.setFont(new java.awt.Font("Segoe UI", 0, 8)); // NOI18N
         panelTablero.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/cuadricula.png"))); // NOI18N
         jPanel1.add(panelTablero, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 140, 450, 450));
 
@@ -355,6 +360,13 @@ public class ColocacionPanel extends javax.swing.JPanel {
 
         lblPortaAviones.setText("Portaaviones");
         jPanel1.add(lblPortaAviones, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 320, 160, 40));
+
+        lblTiempoRestante.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
+        jPanel1.add(lblTiempoRestante, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 170, 100, 40));
+
+        lblTiempo.setFont(new java.awt.Font("Segoe UI Variable", 0, 18)); // NOI18N
+        lblTiempo.setText("Tiempo restante:");
+        jPanel1.add(lblTiempo, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 110, 260, 40));
 
         lblNaves.setText("Naves");
         jPanel1.add(lblNaves, new org.netbeans.lib.awtextra.AbsoluteConstraints(262, 170, 80, 40));
@@ -409,6 +421,8 @@ public class ColocacionPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lblFondo;
     private javax.swing.JLabel lblNaves;
     private javax.swing.JLabel lblPortaAviones;
+    private javax.swing.JLabel lblTiempo;
+    private javax.swing.JLabel lblTiempoRestante;
     private javax.swing.JLabel lblTitulo1;
     private javax.swing.JLabel lblTitulo2;
     private javax.swing.JLabel panelBorde;

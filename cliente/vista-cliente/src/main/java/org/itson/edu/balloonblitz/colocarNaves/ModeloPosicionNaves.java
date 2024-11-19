@@ -57,7 +57,7 @@ public class ModeloPosicionNaves implements ObservadorTiempo {
             ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
             scheduler.scheduleAtFixedRate(() -> {
                 if (tiempoRestante > 0) {
-                    label.setText("El temporizador está corriendo. Tiempo restante: " + tiempoRestante + " segundos.");
+                    label.setText(String.valueOf(tiempoRestante));
                     tiempoRestante--;
                 } else {
                     label.setText("El tiempo ha expirado. Has perdido tu turno.");

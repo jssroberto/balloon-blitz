@@ -34,7 +34,7 @@ public class EsperandoJugadorPanel extends javax.swing.JPanel {
     private final FramePrincipal framePrincipal;
     int contador = 0;
     ControladorEmparejamiento controlador;
-    private final ExecutorService executorService = Executors.newFixedThreadPool(1);
+    private final ExecutorService executorService = Executors.newFixedThreadPool(10);
 
     /**
      * Creates new form PersonalizarPanel
@@ -117,10 +117,9 @@ public class EsperandoJugadorPanel extends javax.swing.JPanel {
                     contador++;
                     Thread.sleep(500); // Simula la espera (medio segundo entre cambios)
                 }
-
-                // Si es válido, proceder
                 lblEsperando.setText("Partida encontrada");
                 Thread.sleep(5000);
+                // Si es válido, proceder
                 // Cambiar al panel de colocación en el hilo principal
                 SwingUtilities.invokeLater(() -> framePrincipal.cambiarPanel(new ColocacionPanel(framePrincipal)));
             } catch (InterruptedException e) {

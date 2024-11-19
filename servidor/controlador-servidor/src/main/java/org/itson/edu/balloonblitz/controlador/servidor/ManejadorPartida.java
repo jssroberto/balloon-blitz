@@ -47,6 +47,7 @@ public class ManejadorPartida implements EventoObserver {
         executorService.submit(() -> servidor.mandarDatosCliente(streamsJugador2.getSalida(), null));
         enviarEventoAJugador(streamsJugador2.getSalida(), new ResultadoEvento(true));
         enviarEventoAJugador(streamsJugador1.getSalida(), new ResultadoEvento(true));
+
     }
 
     /**
@@ -88,34 +89,43 @@ public class ManejadorPartida implements EventoObserver {
         partida.setTableroJugador1(new Tablero());
         partida.setTableroJugador2(new Tablero());
         partida.setEstadoPartida(EstadoPartida.ACTIVA);
+        manejarTurnos();
 
     }
 
     public Evento procesarEvento(Evento evento, ObjectInputStream entrada) {
-        Jugador emisor = obtenerEmisor(entrada);
         TipoEvento tipoEvento = evento.getTipoEvento();
-        if (emisor == null) {
-            Logger.error("No se pudo identificar el emisor del evento");
-            return null;
-        }
-        evento.setEmisor(emisor);
 
         if (tipoEvento == TipoEvento.ENVIO_JUGADOR) {
+            if (entrada.equals(streamsJugador1.getEntrada())) {
+                partida.setJugador1(evento.getEmisor());
+            } else if (entrada.equals(streamsJugador2.getEntrada())) {
+                partida.setJugador2(evento.getEmisor());
+            }
             verificarYCrearPartida();
             return null;
-        } else if (tipoEvento == TipoEvento.POSICION_NAVES) {
-            ManejadorPosicionNaves manejadorPosicion = new ManejadorPosicionNaves((PosicionNavesEvento) evento);
-            return manejadorPosicion.procesarEvento();
-
-        } else if (tipoEvento == TipoEvento.DISPARO) {
-            //Obtiene el jugador rival y su tablero correspondientes al servidor
-            Tablero tableroRival = obtenerTableroRival(evento.getEmisor());
-            Jugador jugadorRival = obtenerJugadorRival(evento.getEmisor());
-            ManejadorDisparo manejadorDisparo = new ManejadorDisparo((DisparoEvento) evento, tableroRival, jugadorRival);
-            return manejadorDisparo.procesarEvento();
         } else {
-            Logger.error("No se reconoció el tipo de evento");
-            return null;
+            Jugador emisor = obtenerEmisor(entrada);
+            if (emisor == null) {
+                Logger.error("No se pudo identificar el emisor del evento");
+                return null;
+            }
+            evento.setEmisor(emisor);
+
+            if (tipoEvento == TipoEvento.POSICION_NAVES) {
+                ManejadorPosicionNaves manejadorPosicion = new ManejadorPosicionNaves((PosicionNavesEvento) evento);
+                return manejadorPosicion.procesarEvento();
+
+            } else if (tipoEvento == TipoEvento.DISPARO) {
+                //Obtiene el jugador rival y su tablero correspondientes al servidor
+                Tablero tableroRival = obtenerTableroRival(evento.getEmisor());
+                Jugador jugadorRival = obtenerJugadorRival(evento.getEmisor());
+                ManejadorDisparo manejadorDisparo = new ManejadorDisparo((DisparoEvento) evento, tableroRival, jugadorRival);
+                return manejadorDisparo.procesarEvento();
+            } else {
+                Logger.error("No se reconoció el tipo de evento");
+                return null;
+            }
         }
 
     }
@@ -128,7 +138,7 @@ public class ManejadorPartida implements EventoObserver {
             manejarTurnoJugador(streamsJugador1, partida.getJugador1(), partida.getJugador2());
         } else if (partida.getJugador2().isTurno() && !partida.getJugador1().isTurno()) {
             manejarTurnoJugador(streamsJugador2, partida.getJugador2(), partida.getJugador1());
-        }else if (partida.getJugador2().isTurno() && partida.getJugador1().isTurno()){
+        } else if (partida.getJugador2().isTurno() && partida.getJugador1().isTurno()) {
             manejarTurnoJugador();
         }
     }
@@ -148,6 +158,7 @@ public class ManejadorPartida implements EventoObserver {
             jugadorSiguiente.setTurno(true);
         }
     }
+
     private void manejarTurnoJugador() {
         enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(30));
         enviarEventoAJugador(streamsJugador2.getSalida(), new TimeOutEvento(30));

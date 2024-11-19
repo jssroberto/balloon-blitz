@@ -19,8 +19,9 @@ public class ControladorEnvio {
         cliente = ClienteControlador.getInstancia();
     }
 
-    public void enviarEvento(Evento evento) {
-        cliente.enviarMensaje(evento);
-    }
+    public synchronized void enviarEvento(Evento evento) {
+    cliente.enviarMensaje(evento);
+}
+
 
 }

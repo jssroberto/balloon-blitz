@@ -116,33 +116,26 @@ public final class Servidor {
      * @param entrada Input del usuario a recibir datos
      */
     public void recibirDatosCiente(ObjectInputStream entrada) {
-
-        try {
-            while (true) { // Bucle infinito para mantener la escucha
-                try {
-                    // Leer el objeto enviado por el cliente
-                    Evento evento = (Evento) entrada.readObject(); // Esto bloqueará hasta que llegue un objeto
-
-                    if (observadorEventos != null) {
-                        observadorEventos.manejarEvento(evento, entrada);
-                    }
-
-                } catch (IOException e) {
-                    Logger.error("Error al recibir datos del cliente: {}", e.getMessage());
-                    break; // Salir del bucle si hay un error de conexión o I/O
-                } catch (ClassNotFoundException e) {
-                    Logger.error("Clase de evento desconocida: {}", e.getMessage());
-                }
-            }
-        } finally {
-            // Cerrar el ObjectInputStream al salir del bucle
+   
+        while (true) { // Bucle infinito para mantener la escucha
             try {
-                entrada.close();
+                // Leer el objeto enviado por el cliente
+                Evento evento = (Evento) entrada.readObject(); // Esto bloqueará hasta que llegue un objeto
+
+                if (observadorEventos != null) {
+                    observadorEventos.manejarEvento(evento, entrada);
+                }
+
             } catch (IOException e) {
-                Logger.error("Error al cerrar el flujo de entrada: {}", e.getMessage());
+                Logger.error("Error al recibir datos del cliente: {}", e.getMessage());
+                break; // Salir del bucle si hay un error de conexión o I/O
+            } catch (ClassNotFoundException e) {
+                Logger.error("Clase de evento desconocida: {}", e.getMessage());
             }
         }
-    }
+    
+}
+
 
 
     /**
