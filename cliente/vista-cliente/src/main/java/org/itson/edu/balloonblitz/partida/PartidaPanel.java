@@ -34,7 +34,6 @@ import org.itson.edu.balloonblitz.vista.PerderPanel;
 public class PartidaPanel extends javax.swing.JPanel {
 
     private Jugador jugador;
-    private ClienteControlador controlador;
     private Tablero tablero;
     private GridDragDropHandler gridDragDropHandler;
     private static final Logger logger = Logger.getLogger(PartidaPanel.class.getName());

@@ -6,6 +6,8 @@ import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import org.itson.edu.balloonblitz.controlador.ControladorEnvio;
 import org.itson.edu.balloonblitz.entidades.Coordenada;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
@@ -70,7 +72,9 @@ public class TableroClickHandler {
     private static void realizarDisparo(int row, int col, Jugador jugador) {
         DisparoEvento disparo = new DisparoEvento(new Coordenada(row, col));
         disparo.setEmisor(jugador);
-
+        ControladorEnvio controladorEnvio = new ControladorEnvio();
+        controladorEnvio.enviarEvento(disparo);
+        ClienteControlador.getInstancia().enviarMensaje(disparo);
 
         System.out.println("Disparo realizado en posicion: " + row + ", " + col);
     }

@@ -10,7 +10,6 @@ import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoNave;
 import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.ResultadoDisparoEvento;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,13 +20,11 @@ public class ManejadorDisparo {
     private final DisparoEvento disparoEvento;
     private final Tablero tableroRival;
     private final Jugador jugadorRival;
-    private final List<Casilla> casillasAtacadas;
 
     public ManejadorDisparo(DisparoEvento disparoEvento, Tablero tableroRival, Jugador jugadorRival) {
         this.disparoEvento = disparoEvento;
         this.tableroRival = tableroRival;
         this.jugadorRival = jugadorRival;
-        this.casillasAtacadas = new ArrayList<>();
     }
 
     //Los cambios que se le hagan al tablero y jugador en esta clase se reflejarán en la partida que tiene el servidor (i hope)
@@ -43,7 +40,7 @@ public class ManejadorDisparo {
         // Usar Optional para obtener la nave en la casilla
         if (casilla.getNave().isEmpty()) {
             // Si no hay nave en la casilla, retornar un evento de resultado sin impacto
-            return new ResultadoDisparoEvento(null);
+            return new ResultadoDisparoEvento(tableroRival);
         }
         return procesarDisparo(casilla);
     }
@@ -65,12 +62,12 @@ public class ManejadorDisparo {
             // Si la nave está hundida, procesar el hundimiento
             procesarNaveHundida(tableroRival, jugadorRival, casilla);
         }
-        return new ResultadoDisparoEvento(casillasAtacadas);
+        return new ResultadoDisparoEvento(tableroRival);
     }
 
     private void procesarNaveAveriada(Casilla casilla, Nave nave) {
         nave.setEstadoNave(EstadoNave.AVERIADA);
-        casillasAtacadas.add(casilla);
+        tableroRival.setCasilla(casilla);
     }
 
     private void procesarNaveHundida(Tablero tableroRival, Jugador jugadorRival, Casilla casilla) {
@@ -96,7 +93,7 @@ public class ManejadorDisparo {
                 Casilla c = tableroRival.getCasilla(new Coordenada(i, j));
                 if (c.getNave().isPresent() && c.getNave().get().equals(nave)) {
                     c.setEstado(EstadoCasilla.GOLPEADA);
-                    casillasAtacadas.add(c);
+                    tableroRival.setCasilla(c);
                 }
             }
         }

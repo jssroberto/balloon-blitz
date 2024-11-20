@@ -64,7 +64,7 @@ class ManejadorDisparoTest {
         ResultadoDisparoEvento resultado = manejador.procesarEvento();
 
         // Verificar resultado
-        assertFalse(resultado.getCasillas().isPresent());
+        assertFalse(resultado.getTablero().getCasilla(new Coordenada(5, 5)).getNave().isPresent());
         assertEquals(EstadoCasilla.GOLPEADA, casillaSinNave.getEstado());
     }
 
@@ -78,7 +78,7 @@ class ManejadorDisparoTest {
         ResultadoDisparoEvento resultado = manejador.procesarEvento();
 
         // Verificar resultado
-        assertTrue(resultado.getCasillas().isPresent());
+        assertTrue(resultado.getTablero().getCasilla(new Coordenada(2, 3)).getNave().isPresent());
         assertEquals(EstadoCasilla.GOLPEADA, casilla1.getEstado());
         assertEquals(1, nave.getImpactos());
         assertEquals(EstadoNave.AVERIADA, nave.getEstadoNave());
@@ -98,7 +98,7 @@ class ManejadorDisparoTest {
         ResultadoDisparoEvento resultado = manejador.procesarEvento();
 
         // Verificar resultado
-        assertTrue(resultado.getCasillas().isPresent());
+        assertEquals(EstadoCasilla.GOLPEADA, resultado.getTablero().getCasilla(new Coordenada(2, 3)).getEstado());
         assertEquals(EstadoCasilla.GOLPEADA, casilla1.getEstado());
         assertEquals(3, nave.getImpactos());
         assertEquals(EstadoNave.HUNDIDA, nave.getEstadoNave());
@@ -170,7 +170,7 @@ class ManejadorDisparoTest {
         );
 
         // Verificar el resultado
-        assertTrue(resultado3.getCasillas().isPresent());
+        assertTrue(resultado3.getTablero().getCasilla(new Coordenada(2, 5)).getNave().isPresent());
     }
 
     @Test
