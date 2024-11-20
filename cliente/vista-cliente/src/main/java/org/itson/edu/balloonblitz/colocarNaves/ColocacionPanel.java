@@ -95,7 +95,6 @@ public class ColocacionPanel extends javax.swing.JPanel {
         Font titleFont = framePrincipal.cargarFuente(FONT_PATH, TITLE_FONT_SIZE);
         Font textFont = framePrincipal.cargarFuente(FONT_PATH, TEXT_FONT_SIZE);
 
-        lblTiempo.setFont(titleFont);
         lblTiempoRestante.setFont(titleFont);
         lblTitulo1.setFont(titleFont);
         lblTitulo2.setFont(titleFont);
@@ -303,10 +302,10 @@ public class ColocacionPanel extends javax.swing.JPanel {
         lblCruceros = new javax.swing.JLabel();
         lblPortaAviones = new javax.swing.JLabel();
         lblTiempoRestante = new javax.swing.JLabel();
-        lblTiempo = new javax.swing.JLabel();
         lblNaves = new javax.swing.JLabel();
         panelContenedorGlobos = new javax.swing.JLabel();
         panelBorde = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
         lblFondo = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -361,12 +360,8 @@ public class ColocacionPanel extends javax.swing.JPanel {
         lblPortaAviones.setText("Portaaviones");
         jPanel1.add(lblPortaAviones, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 320, 160, 40));
 
-        lblTiempoRestante.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
-        jPanel1.add(lblTiempoRestante, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 170, 100, 40));
-
-        lblTiempo.setFont(new java.awt.Font("Segoe UI Variable", 0, 18)); // NOI18N
-        lblTiempo.setText("Tiempo restante:");
-        jPanel1.add(lblTiempo, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 110, 260, 40));
+        lblTiempoRestante.setText("Hora");
+        jPanel1.add(lblTiempoRestante, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 620, 470, 40));
 
         lblNaves.setText("Naves");
         jPanel1.add(lblNaves, new org.netbeans.lib.awtextra.AbsoluteConstraints(262, 170, 80, 40));
@@ -376,6 +371,9 @@ public class ColocacionPanel extends javax.swing.JPanel {
 
         panelBorde.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/borde.png"))); // NOI18N
         jPanel1.add(panelBorde, new org.netbeans.lib.awtextra.AbsoluteConstraints(576, 136, 458, 458));
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/clock.png"))); // NOI18N
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 620, -1, -1));
 
         lblFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/colocacionSinTablero.png"))); // NOI18N
         jPanel1.add(lblFondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1280, 680));
@@ -415,13 +413,13 @@ public class ColocacionPanel extends javax.swing.JPanel {
     private javax.swing.JLabel cantNave;
     private javax.swing.JLabel cantPortaAviones;
     private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblBarcos;
     private javax.swing.JLabel lblCruceros;
     private javax.swing.JLabel lblFondo;
     private javax.swing.JLabel lblNaves;
     private javax.swing.JLabel lblPortaAviones;
-    private javax.swing.JLabel lblTiempo;
     private javax.swing.JLabel lblTiempoRestante;
     private javax.swing.JLabel lblTitulo1;
     private javax.swing.JLabel lblTitulo2;
