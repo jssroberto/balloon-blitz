@@ -21,11 +21,11 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.enumeradores.ColorNaves;
-import org.itson.edu.balloonblitz.modelo.ClienteControlador;
 import org.itson.edu.balloonblitz.esperarJugador.EsperandoJugadorPanel;
 import org.itson.edu.balloonblitz.vista.FramePrincipal;
 import org.itson.edu.balloonblitz.vista.InicioPanel;
 import org.itson.edu.balloonblitz.esperarJugador.ModeloResultadoEmparejamiento;
+import org.itson.edu.balloonblitz.modelo.ConexionCliente;
 
 /**
  *
@@ -35,12 +35,12 @@ public class PersonalizarPanel extends javax.swing.JPanel {
 
     private static final Logger logger = Logger.getLogger(InicioPanel.class.getName());
     private final FramePrincipal framePrincipal;
-    private ClienteControlador cliente;
+    private ConexionCliente cliente;
     private ColorNaves colorNaves;
     private ColorNaves colorNavesRival;
     private String fotoPerfil;
     ControladorJugador jugador;
-    ClienteControlador controlador;
+    ConexionCliente controlador;
     ModeloResultadoEmparejamiento emparejamiento;
     private record ImageProperties(int width, int height, boolean isEnlarged) {
 
@@ -497,7 +497,7 @@ public class PersonalizarPanel extends javax.swing.JPanel {
 
     private void lblContinuarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblContinuarMouseClicked
         crearJugador();
-        controlador = ClienteControlador.getInstancia();
+        controlador = ConexionCliente.getInstancia();
         emparejamiento = ModeloResultadoEmparejamiento.getInstancia();
         controlador.setObservadorResultado(emparejamiento);
         framePrincipal.cambiarPanel(new EsperandoJugadorPanel(framePrincipal));

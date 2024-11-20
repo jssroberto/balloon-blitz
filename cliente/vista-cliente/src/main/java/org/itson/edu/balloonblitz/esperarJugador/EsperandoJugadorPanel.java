@@ -19,7 +19,6 @@ import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
-import org.itson.edu.balloonblitz.controlador.ControladorEnvio;
 import org.itson.edu.balloonblitz.colocarNaves.ColocacionPanel;
 import org.itson.edu.balloonblitz.vista.FramePrincipal;
 import org.itson.edu.balloonblitz.vista.InicioPanel;
