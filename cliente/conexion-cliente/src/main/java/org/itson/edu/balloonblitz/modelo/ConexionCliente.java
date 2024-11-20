@@ -13,9 +13,9 @@ import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
 /**
  * @author elimo
  */
-public class ClienteControlador {
+public class ConexionCliente {
 
-    private static ClienteControlador instancia;
+    private static ConexionCliente instancia;
 
     private Socket socket;
     private ObjectOutputStream salida;
@@ -30,7 +30,7 @@ public class ClienteControlador {
 
     TimeOutEvento timeOutEvento;
 
-    private ClienteControlador() {
+    private ConexionCliente() {
         try {
             socket = new Socket("localhost", 1234);
             salida = new ObjectOutputStream(socket.getOutputStream());
@@ -41,9 +41,9 @@ public class ClienteControlador {
         }
     }
 
-    public static synchronized ClienteControlador getInstancia() {
+    public static synchronized ConexionCliente getInstancia() {
         if (instancia == null) {
-            instancia = new ClienteControlador();
+            instancia = new ConexionCliente();
             instancia.iniciarStreams();
         }
         return instancia;

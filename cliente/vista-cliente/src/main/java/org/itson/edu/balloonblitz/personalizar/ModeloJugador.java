@@ -6,7 +6,6 @@ package org.itson.edu.balloonblitz.personalizar;
 
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.eventos.EnvioJugadorEvento;
-import org.itson.edu.balloonblitz.modelo.ClienteControlador;
 import org.itson.edu.balloonblitz.modelo.ObservadorJugador;
 
 /**

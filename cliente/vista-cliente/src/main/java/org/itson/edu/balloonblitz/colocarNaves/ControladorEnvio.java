@@ -2,10 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package org.itson.edu.balloonblitz.controlador;
+package org.itson.edu.balloonblitz.colocarNaves;
 
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
-import org.itson.edu.balloonblitz.modelo.ClienteControlador;
+import org.itson.edu.balloonblitz.modelo.ConexionCliente;
 
 /**
  *
@@ -13,10 +13,10 @@ import org.itson.edu.balloonblitz.modelo.ClienteControlador;
  */
 public class ControladorEnvio {
 
-    ClienteControlador cliente;
+    ConexionCliente cliente;
 
     public ControladorEnvio() {
-        cliente = ClienteControlador.getInstancia();
+        cliente = ConexionCliente.getInstancia();
     }
 
     public synchronized void enviarEvento(Evento evento) {

@@ -6,12 +6,10 @@ import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-import org.itson.edu.balloonblitz.controlador.ControladorEnvio;
 import org.itson.edu.balloonblitz.entidades.Coordenada;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
-import org.itson.edu.balloonblitz.modelo.ClienteControlador;
+
 
 public class TableroClickHandler {
 
