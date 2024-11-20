@@ -4,8 +4,9 @@
  */
 package org.itson.edu.balloonblitz.vista;
 
-
+import org.itson.edu.balloonblitz.modelo.ClienteControlador;
 import org.itson.edu.balloonblitz.personalizar.PersonalizarPanel;
+import org.itson.edu.balloonblitz.esperarJugador.ModeloResultadoEmparejamiento;
 
 /**
  *

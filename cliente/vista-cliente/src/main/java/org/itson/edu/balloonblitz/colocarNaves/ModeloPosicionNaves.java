@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.JLabel;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
-import org.itson.edu.balloonblitz.modelo.ConexionCliente;
+import org.itson.edu.balloonblitz.modelo.ClienteControlador;
 import org.itson.edu.balloonblitz.modelo.ObservadorTiempo;
 
 /**
@@ -20,7 +20,7 @@ import org.itson.edu.balloonblitz.modelo.ObservadorTiempo;
 public class ModeloPosicionNaves implements ObservadorTiempo {
 
     private static ModeloPosicionNaves instancia;
-    ConexionCliente cliente;
+    ClienteControlador cliente;
     JLabel label;
     int tiempoRestante;
 

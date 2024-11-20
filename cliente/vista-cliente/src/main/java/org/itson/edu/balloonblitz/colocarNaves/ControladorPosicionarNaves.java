@@ -5,11 +5,12 @@
 package org.itson.edu.balloonblitz.colocarNaves;
 
 import javax.swing.JLabel;
+import org.itson.edu.balloonblitz.controlador.ControladorEnvio;
 import org.itson.edu.balloonblitz.personalizar.*;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.eventos.EnvioJugadorEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
-import org.itson.edu.balloonblitz.modelo.ConexionCliente;
+import org.itson.edu.balloonblitz.modelo.ClienteControlador;
 
 /**
  *
@@ -18,13 +19,13 @@ import org.itson.edu.balloonblitz.modelo.ConexionCliente;
 public class ControladorPosicionarNaves {
 
     private static ControladorPosicionarNaves instancia;
-    ConexionCliente cliente;
+    ClienteControlador cliente;
     private final ModeloPosicionNaves posicion;
     private final ModeloJugador modeloJugador;
     private final ControladorEnvio controladorEnvio;
 
     public ControladorPosicionarNaves() {
-        cliente = ConexionCliente.getInstancia();
+        cliente = ClienteControlador.getInstancia();
         posicion = ModeloPosicionNaves.getInstancia();
         cliente.setObservadorTiempo(posicion);
         modeloJugador = ModeloJugador.getInstancia();
