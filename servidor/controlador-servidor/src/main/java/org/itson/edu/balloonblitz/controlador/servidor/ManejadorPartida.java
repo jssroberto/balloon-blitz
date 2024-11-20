@@ -43,10 +43,8 @@ public class ManejadorPartida implements EventoObserver {
     private void iniciarStreams() {
         executorService.submit(() -> servidor.recibirDatosCiente(streamsJugador1.getEntrada()));
         executorService.submit(() -> servidor.recibirDatosCiente(streamsJugador2.getEntrada()));
-        executorService.submit(() -> servidor.mandarDatosCliente(streamsJugador1.getSalida(), null));
-        executorService.submit(() -> servidor.mandarDatosCliente(streamsJugador2.getSalida(), null));
-        enviarEventoAJugador(streamsJugador2.getSalida(), new ResultadoEvento(true));
-        enviarEventoAJugador(streamsJugador1.getSalida(), new ResultadoEvento(true));
+        executorService.submit(() -> servidor.mandarDatosCliente(streamsJugador1.getSalida(), new ResultadoEvento(true)));
+        executorService.submit(() -> servidor.mandarDatosCliente(streamsJugador2.getSalida(), new ResultadoEvento(true)));
 
     }
 
@@ -162,9 +160,12 @@ public class ManejadorPartida implements EventoObserver {
     private void manejarTurnoJugador() {
         enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(30));
         enviarEventoAJugador(streamsJugador2.getSalida(), new TimeOutEvento(30));
-        if (turno.iniciarTemporizador(30) == 0) {
+        int tiempo = turno.iniciarTemporizador(30);
+        if (tiempo == 0) {
             enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(0));
+            System.out.println("Enviado a "+partida.getJugador1().getNombre());
             enviarEventoAJugador(streamsJugador2.getSalida(), new TimeOutEvento(0));
+            System.out.println("Enviado a "+partida.getJugador2().getNombre());
             partida.getJugador1().setTurno(true);
             partida.getJugador2().setTurno(false);
         }

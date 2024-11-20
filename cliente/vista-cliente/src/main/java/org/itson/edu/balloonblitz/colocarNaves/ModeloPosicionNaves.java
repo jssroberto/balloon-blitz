@@ -52,18 +52,24 @@ public class ModeloPosicionNaves implements ObservadorTiempo {
     }
 
     public void correrTiempo(TimeOutEvento evento, JLabel label) {
-        tiempoRestante = evento.getTiempoRestante();
-        if (tiempoRestante > 0) {
-            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-            scheduler.scheduleAtFixedRate(() -> {
-                if (tiempoRestante > 0) {
-                    label.setText(String.valueOf(tiempoRestante));
-                    tiempoRestante--;
-                }
-            }, 0, 1, TimeUnit.SECONDS);
-        } else if(evento.getTiempoRestante() == 0){
-            label.setText("El tiempo ha expirado. Has perdido tu turno.");
-        }
+    tiempoRestante = evento.getTiempoRestante();
+
+    if (tiempoRestante > 0) {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+        scheduler.scheduleAtFixedRate(() -> {
+            if (tiempoRestante > 1) {
+                label.setText(String.valueOf(tiempoRestante));
+                tiempoRestante--;
+            } else {
+                label.setText("El tiempo ha expirado. Has perdido tu turno.");
+                scheduler.shutdown(); // Detenemos el scheduler cuando tiempoRestante llega a 1
+            }
+        }, 0, 1, TimeUnit.SECONDS);
+    } else if (evento.getTiempoRestante() == 0) {
+        label.setText("El tiempo ha expirado. Has perdido tu turno.");
     }
+}
+
 
 }

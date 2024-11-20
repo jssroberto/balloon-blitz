@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  *
@@ -24,25 +25,26 @@ public class ManejadorTurno {
     }
 
     public int iniciarTemporizador(int segundos) {
-        CompletableFuture<String> futuro = new CompletableFuture<>();
-        tiempoExcedido = false;
-
+    ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    try {
         scheduler.schedule(() -> {
-            tiempoExcedido = true;
-            futuro.complete(mostrarMensajeTiempoExcedido());
+            System.out.println("El tiempo ha expirado.");
+            scheduler.shutdown(); // Detenemos el scheduler
         }, segundos, TimeUnit.SECONDS);
 
-        try {
-            // Esperamos el resultado del CompletableFuture
-            futuro.get();
-            return 0;
-        } catch (InterruptedException | ExecutionException e) {
-            Thread.currentThread().interrupt(); // Restablece el estado de interrupción
+        // Bucle que espera hasta que el scheduler termine
+        while (!scheduler.isTerminated()) {
+            // Aquí puedes agregar lógica si es necesario.
         }
-        return -1;
+        return 0; // Devuelve 0 cuando el tiempo expira
+    } finally {
+        scheduler.shutdownNow(); // Asegúrate de detener el scheduler si ocurre un error
     }
+}
 
-    
+
+
+
     private String mostrarMensajeTiempoExcedido() {
         return "El tiempo ha expirado.";
     }

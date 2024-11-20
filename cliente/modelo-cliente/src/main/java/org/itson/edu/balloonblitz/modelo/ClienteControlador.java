@@ -79,18 +79,7 @@ public class ClienteControlador {
             try {
                 mensajeRecibido = (Evento) entrada.readObject();
                 if (mensajeRecibido != null) {
-                    if (mensajeRecibido.getTipoEvento() == TipoEvento.TIMEOUT) {
-                        timeOutEvento = (TimeOutEvento) mensajeRecibido;
-                        if (timeOutEvento.getTiempoRestante() == 0) {
-                            procesarMensaje(mensajeRecibido);
-                        } else {
-                            procesarMensaje(mensajeRecibido);
-                        }
-                    } else {
-                        
-                            procesarMensaje(mensajeRecibido);
-                        
-                    }
+                    procesarMensaje(mensajeRecibido);
                 }
             } catch (IOException | ClassNotFoundException ex) {
                 System.out.println(ex.getMessage());
