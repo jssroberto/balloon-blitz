@@ -44,7 +44,7 @@ public class ColocacionPanel extends javax.swing.JPanel {
     private static final int BORDER_THICKNESS = 2;
     private final FramePrincipal framePrincipal;
     private GridDragDropHandler gridDragDropHandler;
-    ControladorPosicionarNaves controlador;
+    ControladorPosicionNaves controlador;
 
     //TODO: portaaviones son 2 no 1
     private static final Map<String, Integer> BALLOON_LIMITS = Map.of(
@@ -62,11 +62,11 @@ public class ColocacionPanel extends javax.swing.JPanel {
      */
     public ColocacionPanel(FramePrincipal framePrincipal) {
         initComponents();
-        controlador = ControladorPosicionarNaves.getInstancia();
+        controlador = ControladorPosicionNaves.getInstancia();
         controlador.setLabel(lblTiempoRestante);
         this.framePrincipal = framePrincipal;
         this.gridDragDropHandler = new GridDragDropHandler(panelTablero);
-//        this.balloon_base_path = "/images/ballons/" + controlador.obtenerJugador().getColorPropio() + "/" + controlador.obtenerJugador().getColorPropio() + "-";
+        this.balloon_base_path = "/images/ballons/" + controlador.getJugador().getColorPropio() + "/" + controlador.getJugador().getColorPropio() + "-";
 
         // Inicializar los labels de cantidad
         cantNave = new JLabel("x4");

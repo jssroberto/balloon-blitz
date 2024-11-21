@@ -17,6 +17,7 @@ import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
  *
  * @author elimo
  */
+
 public final class Servidor {
 
     private static Servidor instancia;
@@ -28,7 +29,7 @@ public final class Servidor {
 
     /**
      * Constructor que inicializa el puerto del socket y llama al hilo de
-     * aceptacion de clientes
+     * aceptación de clientes
      */
     public Servidor() {
         try {
@@ -37,7 +38,6 @@ public final class Servidor {
         } catch (IOException ex) {
             Logger.error("Error al crear el ServerSocket: {}", ex.getMessage());
         }
-
     }
 
     /**
@@ -46,7 +46,7 @@ public final class Servidor {
      * @return Nueva instancia si no se ha creado o la instancia existente si ya
      * se creó
      */
-    public static Servidor getInstance() {
+    public static synchronized Servidor getInstance() {
         if (instancia == null) {
             instancia = new Servidor();
         }
@@ -54,16 +54,16 @@ public final class Servidor {
     }
 
     /**
-     * Metodo que establece el observador de la conexion
+     * Método que establece el observador de la conexión
      *
-     * @param observadorConexion Observador de la conexion
+     * @param observadorConexion Observador de la conexión
      */
     public void setObservadorConexion(ConexionObserver observadorConexion) {
         this.observadorConexion = observadorConexion;
     }
 
     /**
-     * Metodo que establece el observador de eventos
+     * Método que establece el observador de eventos
      *
      * @param observadorEventos Observador de los eventos
      */
@@ -72,15 +72,16 @@ public final class Servidor {
     }
 
     /**
+     * Método que establece el observador de jugadores
      *
-     * @param observadorJugador
+     * @param observadorJugador Observador de los jugadores
      */
     public void setObservadorJugadores(JugadorObserver observadorJugador) {
         this.observadorJugador = observadorJugador;
     }
 
     /**
-     * Metodo que crea un hilo para la recepcion continua de clientes
+     * Método que crea un hilo para la recepción continua de clientes
      */
     private void iniciarHiloDeAceptacion() {
         // Puedes decidir si quieres reiniciar el hilo o detenerlo completamente
@@ -88,8 +89,8 @@ public final class Servidor {
     }
 
     /**
-     * Metodo que acepta sockets de clientes continuamente, de igual forma crea
-     * hilos para recepcion y envio de datos
+     * Método que acepta sockets de clientes continuamente, de igual forma crea
+     * hilos para recepción y envío de datos
      */
     public void aceptarClientes() {
         while (true) {
@@ -103,6 +104,7 @@ public final class Servidor {
                         new ObjectInputStream(socketCliente.getInputStream())
                 );
                 Logger.info("Cliente conectado con éxito: {}", socketCliente.getInetAddress());
+
                 // Notificar al observador de conexión
                 if (observadorConexion != null) {
                     observadorConexion.clienteConectado(streams);
@@ -121,7 +123,7 @@ public final class Servidor {
     }
 
     /**
-     * Metodo que recibe eventos de los clientes y manda al observador de
+     * Método que recibe eventos de los clientes y manda al observador de
      * eventos para su manejo
      *
      * @param entrada Input del usuario a recibir datos
@@ -154,7 +156,7 @@ public final class Servidor {
     }
 
     /**
-     * Metodo que envia eventos a socket proporcionado
+     * Método que envía eventos a socket proporcionado
      *
      * @param salida ObjectOutputStream del jugador a enviar
      * @param evento Evento a enviar
@@ -166,7 +168,22 @@ public final class Servidor {
         } catch (IOException ex) {
             Logger.error("Error al enviar datos al cliente: {}", ex.getMessage());
         }
+    }
 
+    /**
+     * Método para cerrar todos los recursos y hilos correctamente
+     */
+    public void detenerServidor() {
+        try {
+            // Detener hilos de clientes
+            executorService.shutdownNow();  // Detener todos los hilos activos
+            serverSocket.close();  // Cerrar el ServerSocket
+
+            // Si es necesario, interrumpir hilos adicionales aquí
+            // Asegúrate de limpiar cualquier recurso pendiente
+        } catch (IOException e) {
+            Logger.error("Error al cerrar el servidor: {}", e.getMessage());
+        }
     }
 
 }

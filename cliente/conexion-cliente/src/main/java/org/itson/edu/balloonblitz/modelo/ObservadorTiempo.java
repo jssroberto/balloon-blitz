@@ -4,7 +4,7 @@
  */
 package org.itson.edu.balloonblitz.modelo;
 
-import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
+import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 
 /**
  *
@@ -12,6 +12,6 @@ import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
  */
 public interface ObservadorTiempo {
     
-    void manejarEvento(TimeOutEvento evento);
+    void manejarEvento(Evento evento);
     
 }

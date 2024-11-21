@@ -4,72 +4,44 @@
  */
 package org.itson.edu.balloonblitz.colocarNaves;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import javax.swing.JLabel;
+import org.itson.edu.balloonblitz.personalizar.*;
+import org.itson.edu.balloonblitz.entidades.Jugador;
+import org.itson.edu.balloonblitz.entidades.eventos.EnvioJugadorEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
-import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
 import org.itson.edu.balloonblitz.modelo.ConexionCliente;
-import org.itson.edu.balloonblitz.modelo.ObservadorTiempo;
 
 /**
  *
  * @author elimo
  */
-public class ModeloPosicionNaves implements ObservadorTiempo {
+public class ModeloPosicionNaves {
 
-    private static ModeloPosicionNaves instancia;
     ConexionCliente cliente;
-    JLabel label;
-    int tiempoRestante;
+    private final ModeloPosicionNaves posicion;
+    private final ModeloJugador modeloJugador;
+    private final ControladorEnvio controladorEnvio;
 
     public ModeloPosicionNaves() {
+        cliente = ConexionCliente.getInstancia();
+        posicion = new ModeloPosicionNaves();
+        
+        modeloJugador = ModeloJugador.getInstancia();
+        controladorEnvio = new ControladorEnvio();
     }
 
-    public static ModeloPosicionNaves getInstancia() {
-        if (instancia == null) {
-            instancia = new ModeloPosicionNaves();
-        }
-        return instancia;
+    
+    
+    public void setLabel(JLabel label){
+        posicion.setLabel(label);
     }
-
-    public void enviarEvento(Evento evento) {
-        cliente.enviarMensaje(evento);
+    
+    
+    
+    public void cerrar(){
+        cliente.eliminarObservadorTiempo();
     }
-
-    public JLabel getLabel() {
-        return label;
-    }
-
-    public void setLabel(JLabel label) {
-        this.label = label;
-    }
-
-    @Override
-    public void manejarEvento(TimeOutEvento evento) {
-        correrTiempo(evento, label);
-    }
-
-    public void correrTiempo(TimeOutEvento evento, JLabel label) {
-    tiempoRestante = evento.getTiempoRestante();
-
-    if (tiempoRestante > 0) {
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-
-        scheduler.scheduleAtFixedRate(() -> {
-            if (tiempoRestante > 1) {
-                label.setText(String.valueOf(tiempoRestante));
-                tiempoRestante--;
-            } else {
-                label.setText("El tiempo ha expirado. Has perdido tu turno.");
-                scheduler.shutdown(); // Detenemos el scheduler cuando tiempoRestante llega a 1
-            }
-        }, 0, 1, TimeUnit.SECONDS);
-    } else if (evento.getTiempoRestante() == 0) {
-        label.setText("El tiempo ha expirado. Has perdido tu turno.");
-    }
-}
-
+    
+    
 
 }

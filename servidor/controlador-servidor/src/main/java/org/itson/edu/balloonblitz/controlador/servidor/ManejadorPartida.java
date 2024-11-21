@@ -92,7 +92,7 @@ public class ManejadorPartida implements EventoObserver {
                 partida.setJugador2(jugador2);
                 enviarEventoAJugador(streamsJugador1.getSalida(), new ResultadoEvento(true));
                 enviarEventoAJugador(streamsJugador2.getSalida(), new ResultadoEvento(true));
-//                crearPartida();
+                crearPartida();
             }
         }
     }
@@ -106,7 +106,6 @@ public class ManejadorPartida implements EventoObserver {
         partida.setEstadoPartida(EstadoPartida.ACTIVA);
         jugador1.setTurno(true);
         jugador2.setTurno(true);
-        manejarTurnos();
     }
 
     /**
@@ -177,14 +176,22 @@ public class ManejadorPartida implements EventoObserver {
      * establecido el turno de disparo
      */
     private void manejarTurnoJugador() {
-        enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(30));
-        enviarEventoAJugador(streamsJugador2.getSalida(), new TimeOutEvento(30));
-        if (turno.iniciarTemporizador(30) == 0) {
-            enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(0));
-            enviarEventoAJugador(streamsJugador2.getSalida(), new TimeOutEvento(0));
-            partida.getJugador2().setTurno(false);
-            partida.getJugador1().setTurno(true);
-        }
+        Evento evento1 = new EnvioJugadorEvento();
+        evento1.setEmisor(jugador1);
+        enviarEventoAJugador(streamsJugador1.getSalida(),evento1);
+        Evento evento2 = new EnvioJugadorEvento();
+        evento2.setEmisor(jugador2);
+        enviarEventoAJugador(streamsJugador2.getSalida(),evento2);
+        
+        
+//        enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(30));
+//        enviarEventoAJugador(streamsJugador2.getSalida(), new TimeOutEvento(30));
+//        if (turno.iniciarTemporizador(30) == 0) {
+//            enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(0));
+//            enviarEventoAJugador(streamsJugador2.getSalida(), new TimeOutEvento(0));
+//            partida.getJugador2().setTurno(false);
+//            partida.getJugador1().setTurno(true);
+//        }
     }
 
     /**

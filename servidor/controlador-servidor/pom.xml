@@ -16,6 +16,12 @@
             <artifactId>modelo-servidor</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>biz.aQute</groupId>
+            <artifactId>biz.aQute.osgi.logger.tracker.util</artifactId>
+            <version>1.10.0</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

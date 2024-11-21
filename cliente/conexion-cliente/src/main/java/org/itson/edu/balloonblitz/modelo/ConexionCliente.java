@@ -8,7 +8,6 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
 
 /**
  * @author elimo
@@ -109,7 +108,9 @@ public class ConexionCliente {
             case ENVIO_JUGADOR:
                 observadorJugador.manejarEvento((EnvioJugadorEvento) evento);
             case RESULTADO:
+                System.out.println("entró");
                 if (observadorResultado != null) {
+                    System.out.println("volvio a entrar");
                     observadorResultado.manejarEvento((ResultadoEvento) evento);
                 }
                 break;
