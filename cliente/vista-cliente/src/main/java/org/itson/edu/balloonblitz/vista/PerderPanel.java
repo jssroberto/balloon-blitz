@@ -4,6 +4,8 @@
  */
 package org.itson.edu.balloonblitz.vista;
 
+import org.itson.edu.balloonblitz.FramePrincipal;
+
 import java.awt.Color;
 import java.awt.FontFormatException;
 import java.awt.FontMetrics;

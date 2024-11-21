@@ -11,8 +11,7 @@ import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import org.itson.edu.balloonblitz.colocarNaves.ColocacionPanel;
 import org.itson.edu.balloonblitz.entidades.eventos.ResultadoEvento;
-import org.itson.edu.balloonblitz.vista.FramePrincipal;
-import org.itson.edu.balloonblitz.vista.InicioPanel;
+import org.itson.edu.balloonblitz.FramePrincipal;
 
 /**
  *

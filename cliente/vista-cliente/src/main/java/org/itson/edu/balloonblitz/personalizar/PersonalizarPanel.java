@@ -22,7 +22,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.enumeradores.ColorNaves;
-import org.itson.edu.balloonblitz.vista.FramePrincipal;
+import org.itson.edu.balloonblitz.FramePrincipal;
 import org.itson.edu.balloonblitz.vista.InicioPanel;
 
 /**

@@ -26,7 +26,7 @@ import org.itson.edu.balloonblitz.auxiliar.GridDragDropHandler;
 import org.itson.edu.balloonblitz.entidades.Tablero;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.entidades.eventos.PosicionNavesEvento;
-import org.itson.edu.balloonblitz.vista.FramePrincipal;
+import org.itson.edu.balloonblitz.FramePrincipal;
 import org.itson.edu.balloonblitz.vista.InicioPanel;
 import org.itson.edu.balloonblitz.partida.PartidaPanel;
 

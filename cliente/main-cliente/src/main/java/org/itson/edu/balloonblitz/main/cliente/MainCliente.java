@@ -3,7 +3,7 @@
  */
 package org.itson.edu.balloonblitz.main.cliente;
 
-import org.itson.edu.balloonblitz.vista.FramePrincipal;
+import org.itson.edu.balloonblitz.FramePrincipal;
 import org.itson.edu.balloonblitz.vista.InicioPanel;
 
 /**

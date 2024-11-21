@@ -4,13 +4,11 @@
  */
 package org.itson.edu.balloonblitz.esperarJugador;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.entidades.eventos.ResultadoEvento;
 import org.itson.edu.balloonblitz.modelo.ConexionCliente;
 import org.itson.edu.balloonblitz.modelo.ObservadorResultado;
-import org.itson.edu.balloonblitz.vista.FramePrincipal;
+import org.itson.edu.balloonblitz.FramePrincipal;
 
 /**
  *

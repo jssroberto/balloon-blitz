@@ -1,4 +1,4 @@
-package org.itson.edu.balloonblitz.vista;
+package org.itson.edu.balloonblitz;
 
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import java.awt.Font;
@@ -106,9 +106,8 @@ public class FramePrincipal extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, mensaje, titulo, JOptionPane.WARNING_MESSAGE);
     }
 
-    public boolean mostrarConfirmacion(String mensaje, String titulo) {
+    public void mostrarConfirmacion(String mensaje, String titulo) {
         int respuesta = JOptionPane.showConfirmDialog(null, mensaje, titulo, JOptionPane.OK_CANCEL_OPTION);
-        return respuesta == JOptionPane.OK_OPTION;
     }
 
     public void mostrarInformacion(String mensaje, String titulo) {

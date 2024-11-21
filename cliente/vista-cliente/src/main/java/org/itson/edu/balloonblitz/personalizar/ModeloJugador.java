@@ -5,7 +5,7 @@
 package org.itson.edu.balloonblitz.personalizar;
 
 import org.itson.edu.balloonblitz.esperarJugador.EsperandoJugadorPanel;
-import org.itson.edu.balloonblitz.vista.FramePrincipal;
+import org.itson.edu.balloonblitz.FramePrincipal;
 
 /**
  *

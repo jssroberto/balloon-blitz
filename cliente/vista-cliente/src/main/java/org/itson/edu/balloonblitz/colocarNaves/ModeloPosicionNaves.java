@@ -20,14 +20,12 @@ public class ModeloPosicionNaves {
     ConexionCliente cliente;
     private final ModeloPosicionNaves posicion;
     private final ModeloJugador modeloJugador;
-    private final ControladorEnvio controladorEnvio;
 
     public ModeloPosicionNaves() {
         cliente = ConexionCliente.getInstancia();
         posicion = new ModeloPosicionNaves();
         
         modeloJugador = ModeloJugador.getInstancia();
-        controladorEnvio = new ControladorEnvio();
     }
 
     
