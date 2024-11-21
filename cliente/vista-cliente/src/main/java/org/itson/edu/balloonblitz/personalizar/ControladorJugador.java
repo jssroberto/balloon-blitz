@@ -5,27 +5,24 @@
 package org.itson.edu.balloonblitz.personalizar;
 
 import org.itson.edu.balloonblitz.entidades.Jugador;
+import org.itson.edu.balloonblitz.entidades.eventos.EnvioJugadorEvento;
+import org.itson.edu.balloonblitz.entidades.eventos.Evento;
+import org.itson.edu.balloonblitz.modelo.ConexionCliente;
+import org.itson.edu.balloonblitz.vista.FramePrincipal;
 
 /**
  *
  * @author elimo
  */
 public class ControladorJugador {
-
+    
     private static ControladorJugador instancia;
     private final ModeloJugador modeloJugador;
-
+    ConexionCliente conexion;
+    
     public ControladorJugador() {
         modeloJugador = ModeloJugador.getInstancia();
-        
-    }
-
-    public Jugador obtenerJugador() {
-        return modeloJugador.getJugador();
-    }
-
-    public void setJugador(Jugador jugador) {
-        modeloJugador.setJugador(jugador);
+        conexion = ConexionCliente.getInstancia();
     }
     
     public static ControladorJugador getInstancia() {
@@ -34,5 +31,15 @@ public class ControladorJugador {
         }
         return instancia;
     }
-
+    
+    public void cambiarPanel(FramePrincipal framePrincipal) {
+        modeloJugador.cambiarPanel(framePrincipal);
+    }
+    
+    public void enviarJugador(Jugador jugador){
+        Evento evento = new EnvioJugadorEvento();
+        evento.setEmisor(jugador);
+        conexion.enviarMensaje(evento);
+    }
+    
 }

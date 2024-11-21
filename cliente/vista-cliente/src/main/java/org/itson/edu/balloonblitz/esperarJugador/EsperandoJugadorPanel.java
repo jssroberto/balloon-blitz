@@ -12,13 +12,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.SwingUtilities;
 import org.itson.edu.balloonblitz.colocarNaves.ColocacionPanel;
 import org.itson.edu.balloonblitz.vista.FramePrincipal;
 import org.itson.edu.balloonblitz.vista.InicioPanel;
@@ -27,13 +24,11 @@ import org.itson.edu.balloonblitz.vista.InicioPanel;
  *
  * @author user
  */
-public class EsperandoJugadorPanel extends javax.swing.JPanel {
+public class EsperandoJugadorPanel extends javax.swing.JPanel implements ObservadorEncontrarPartida {
 
     private static final Logger logger = Logger.getLogger(InicioPanel.class.getName());
     private final FramePrincipal framePrincipal;
-    int contador = 0;
     ControladorEmparejamiento controlador;
-    private final ExecutorService executorService = Executors.newFixedThreadPool(10);
 
     /**
      * Creates new form PersonalizarPanel
@@ -41,9 +36,13 @@ public class EsperandoJugadorPanel extends javax.swing.JPanel {
      * @param framePrincipal
      */
     public EsperandoJugadorPanel(FramePrincipal framePrincipal) {
-        this.framePrincipal = framePrincipal;
+
         initComponents();
+        this.framePrincipal = framePrincipal;
         controlador = ControladorEmparejamiento.getInstancia();
+        controlador.setObservador(this);
+        controlador.cambiarPanel(framePrincipal);
+        controlador.unirsePartida();
         try {
             setFuentes();
         } catch (FontFormatException | IOException e) {
@@ -57,7 +56,6 @@ public class EsperandoJugadorPanel extends javax.swing.JPanel {
 
         addTextBorder(lblMenu);
         addTextBorder(lblEsperando);
-        unirsePartida();
     }
 
     // Método para añadir borde al texto en JLabel
@@ -96,36 +94,9 @@ public class EsperandoJugadorPanel extends javax.swing.JPanel {
         });
     }
 
-    private void unirsePartida() {
-        executorService.submit(() -> {
-            try {
-
-                while (!controlador.isValido()) {
-                    // Actualizar la UI de forma segura
-                    SwingUtilities.invokeLater(() -> {
-                        switch (contador % 3) {
-                            case 0 ->
-                                lblEsperando.setText("Esperando jugador.");
-                            case 1 ->
-                                lblEsperando.setText("Esperando jugador..");
-                            case 2 ->
-                                lblEsperando.setText("Esperando jugador...");
-                        }
-                    });
-
-                    contador++;
-                    Thread.sleep(500); // Simula la espera (medio segundo entre cambios)
-                }
-                lblEsperando.setText("Partida encontrada");
-                Thread.sleep(3000);
-                // Si es válido, proceder
-                // Cambiar al panel de colocación en el hilo principal
-                SwingUtilities.invokeLater(() -> framePrincipal.cambiarPanel(new ColocacionPanel(framePrincipal)));
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                logger.log(Level.SEVERE, "Hilo interrumpido durante la espera del jugador.", e);
-            }
-        });
+    @Override
+    public void actualizarInterfaz(String mensaje) {
+        lblEsperando.setText(mensaje);
     }
 
     /**
@@ -202,4 +173,5 @@ public class EsperandoJugadorPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lblMenu;
     private javax.swing.JLabel lblVolver;
     // End of variables declaration//GEN-END:variables
+
 }

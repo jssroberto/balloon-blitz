@@ -9,7 +9,8 @@ import javax.swing.JPanel;
 import org.itson.edu.balloonblitz.entidades.Coordenada;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
-
+import org.itson.edu.balloonblitz.partida.ControladorPartida;
+import org.itson.edu.balloonblitz.partida.IControladorPartida;
 
 public class TableroClickHandler {
 
@@ -70,9 +71,8 @@ public class TableroClickHandler {
     private static void realizarDisparo(int row, int col, Jugador jugador) {
         DisparoEvento disparo = new DisparoEvento(new Coordenada(row, col));
         disparo.setEmisor(jugador);
-        ControladorEnvio controladorEnvio = new ControladorEnvio();
+        IControladorPartida controladorEnvio = new ControladorPartida();
         controladorEnvio.enviarEvento(disparo);
-        ClienteControlador.getInstancia().enviarMensaje(disparo);
 
         System.out.println("Disparo realizado en posicion: " + row + ", " + col);
     }

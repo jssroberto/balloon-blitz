@@ -19,13 +19,11 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.enumeradores.ColorNaves;
-import org.itson.edu.balloonblitz.esperarJugador.EsperandoJugadorPanel;
 import org.itson.edu.balloonblitz.vista.FramePrincipal;
 import org.itson.edu.balloonblitz.vista.InicioPanel;
-import org.itson.edu.balloonblitz.esperarJugador.ModeloResultadoEmparejamiento;
-import org.itson.edu.balloonblitz.modelo.ConexionCliente;
 
 /**
  *
@@ -35,26 +33,20 @@ public class PersonalizarPanel extends javax.swing.JPanel {
 
     private static final Logger logger = Logger.getLogger(InicioPanel.class.getName());
     private final FramePrincipal framePrincipal;
-    private ConexionCliente cliente;
     private ColorNaves colorNaves;
     private ColorNaves colorNavesRival;
     private String fotoPerfil;
-    ControladorJugador jugador;
-    ConexionCliente controlador;
-    ModeloResultadoEmparejamiento emparejamiento;
+
     private record ImageProperties(int width, int height, boolean isEnlarged) {
 
     }
     private final Map<String, ImageProperties> imageCache = new HashMap<>();
     private String currentlySelectedPath = null;
-    private String currentlySelectedRivalPath = null;  // Para globos del rival
-
-    // Necesario para elegir la imagen de perfil
+    private String currentlySelectedRivalPath = null;
     private int anchoOriginalQuincy = 0, altoOriginalQuincy = 0;
     private int anchoOriginalGwendolin = 0, altoOriginalGwendolin = 0;
     private int anchoOriginalPatFusty = 0, altoOriginalPatFusty = 0;
     private int anchoOriginalBenjamin = 0, altoOriginalBenjamin = 0;
-
     private boolean imagenBenjaminAumentada = false;
     private boolean imagenQuincyAumentada = false;
     private boolean imagenGwendolinAumentada = false;
@@ -67,7 +59,6 @@ public class PersonalizarPanel extends javax.swing.JPanel {
      */
     public PersonalizarPanel(FramePrincipal framePrincipal) {
         this.framePrincipal = framePrincipal;
-        jugador = new ControladorJugador();
         initComponents();
         try {
             setFuentes();
@@ -129,8 +120,14 @@ public class PersonalizarPanel extends javax.swing.JPanel {
         });
     }
 
-    private void crearJugador() {
-        jugador.setJugador(new Jugador(txtNombre.getText(), colorNaves, colorNavesRival, fotoPerfil));
+    private Jugador crearJugador() {
+        if (txtNombre.getText() != null
+                && colorNaves != null
+                && colorNavesRival != null
+                && fotoPerfil != null) {
+            return new Jugador(txtNombre.getText(), colorNaves, colorNavesRival, fotoPerfil);
+        }
+        return null;
     }
 
     private void restaurarImagenesPFP(String imagenExcluida) {
@@ -496,11 +493,13 @@ public class PersonalizarPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_lblVolverMouseClicked
 
     private void lblContinuarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblContinuarMouseClicked
-        crearJugador();
-        controlador = ConexionCliente.getInstancia();
-        emparejamiento = ModeloResultadoEmparejamiento.getInstancia();
-        controlador.setObservadorResultado(emparejamiento);
-        framePrincipal.cambiarPanel(new EsperandoJugadorPanel(framePrincipal));
+        if (crearJugador() != null) {
+            ControladorJugador.getInstancia();
+            ControladorJugador.getInstancia().enviarJugador(crearJugador());
+            ControladorJugador.getInstancia().cambiarPanel(framePrincipal);
+        } else {
+            JOptionPane.showConfirmDialog(this, "Tienes que llenar todos los datos para poder continuar");
+        }
     }//GEN-LAST:event_lblContinuarMouseClicked
 
     private void txtNombreFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNombreFocusGained

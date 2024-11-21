@@ -24,6 +24,7 @@ public class InicioPanel extends javax.swing.JPanel {
     public InicioPanel(FramePrincipal framePrincipal) {
         initComponents();
         this.framePrincipal = framePrincipal;
+        
     }
 
     /**

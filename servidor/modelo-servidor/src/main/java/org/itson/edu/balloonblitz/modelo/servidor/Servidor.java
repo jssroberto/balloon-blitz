@@ -10,6 +10,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
 
 /**
  * Clase que representa el servidor
@@ -17,9 +18,11 @@ import java.util.concurrent.Executors;
  * @author elimo
  */
 public final class Servidor {
+
     private static Servidor instancia;
     private ConexionObserver observadorConexion;
     private EventoObserver observadorEventos;
+    private JugadorObserver observadorJugador;
     private final ExecutorService executorService = Executors.newFixedThreadPool(10);
     private ServerSocket serverSocket;
 
@@ -66,6 +69,14 @@ public final class Servidor {
      */
     public void setObservadorEventos(EventoObserver observadorEventos) {
         this.observadorEventos = observadorEventos;
+    }
+
+    /**
+     *
+     * @param observadorJugador
+     */
+    public void setObservadorJugadores(JugadorObserver observadorJugador) {
+        this.observadorJugador = observadorJugador;
     }
 
     /**
@@ -116,27 +127,31 @@ public final class Servidor {
      * @param entrada Input del usuario a recibir datos
      */
     public void recibirDatosCiente(ObjectInputStream entrada) {
-   
         while (true) { // Bucle infinito para mantener la escucha
             try {
                 // Leer el objeto enviado por el cliente
                 Evento evento = (Evento) entrada.readObject(); // Esto bloqueará hasta que llegue un objeto
 
-                if (observadorEventos != null) {
-                    observadorEventos.manejarEvento(evento, entrada);
+                if (evento.getTipoEvento() != TipoEvento.ENVIO_JUGADOR) {
+                    if (observadorEventos != null) {
+                        observadorEventos.manejarEvento(evento, entrada);
+                    }
+                } else {
+                    if (observadorJugador != null) {
+                        observadorJugador.agregarJugador(evento, entrada);
+                    }
                 }
 
-            } catch (IOException e) {
-                Logger.error("Error al recibir datos del cliente: {}", e.getMessage());
-                break; // Salir del bucle si hay un error de conexión o I/O
-            } catch (ClassNotFoundException e) {
-                Logger.error("Clase de evento desconocida: {}", e.getMessage());
+            } catch (IOException | ClassNotFoundException e) {
+                // Detecta la desconexión y realiza las acciones correspondientes
+                System.err.println("Cliente desconectado: " + entrada);
+                if (observadorJugador != null) {
+                    observadorJugador.eliminarCliente(entrada);  // Elimina el cliente
+                }
+                break; // Salir del bucle para evitar más intentos de lectura
             }
         }
-    
-}
-
-
+    }
 
     /**
      * Metodo que envia eventos a socket proporcionado

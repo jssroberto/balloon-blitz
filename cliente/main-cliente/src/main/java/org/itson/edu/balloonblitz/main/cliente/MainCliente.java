@@ -3,6 +3,7 @@
  */
 package org.itson.edu.balloonblitz.main.cliente;
 
+import org.itson.edu.balloonblitz.modelo.ConexionCliente;
 import org.itson.edu.balloonblitz.vista.FramePrincipal;
 import org.itson.edu.balloonblitz.vista.InicioPanel;
 
@@ -14,6 +15,7 @@ public class MainCliente {
 
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(() -> {
+        
             FramePrincipal framePrincipal = new FramePrincipal();
             framePrincipal.cambiarPanel(new InicioPanel(framePrincipal));
             framePrincipal.setVisible(true);

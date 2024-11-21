@@ -37,11 +37,8 @@ public class PartidaPanel extends javax.swing.JPanel {
     private GridDragDropHandler gridDragDropHandler;
     private static final Logger logger = Logger.getLogger(PartidaPanel.class.getName());
     private final FramePrincipal framePrincipal;
-
     private static final String FONT_PATH = "/fonts/oetztype/OETZTYPE.TTF";
     private static final float TITLE_FONT_SIZE = 28.0F;
-    // Segun el tipo de
-
     private static final int BORDER_THICKNESS = 2;
 
     /**

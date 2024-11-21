@@ -66,7 +66,7 @@ public class ColocacionPanel extends javax.swing.JPanel {
         controlador.setLabel(lblTiempoRestante);
         this.framePrincipal = framePrincipal;
         this.gridDragDropHandler = new GridDragDropHandler(panelTablero);
-        this.balloon_base_path = "/images/ballons/" + controlador.obtenerJugador().getColorPropio() + "/" + controlador.obtenerJugador().getColorPropio() + "-";
+//        this.balloon_base_path = "/images/ballons/" + controlador.obtenerJugador().getColorPropio() + "/" + controlador.obtenerJugador().getColorPropio() + "-";
 
         // Inicializar los labels de cantidad
         cantNave = new JLabel("x4");
@@ -160,7 +160,7 @@ public class ColocacionPanel extends javax.swing.JPanel {
 
         Tablero tablero = gridDragDropHandler.obtenerTablero();
         Evento eventoTablero = new PosicionNavesEvento(tablero);
-        eventoTablero.setEmisor(controlador.obtenerJugador());
+//        eventoTablero.setEmisor(controlador.obtenerJugador());
         controlador.enviarEvento(eventoTablero);
 
         return true;

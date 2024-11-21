@@ -29,16 +29,8 @@ public class ControladorPosicionarNaves {
         cliente.setObservadorTiempo(posicion);
         modeloJugador = ModeloJugador.getInstancia();
         controladorEnvio = new ControladorEnvio();
-        enviarJugador();
     }
 
-    public Jugador obtenerJugador() {
-        return modeloJugador.getJugador();
-    }
-
-    public void setJugador(Jugador jugador) {
-        modeloJugador.setJugador(jugador);
-    }
     
     public void enviarEvento(Evento evento){
         controladorEnvio.enviarEvento(evento);
@@ -55,11 +47,7 @@ public class ControladorPosicionarNaves {
         posicion.setLabel(label);
     }
     
-    private void enviarJugador(){
-        Evento evento = new EnvioJugadorEvento();
-        evento.setEmisor(obtenerJugador());
-        enviarEvento(evento);
-    }
+    
     
     public void cerrar(){
         cliente.eliminarObservadorTiempo();

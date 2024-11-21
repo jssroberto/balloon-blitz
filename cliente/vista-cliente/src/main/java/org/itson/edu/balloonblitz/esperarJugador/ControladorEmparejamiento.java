@@ -4,40 +4,54 @@
  */
 package org.itson.edu.balloonblitz.esperarJugador;
 
-import org.itson.edu.balloonblitz.personalizar.*;
-import org.itson.edu.balloonblitz.entidades.Jugador;
+import java.util.ArrayList;
+import java.util.List;
+import org.itson.edu.balloonblitz.entidades.eventos.ResultadoEvento;
+import org.itson.edu.balloonblitz.modelo.ConexionCliente;
+import org.itson.edu.balloonblitz.modelo.ObservadorResultado;
+import org.itson.edu.balloonblitz.vista.FramePrincipal;
 
 /**
  *
  * @author elimo
  */
-public class ControladorEmparejamiento {
+public class ControladorEmparejamiento implements ObservadorResultado {
 
-    private final ControladorJugador controladorJugador;
-    private final ModeloResultadoEmparejamiento controladorEmparejamiento;
     private static ControladorEmparejamiento instancia;
+    private ModeloEmparejamiento modelo;
+    private List<FramePrincipal> suscriptores = new ArrayList<>();
+    private FramePrincipal frame;
+    boolean valido;
 
     public ControladorEmparejamiento() {
-        controladorJugador = ControladorJugador.getInstancia();
-        controladorEmparejamiento = ModeloResultadoEmparejamiento.getInstancia();
+        ConexionCliente.getInstancia().setObservadorResultado(this);
+        valido = false;
+        modelo = ModeloEmparejamiento.getInstancia();
     }
 
-    public Jugador obtenerJugador() {
-        return controladorJugador.obtenerJugador();
+    public void cambiarPanel(FramePrincipal frame) {
+        this.frame = frame;
     }
 
-    public void setJugador(Jugador jugador) {
-        controladorJugador.setJugador(jugador);
+    public void setObservador(ObservadorEncontrarPartida observador) {
+        modelo.setObservador(observador);
     }
-    
+
+    @Override
+    public void manejarEvento(ResultadoEvento evento) {
+        valido = evento.isValid();
+        unirsePartida();
+
+    }
+
     public boolean isValido() {
-        return controladorEmparejamiento.isValido();
+        return valido;
     }
 
     public void setValido(boolean valido) {
-        controladorEmparejamiento.setValido(valido);
+        this.valido = valido;
     }
-    
+
     public static ControladorEmparejamiento getInstancia() {
         if (instancia == null) {
             instancia = new ControladorEmparejamiento();
@@ -45,4 +59,7 @@ public class ControladorEmparejamiento {
         return instancia;
     }
 
+    public void unirsePartida() {
+        ModeloEmparejamiento.getInstancia().unirsePartida(frame, valido);
+    }
 }

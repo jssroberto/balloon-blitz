@@ -78,7 +78,9 @@ public class ConexionCliente {
         while (conectado) {
             try {
                 mensajeRecibido = (Evento) entrada.readObject();
+                System.out.println("prendido");
                 if (mensajeRecibido != null) {
+                    System.out.println(mensajeRecibido.getTipoEvento());
                     procesarMensaje(mensajeRecibido);
                 }
             } catch (IOException | ClassNotFoundException ex) {
