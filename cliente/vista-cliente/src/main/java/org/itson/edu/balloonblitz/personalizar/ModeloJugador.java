@@ -4,6 +4,7 @@
  */
 package org.itson.edu.balloonblitz.personalizar;
 
+import org.itson.edu.balloonblitz.FramePrincipal;
 import org.itson.edu.balloonblitz.emparejamiento.EmparejamientoPanel;
 //import org.itson.edu.balloonblitz.vista.FramePrincipal;
 
@@ -25,7 +26,7 @@ public class ModeloJugador {
         return instancia;
     }
     
-//    public void cambiarPanel(FramePrincipal framePrincipal){
-//         framePrincipal.cambiarPanel(new EmparejamientoPanel(framePrincipal));
-//    }
+    public void cambiarPanel(FramePrincipal framePrincipal){
+         framePrincipal.cambiarPanelEmparejamiento();
+    }
 }

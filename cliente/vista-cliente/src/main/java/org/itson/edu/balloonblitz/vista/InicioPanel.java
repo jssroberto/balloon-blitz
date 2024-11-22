@@ -29,7 +29,6 @@ public class InicioPanel extends javax.swing.JPanel {
         initComponents();
         this.framePrincipal = framePrincipal;
         ConexionCliente.getInstancia().setObservadorJugador(ControladorPosicionNaves.getInstancia());
-        ConexionCliente.getInstancia().setObservadorResultado(ControllerEmparejamiento.getInstancia());
         ConexionCliente.getInstancia().setObservadorTiempo(ControladorPosicionNaves.getInstancia());
         
     }

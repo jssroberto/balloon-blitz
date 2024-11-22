@@ -132,7 +132,7 @@ public class FramePrincipal extends javax.swing.JFrame {
         panelActual = panel;
     }
 
-    public void cambiarPanelColocacion() {
+    public void cambiarPanelEmparejamiento() {
         ModelEmparejamiento model = new ModelEmparejamiento();
         EmparejamientoPanel view = new EmparejamientoPanel(this);
         ConexionCliente.getInstancia().setObservadorResultado(new ControllerEmparejamiento(view, model));

@@ -8,6 +8,6 @@ package org.itson.edu.balloonblitz.emparejamiento;
  *
  * @author elimo
  */
-public interface OberverEmparejamiento {
+public interface ObserverEmparejamiento {
     void update(UpdateEventEmparejamiento event);
 }

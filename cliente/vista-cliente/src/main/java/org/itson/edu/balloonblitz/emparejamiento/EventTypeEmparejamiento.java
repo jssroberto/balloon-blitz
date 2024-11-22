@@ -9,5 +9,7 @@ package org.itson.edu.balloonblitz.emparejamiento;
  * @author elimo
  */
 public enum EventTypeEmparejamiento {
-    ACTUALIZAR_LABEL, CAMBIAR_PANEL_COLOCACION_NAVES;
+    ACTUALIZAR_LABEL, 
+    CAMBIAR_PANEL_COLOCACION_NAVES,
+    CONFIRMAR_UNION_PARTIDA;
 }

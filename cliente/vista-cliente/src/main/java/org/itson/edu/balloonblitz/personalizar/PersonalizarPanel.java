@@ -496,7 +496,7 @@ public class PersonalizarPanel extends javax.swing.JPanel {
         if (crearJugador() != null) {
             ControladorJugador.getInstancia();
             ControladorJugador.getInstancia().enviarJugador(crearJugador());
-//            ControladorJugador.getInstancia().cambiarPanel(framePrincipal);
+            ControladorJugador.getInstancia().cambiarPanel(framePrincipal);
         } else {
             JOptionPane.showConfirmDialog(this, "Tienes que llenar todos los datos para poder continuar");
         }

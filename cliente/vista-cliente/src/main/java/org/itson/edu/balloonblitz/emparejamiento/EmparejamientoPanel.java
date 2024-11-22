@@ -18,13 +18,12 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import org.itson.edu.balloonblitz.colocarNaves.ColocacionPanel;
 import org.itson.edu.balloonblitz.FramePrincipal;
-import org.itson.edu.balloonblitz.vista.InicioPanel;
 
 /**
  *
  * @author user
  */
-public class EmparejamientoPanel extends javax.swing.JPanel implements OberverEmparejamiento {
+public class EmparejamientoPanel extends javax.swing.JPanel implements ObserverEmparejamiento {
 
 
     private static final Logger logger = Logger.getLogger(EmparejamientoPanel.class.getName());
@@ -102,10 +101,16 @@ public class EmparejamientoPanel extends javax.swing.JPanel implements OberverEm
 
     @Override
     public void update(UpdateEventEmparejamiento event) {
-        if (event.eventType() == EventTypeEmparejamiento.ACTUALIZAR_LABEL) {
-            lblEsperando.setText(event.model().getTexto());
-        } else if (event.eventType() == EventTypeEmparejamiento.CAMBIAR_PANEL_COLOCACION_NAVES) {
-            framePrincipal.cambiarPanel(new ColocacionPanel(framePrincipal));
+        if (null != event.eventType())
+            switch (event.eventType()) {
+            case ACTUALIZAR_LABEL -> 
+                lblEsperando.setText(event.model().getTexto());
+            case CAMBIAR_PANEL_COLOCACION_NAVES -> 
+                framePrincipal.cambiarPanel(new ColocacionPanel(framePrincipal));
+            case CONFIRMAR_UNION_PARTIDA -> 
+                actionHandler.confirmarUnion();
+            default -> {
+            }
         }
     }
 

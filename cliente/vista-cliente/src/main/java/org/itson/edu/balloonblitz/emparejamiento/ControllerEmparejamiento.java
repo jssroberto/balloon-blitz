@@ -42,4 +42,9 @@ public class ControllerEmparejamiento implements ActionHandlerEmparejamiento, Ob
         model.buscarPartida();
     }
 
+    @Override
+    public void confirmarUnion() {
+        enviarEvento(new ResultadoEvento(true));
+    }
+
 }

@@ -22,22 +22,22 @@ public class ModelEmparejamiento {
 
     private static final Logger logger = Logger.getLogger(ModelEmparejamiento.class.getName());
     private final ExecutorService executorService = Executors.newFixedThreadPool(10);
-    private final List<OberverEmparejamiento> observers = new ArrayList<>();
+    private final List<ObserverEmparejamiento> observers = new ArrayList<>();
     private String texto;
 //    private ControllerEmparejamiento controlador; // Eliminamos la inicialización interna
     private int contador = 0;
     boolean valido;
 
-    public void addObserver(OberverEmparejamiento observer) {
+    public void addObserver(ObserverEmparejamiento observer) {
         observers.add(observer);
     }
 
-    public void removeOberver(OberverEmparejamiento observer) {
+    public void removeOberver(ObserverEmparejamiento observer) {
         observers.remove(observer);
     }
 
     private void notifyObservers(UpdateEventEmparejamiento event) {
-        for (OberverEmparejamiento observer : observers) {
+        for (ObserverEmparejamiento observer : observers) {
             observer.update(event);
         }
     }
@@ -72,7 +72,7 @@ public class ModelEmparejamiento {
                     setTexto("Partida encontrada");
                     notifyObservers(new UpdateEventEmparejamiento(this, EventTypeEmparejamiento.ACTUALIZAR_LABEL));
                     Thread.sleep(3000);
-                    controlador.enviarEvento(new ResultadoEvento(true));
+                    notifyObservers(new UpdateEventEmparejamiento(this, EventTypeEmparejamiento.CONFIRMAR_UNION_PARTIDA));
                     SwingUtilities.invokeLater(() -> notifyObservers(
                             new UpdateEventEmparejamiento(
                                     this, EventTypeEmparejamiento.CAMBIAR_PANEL_COLOCACION_NAVES)));

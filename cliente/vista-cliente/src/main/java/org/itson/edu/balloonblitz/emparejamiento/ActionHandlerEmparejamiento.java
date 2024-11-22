@@ -11,4 +11,5 @@ package org.itson.edu.balloonblitz.emparejamiento;
 public interface ActionHandlerEmparejamiento {
     //aquí irían eventos de interacción de la vista que se enviarían al controlador
 //    void clickRegresar();
+    void confirmarUnion();
 }
