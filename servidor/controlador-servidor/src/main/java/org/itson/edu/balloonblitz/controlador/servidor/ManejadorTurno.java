@@ -5,6 +5,7 @@
 package org.itson.edu.balloonblitz.controlador.servidor;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -26,19 +27,21 @@ public class ManejadorTurno {
 
     public int iniciarTemporizador(int segundos) {
     ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    CountDownLatch latch = new CountDownLatch(1); // Sincronizador para esperar al temporizador
     try {
         scheduler.schedule(() -> {
             System.out.println("El tiempo ha expirado.");
-            scheduler.shutdown(); // Detenemos el scheduler
+            latch.countDown(); // Libera el hilo principal
         }, segundos, TimeUnit.SECONDS);
 
-        // Bucle que espera hasta que el scheduler termine
-        while (!scheduler.isTerminated()) {
-            // Aquí puedes agregar lógica si es necesario.
-        }
+        // Espera a que el latch se libere o el tiempo expire
+        latch.await(); // Bloquea hasta que el tiempo expira
         return 0; // Devuelve 0 cuando el tiempo expira
+    } catch (InterruptedException e) {
+        Thread.currentThread().interrupt(); // Manejo adecuado de interrupciones
+        return -1; // Devuelve -1 si ocurre una interrupción
     } finally {
-        scheduler.shutdownNow(); // Asegúrate de detener el scheduler si ocurre un error
+        scheduler.shutdown(); // Detenemos el scheduler
     }
 }
 

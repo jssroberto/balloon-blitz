@@ -8,8 +8,6 @@ package org.itson.edu.balloonblitz.esperarJugador;
  *
  * @author elimo
  */
-public interface ObservadorEncontrarPartida {
-    
-    public void actualizarInterfaz(String mensaje);
+public interface EmparejamientoActionHandler {
     
 }

@@ -9,7 +9,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import org.itson.edu.balloonblitz.entidades.Jugador;
-import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.EnvioJugadorEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
@@ -24,11 +23,17 @@ public class ControladorPosicionNaves implements ObservadorTiempo, ObservadorJug
     private JLabel label;
     private Jugador jugador;
     private int tiempoRestante;
+    private ObservadorPosicionNaves observador;
+    ModeloPosicionNaves modelo;
 
-    // Constructor privado para evitar la creación de instancias fuera de la clase
     private ControladorPosicionNaves() {
         cliente = ConexionCliente.getInstancia();
         cliente.setObservadorTiempo(this);
+        modelo = new ModeloPosicionNaves();
+    }
+
+    public void setObservador(ObservadorPosicionNaves observador) {
+        this.observador = observador;
     }
 
     // Método estático que devuelve la instancia única del singleton
@@ -62,29 +67,8 @@ public class ControladorPosicionNaves implements ObservadorTiempo, ObservadorJug
     @Override
     public void manejarEvento(Evento evento) {
 
-        correrTiempo((TimeOutEvento) evento, label);
+        modelo.correrTiempo((TimeOutEvento) evento, observador);
 
-    }
-
-    // Método que maneja el tiempo y actualiza el label
-    public void correrTiempo(TimeOutEvento evento, JLabel label) {
-        tiempoRestante = evento.getTiempoRestante();
-
-        if (tiempoRestante > 0) {
-            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-
-            scheduler.scheduleAtFixedRate(() -> {
-                if (tiempoRestante > 1) {
-                    label.setText(String.valueOf(tiempoRestante));
-                    tiempoRestante--;
-                } else {
-                    label.setText("El tiempo ha expirado. Has perdido tu turno.");
-                    scheduler.shutdown(); // Detenemos el scheduler cuando tiempoRestante llega a 1
-                }
-            }, 0, 1, TimeUnit.SECONDS);
-        } else if (evento.getTiempoRestante() == 0) {
-            label.setText("El tiempo ha expirado. Has perdido tu turno.");
-        }
     }
 
     @Override

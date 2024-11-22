@@ -14,35 +14,33 @@ import org.itson.edu.balloonblitz.FramePrincipal;
  *
  * @author elimo
  */
-public class ControladorEmparejamiento implements ObservadorResultado {
+public class EmparejamientoControlador implements ObservadorResultado {
 
-    private static ControladorEmparejamiento instancia; // Instancia única de la clase
-    private ModeloEmparejamiento modelo;
+    private static EmparejamientoControlador instancia; // Instancia única de la clase
+    private EmparejamientoPanel vista;
+    private EmparejamientoModel modelo;
     private FramePrincipal frame;
     private boolean valido;
 
     // Constructor privado para evitar que se instancien múltiples objetos
-    private ControladorEmparejamiento() {
+    private EmparejamientoControlador() {
         
         valido = false;
-        modelo = new ModeloEmparejamiento(this);
+        modelo = new EmparejamientoModel(this);
+        this.setObservador(vista);
         unirsePartida();
     }
 
     // Método público estático para obtener la instancia única
-    public static synchronized ControladorEmparejamiento getInstancia() {
+    public static synchronized EmparejamientoControlador getInstancia() {
         if (instancia == null) {
-            instancia = new ControladorEmparejamiento(); // Se crea la instancia si no existe
+            instancia = new EmparejamientoControlador(); // Se crea la instancia si no existe
         }
         return instancia;
     }
 
     public void cambiarPanel(FramePrincipal frame) {
         this.frame = frame;
-    }
-
-    public void setObservador(ObservadorEncontrarPartida observador) {
-        modelo.setObservador(observador);
     }
 
     @Override
@@ -66,5 +64,10 @@ public class ControladorEmparejamiento implements ObservadorResultado {
 
     public void enviarEvento(Evento evento) {
         ConexionCliente.getInstancia().enviarMensaje(evento);
+    }
+
+    @Override
+    public void actualizarInterfaz(String mensaje) {
+        vista.getLblEsperando().setText("Partida Encottrada");
     }
 }

@@ -4,8 +4,8 @@
  */
 package org.itson.edu.balloonblitz.personalizar;
 
-import org.itson.edu.balloonblitz.esperarJugador.EsperandoJugadorPanel;
-import org.itson.edu.balloonblitz.FramePrincipal;
+import org.itson.edu.balloonblitz.esperarJugador.EmparejamientoPanel;
+import org.itson.edu.balloonblitz.vista.FramePrincipal;
 
 /**
  *
@@ -26,6 +26,6 @@ public class ModeloJugador {
     }
     
     public void cambiarPanel(FramePrincipal framePrincipal){
-         framePrincipal.cambiarPanel(new EsperandoJugadorPanel(framePrincipal));
+         framePrincipal.cambiarPanel(new EmparejamientoPanel(framePrincipal));
     }
 }

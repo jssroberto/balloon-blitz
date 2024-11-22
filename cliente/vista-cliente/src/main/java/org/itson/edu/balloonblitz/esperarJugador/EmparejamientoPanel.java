@@ -24,23 +24,21 @@ import org.itson.edu.balloonblitz.vista.InicioPanel;
  *
  * @author user
  */
-public class EsperandoJugadorPanel extends javax.swing.JPanel implements ObservadorEncontrarPartida {
+public class EmparejamientoPanel extends javax.swing.JPanel{
 
     private static final Logger logger = Logger.getLogger(InicioPanel.class.getName());
     private final FramePrincipal framePrincipal;
-    ControladorEmparejamiento controlador;
+    EmparejamientoControlador controlador;
 
     /**
      * Creates new form PersonalizarPanel
      *
      * @param framePrincipal
      */
-    public EsperandoJugadorPanel(FramePrincipal framePrincipal) {
-
+    public EmparejamientoPanel(FramePrincipal framePrincipal) {
         initComponents();
         this.framePrincipal = framePrincipal;
-        controlador = ControladorEmparejamiento.getInstancia();
-        controlador.setObservador(this);
+        controlador = EmparejamientoControlador.getInstancia();
         controlador.cambiarPanel(framePrincipal);
         controlador.unirsePartida();
         try {
@@ -94,10 +92,15 @@ public class EsperandoJugadorPanel extends javax.swing.JPanel implements Observa
         });
     }
 
-    @Override
-    public void actualizarInterfaz(String mensaje) {
-        lblEsperando.setText(mensaje);
+    public JLabel getLblEsperando() {
+        return lblEsperando;
     }
+
+    public void setLblEsperando(JLabel lblEsperando) {
+        this.lblEsperando = lblEsperando;
+    }
+
+   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -173,5 +176,11 @@ public class EsperandoJugadorPanel extends javax.swing.JPanel implements Observa
     private javax.swing.JLabel lblMenu;
     private javax.swing.JLabel lblVolver;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void actualizarInterfaz(String mensaje) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
 
 }

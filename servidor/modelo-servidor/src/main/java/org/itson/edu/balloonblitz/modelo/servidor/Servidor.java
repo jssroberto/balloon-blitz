@@ -17,7 +17,6 @@ import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
  *
  * @author elimo
  */
-
 public final class Servidor {
 
     private static Servidor instancia;
@@ -163,8 +162,15 @@ public final class Servidor {
      */
     public synchronized void mandarDatosCliente(ObjectOutputStream salida, Evento evento) {
         try {
-            salida.writeObject(evento);
-            salida.flush();
+            if (evento.getTipoEvento() != TipoEvento.TIMEOUT) {
+                System.out.println(evento.getTipoEvento());
+                salida.writeObject(evento);
+                salida.flush();
+            }else{
+                System.out.println(evento.getTipoEvento());
+                salida.writeObject(evento);
+                salida.flush();
+            }
         } catch (IOException ex) {
             Logger.error("Error al enviar datos al cliente: {}", ex.getMessage());
         }

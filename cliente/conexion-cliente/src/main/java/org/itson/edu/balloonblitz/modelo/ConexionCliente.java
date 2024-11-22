@@ -77,9 +77,7 @@ public class ConexionCliente {
         while (conectado) {
             try {
                 mensajeRecibido = (Evento) entrada.readObject();
-                System.out.println("prendido");
                 if (mensajeRecibido != null) {
-                    System.out.println(mensajeRecibido.getTipoEvento());
                     procesarMensaje(mensajeRecibido);
                 }
             } catch (IOException | ClassNotFoundException ex) {
@@ -103,14 +101,19 @@ public class ConexionCliente {
         switch (evento.getTipoEvento()) {
             case TIMEOUT:
                 if (observadorTiempo != null) {
+                    System.out.println("entrando al timeout");
+                    TimeOutEvento time = (TimeOutEvento) evento;
+                    System.out.println(time.getTiempoRestante());
                     observadorTiempo.manejarEvento((TimeOutEvento) evento);
                 }
+                break;
             case ENVIO_JUGADOR:
+                if(observadorJugador!=null){
                 observadorJugador.manejarEvento((EnvioJugadorEvento) evento);
+                }
+                break;
             case RESULTADO:
-                System.out.println("entró");
                 if (observadorResultado != null) {
-                    System.out.println("volvio a entrar");
                     observadorResultado.manejarEvento((ResultadoEvento) evento);
                 }
                 break;

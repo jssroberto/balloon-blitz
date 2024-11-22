@@ -63,7 +63,7 @@ public class ColocacionPanel extends javax.swing.JPanel {
     public ColocacionPanel(FramePrincipal framePrincipal) {
         initComponents();
         controlador = ControladorPosicionNaves.getInstancia();
-        controlador.setLabel(lblTiempoRestante);
+
         this.framePrincipal = framePrincipal;
         this.gridDragDropHandler = new GridDragDropHandler(panelTablero);
         this.balloon_base_path = "/images/ballons/" + controlador.getJugador().getColorPropio() + "/" + controlador.getJugador().getColorPropio() + "-";
@@ -424,4 +424,5 @@ public class ColocacionPanel extends javax.swing.JPanel {
     private javax.swing.JLabel panelContenedorGlobos;
     private javax.swing.JLabel panelTablero;
     // End of variables declaration//GEN-END:variables
+
 }
