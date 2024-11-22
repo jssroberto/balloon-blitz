@@ -4,7 +4,6 @@
  */
 package org.itson.edu.balloonblitz.emparejamiento;
 
-import org.itson.edu.balloonblitz.FramePrincipal;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.entidades.eventos.ResultadoEvento;
 import org.itson.edu.balloonblitz.modelo.ConexionCliente;
@@ -15,9 +14,8 @@ import org.itson.edu.balloonblitz.modelo.ObservadorResultado;
  */
 public class ControllerEmparejamiento implements ActionHandlerEmparejamiento, ObservadorResultado {
 
-    private static ControllerEmparejamiento instancia; // Instancia única de la clase
-    private EmparejamientoPanel view;
-    private ModelEmparejamiento model;
+    private final EmparejamientoPanel view;
+    private final ModelEmparejamiento model;
 
     // Constructor privado para evitar que se instancien múltiples objetos
     public ControllerEmparejamiento(EmparejamientoPanel view, ModelEmparejamiento model) {
@@ -30,15 +28,14 @@ public class ControllerEmparejamiento implements ActionHandlerEmparejamiento, Ob
 
     @Override
     public void manejarEvento(ResultadoEvento evento) {
-        System.out.println("Entramos al ejecutador del metodo");
-        model.setValido();
+        model.setPartidaEncontrada();
     }
 
     public void enviarEvento(Evento evento) {
         ConexionCliente.getInstancia().enviarMensaje(evento);
     }
 
-    public void buscarPartida() {
+    private void buscarPartida() {
         model.buscarPartida();
     }
 

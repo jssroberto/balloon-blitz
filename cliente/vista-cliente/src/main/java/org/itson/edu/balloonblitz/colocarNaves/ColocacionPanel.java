@@ -47,12 +47,7 @@ public class ColocacionPanel extends javax.swing.JPanel {
     ControladorPosicionNaves controlador;
 
     //TODO: portaaviones son 2 no 1
-    private static final Map<String, Integer> BALLOON_LIMITS = Map.of(
-            "barco", 4, // 4 barcos de 1 casilla
-            "submarino", 3, // 3 submarinos de 2 casillas
-            "crucero", 2, // 2 cruceros de 3 casillas
-            "portaAviones", 1 // 1 portaaviones de 4 casillas
-    );
+    
 
     /**
      * Creates new form PersonalizarPanel
@@ -80,6 +75,13 @@ public class ColocacionPanel extends javax.swing.JPanel {
             LOGGER.log(Level.SEVERE, "Error initializing UI: ", e);
         }
     }
+    
+    private static final Map<String, Integer> BALLOON_LIMITS = Map.of(
+            "barco", 4, // 4 barcos de 1 casilla
+            "submarino", 3, // 3 submarinos de 2 casillas
+            "crucero", 2, // 2 cruceros de 3 casillas
+            "portaAviones", 2 // 1 portaaviones de 4 casillas
+    );
 
     private void setupUI() throws FontFormatException, IOException {
         setupFonts();

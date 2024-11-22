@@ -11,22 +11,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
+import org.tinylog.Logger;
 
 /**
  * @author elimo
  */
 public class ModelEmparejamiento {
 
-    private static final Logger logger = Logger.getLogger(ModelEmparejamiento.class.getName());
     private final ExecutorService executorService = Executors.newFixedThreadPool(10);
     private final List<ObserverEmparejamiento> observers = new ArrayList<>();
     private String texto;
-//    private ControllerEmparejamiento controlador; // Eliminamos la inicialización interna
     private int contador = 0;
-    boolean valido;
+    boolean partidaEncontrada;
 
     public void addObserver(ObserverEmparejamiento observer) {
         observers.add(observer);
@@ -45,15 +42,15 @@ public class ModelEmparejamiento {
     public ModelEmparejamiento() {
     }
 
-    public void setValido() {
-        this.valido = true;
+    public void setPartidaEncontrada() {
+        this.partidaEncontrada = true;
     }
 
     public void buscarPartida() {
         if (!observers.isEmpty()) {
             executorService.submit(() -> {
                 try {
-                    while (!valido) {
+                    while (!partidaEncontrada) {
                         SwingUtilities.invokeLater(() -> {
                             switch (contador % 3) {
                                 case 0 -> setTexto("Esperando jugador.");
@@ -63,13 +60,8 @@ public class ModelEmparejamiento {
                             notifyObservers(new UpdateEventEmparejamiento(this, EventTypeEmparejamiento.ACTUALIZAR_LABEL));
                         });
                         contador++;
-                        Thread.sleep(500); // Simula la espera
-                        if (valido) {
-                            System.out.println(valido);
-                        }
+                        Thread.sleep(500);
                     }
-                    System.out.println("se deberia de actualizar");
-                    setTexto("Partida encontrada");
                     notifyObservers(new UpdateEventEmparejamiento(this, EventTypeEmparejamiento.ACTUALIZAR_LABEL));
                     Thread.sleep(3000);
                     notifyObservers(new UpdateEventEmparejamiento(this, EventTypeEmparejamiento.CONFIRMAR_UNION_PARTIDA));
@@ -78,7 +70,7 @@ public class ModelEmparejamiento {
                                     this, EventTypeEmparejamiento.CAMBIAR_PANEL_COLOCACION_NAVES)));
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
-                    logger.log(Level.SEVERE, "Hilo interrumpido durante la espera del jugador.", e);
+                    Logger.error("Hilo interrumpido durante la espera del jugador.");
                 }
             });
         }

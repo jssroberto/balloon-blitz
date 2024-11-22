@@ -95,9 +95,6 @@ public class EmparejamientoPanel extends javax.swing.JPanel implements ObserverE
         return lblEsperando;
     }
 
-    public void setLblEsperando(JLabel lblEsperando) {
-        this.lblEsperando = lblEsperando;
-    }
 
     @Override
     public void update(UpdateEventEmparejamiento event) {
