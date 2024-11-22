@@ -16,6 +16,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
+import org.itson.edu.balloonblitz.emparejamiento.ControllerEmparejamiento;
+import org.itson.edu.balloonblitz.emparejamiento.EmparejamientoPanel;
+import org.itson.edu.balloonblitz.emparejamiento.ModelEmparejamiento;
+import org.itson.edu.balloonblitz.modelo.ConexionCliente;
 import org.itson.edu.balloonblitz.vista.music.MusicPlayer;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
 
@@ -125,6 +130,13 @@ public class FramePrincipal extends javax.swing.JFrame {
         limpiarFrame();
         ponerEnFrame(panel);
         panelActual = panel;
+    }
+
+    public void cambiarPanelColocacion() {
+        ModelEmparejamiento model = new ModelEmparejamiento();
+        EmparejamientoPanel view = new EmparejamientoPanel(this);
+        ConexionCliente.getInstancia().setObservadorResultado(new ControllerEmparejamiento(view, model));
+        cambiarPanel(view);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

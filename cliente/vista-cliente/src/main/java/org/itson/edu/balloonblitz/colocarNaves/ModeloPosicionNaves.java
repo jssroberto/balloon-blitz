@@ -20,7 +20,7 @@ public class ModeloPosicionNaves {
     public ModeloPosicionNaves() {
         cliente = ConexionCliente.getInstancia();
 
-        controladorEnvio = new ControladorEnvio();
+//        controladorEnvio = new ControladorEnvio();
     }
 
     public void setObservador(ObservadorPosicionNaves observador) {

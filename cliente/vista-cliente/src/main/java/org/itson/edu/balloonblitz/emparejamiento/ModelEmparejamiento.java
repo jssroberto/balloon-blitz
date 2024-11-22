@@ -4,6 +4,9 @@
  */
 package org.itson.edu.balloonblitz.emparejamiento;
 
+
+import org.itson.edu.balloonblitz.entidades.eventos.ResultadoEvento;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -11,62 +14,53 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
-import org.itson.edu.balloonblitz.colocarNaves.ColocacionPanel;
-import org.itson.edu.balloonblitz.entidades.eventos.ResultadoEvento;
-import org.itson.edu.balloonblitz.FramePrincipal;
 
 /**
- *
  * @author elimo
  */
-public class EmparejamientoModel {
+public class ModelEmparejamiento {
 
-    private static final Logger logger = Logger.getLogger(EmparejamientoModel.class.getName());
+    private static final Logger logger = Logger.getLogger(ModelEmparejamiento.class.getName());
     private final ExecutorService executorService = Executors.newFixedThreadPool(10);
-    private final List<EmparejamientoObserver> observers = new ArrayList<>();
+    private final List<OberverEmparejamiento> observers = new ArrayList<>();
     private String texto;
-    private EmparejamientoControlador controlador; // Eliminamos la inicialización interna
+//    private ControllerEmparejamiento controlador; // Eliminamos la inicialización interna
     private int contador = 0;
     boolean valido;
 
-    public void addObserver(EmparejamientoObserver observer) {
+    public void addObserver(OberverEmparejamiento observer) {
         observers.add(observer);
     }
 
-    public void removeOberver(EmparejamientoObserver observer) {
+    public void removeOberver(OberverEmparejamiento observer) {
         observers.remove(observer);
     }
 
-    private void notifyObservers(UpdateEvent event) {
-        for (EmparejamientoObserver observer : observers) {
+    private void notifyObservers(UpdateEventEmparejamiento event) {
+        for (OberverEmparejamiento observer : observers) {
             observer.update(event);
         }
     }
 
-    // Constructor que recibe el controlador como dependencia
-    public EmparejamientoModel(EmparejamientoControlador controlador) {
-        this.controlador = controlador;
+    public ModelEmparejamiento() {
     }
 
-    public void setValido(boolean valido) {
-        this.valido = valido;
+    public void setValido() {
+        this.valido = true;
     }
 
-    public void unirsePartida(FramePrincipal framePrincipal) {
+    public void buscarPartida() {
         if (!observers.isEmpty()) {
             executorService.submit(() -> {
                 try {
                     while (!valido) {
                         SwingUtilities.invokeLater(() -> {
                             switch (contador % 3) {
-                                case 0 ->
-                                    setTexto("Esperando jugador.");
-                                case 1 ->
-                                    setTexto("Esperando jugador..");
-                                case 2 ->
-                                    setTexto("Esperando jugador...");
+                                case 0 -> setTexto("Esperando jugador.");
+                                case 1 -> setTexto("Esperando jugador..");
+                                case 2 -> setTexto("Esperando jugador...");
                             }
-                            notifyObservers(new UpdateEvent(this, EventType.ACTUALIZAR_LABEL));
+                            notifyObservers(new UpdateEventEmparejamiento(this, EventTypeEmparejamiento.ACTUALIZAR_LABEL));
                         });
                         contador++;
                         Thread.sleep(500); // Simula la espera
@@ -76,10 +70,12 @@ public class EmparejamientoModel {
                     }
                     System.out.println("se deberia de actualizar");
                     setTexto("Partida encontrada");
-                    notifyObservers(new UpdateEvent(this, EventType.ACTUALIZAR_LABEL));
+                    notifyObservers(new UpdateEventEmparejamiento(this, EventTypeEmparejamiento.ACTUALIZAR_LABEL));
                     Thread.sleep(3000);
                     controlador.enviarEvento(new ResultadoEvento(true));
-                    SwingUtilities.invokeLater(() -> framePrincipal.cambiarPanel(new ColocacionPanel(framePrincipal)));
+                    SwingUtilities.invokeLater(() -> notifyObservers(
+                            new UpdateEventEmparejamiento(
+                                    this, EventTypeEmparejamiento.CAMBIAR_PANEL_COLOCACION_NAVES)));
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     logger.log(Level.SEVERE, "Hilo interrumpido durante la espera del jugador.", e);

@@ -24,11 +24,12 @@ import org.itson.edu.balloonblitz.vista.InicioPanel;
  *
  * @author user
  */
-public class EmparejamientoPanel extends javax.swing.JPanel{
+public class EmparejamientoPanel extends javax.swing.JPanel implements OberverEmparejamiento {
 
-    private static final Logger logger = Logger.getLogger(InicioPanel.class.getName());
+
+    private static final Logger logger = Logger.getLogger(EmparejamientoPanel.class.getName());
     private final FramePrincipal framePrincipal;
-    EmparejamientoControlador controlador;
+    private ActionHandlerEmparejamiento actionHandler;
 
     /**
      * Creates new form PersonalizarPanel
@@ -38,9 +39,8 @@ public class EmparejamientoPanel extends javax.swing.JPanel{
     public EmparejamientoPanel(FramePrincipal framePrincipal) {
         initComponents();
         this.framePrincipal = framePrincipal;
-        controlador = EmparejamientoControlador.getInstancia();
-        controlador.cambiarPanel(framePrincipal);
-        controlador.unirsePartida();
+//        controlador.cambiarPanel(framePrincipal);
+//        controlador.buscarPartida();
         try {
             setFuentes();
         } catch (FontFormatException | IOException e) {
@@ -100,7 +100,14 @@ public class EmparejamientoPanel extends javax.swing.JPanel{
         this.lblEsperando = lblEsperando;
     }
 
-   
+    @Override
+    public void update(UpdateEventEmparejamiento event) {
+        if (event.eventType() == EventTypeEmparejamiento.ACTUALIZAR_LABEL) {
+            lblEsperando.setText(event.model().getTexto());
+        } else if (event.eventType() == EventTypeEmparejamiento.CAMBIAR_PANEL_COLOCACION_NAVES) {
+            framePrincipal.cambiarPanel(new ColocacionPanel(framePrincipal));
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -167,6 +174,13 @@ public class EmparejamientoPanel extends javax.swing.JPanel{
         framePrincipal.cambiarPanel(new ColocacionPanel(framePrincipal));
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    public ActionHandlerEmparejamiento getActionHandler() {
+        return actionHandler;
+    }
+
+    public void setActionHandler(ActionHandlerEmparejamiento actionHandler) {
+        this.actionHandler = actionHandler;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -175,12 +189,9 @@ public class EmparejamientoPanel extends javax.swing.JPanel{
     private javax.swing.JLabel lblFondo;
     private javax.swing.JLabel lblMenu;
     private javax.swing.JLabel lblVolver;
-    // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void actualizarInterfaz(String mensaje) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+
+    // End of variables declaration//GEN-END:variables
 
 
 }

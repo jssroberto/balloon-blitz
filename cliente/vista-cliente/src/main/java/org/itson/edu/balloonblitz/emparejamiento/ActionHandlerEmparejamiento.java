@@ -8,6 +8,7 @@ package org.itson.edu.balloonblitz.emparejamiento;
  *
  * @author elimo
  */
-public interface EmparejamientoObserver {
-    public void update(UpdateEvent event);
+public interface ActionHandlerEmparejamiento {
+    //aquí irían eventos de interacción de la vista que se enviarían al controlador
+//    void clickRegresar();
 }

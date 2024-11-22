@@ -7,7 +7,7 @@ package org.itson.edu.balloonblitz.vista;
 
 import org.itson.edu.balloonblitz.FramePrincipal;
 import org.itson.edu.balloonblitz.colocarNaves.ControladorPosicionNaves;
-import org.itson.edu.balloonblitz.emparejamiento.EmparejamientoControlador;
+import org.itson.edu.balloonblitz.emparejamiento.ControllerEmparejamiento;
 import org.itson.edu.balloonblitz.modelo.ConexionCliente;
 import org.itson.edu.balloonblitz.personalizar.PersonalizarPanel;
 
@@ -29,7 +29,7 @@ public class InicioPanel extends javax.swing.JPanel {
         initComponents();
         this.framePrincipal = framePrincipal;
         ConexionCliente.getInstancia().setObservadorJugador(ControladorPosicionNaves.getInstancia());
-        ConexionCliente.getInstancia().setObservadorResultado(EmparejamientoControlador.getInstancia());
+        ConexionCliente.getInstancia().setObservadorResultado(ControllerEmparejamiento.getInstancia());
         ConexionCliente.getInstancia().setObservadorTiempo(ControladorPosicionNaves.getInstancia());
         
     }

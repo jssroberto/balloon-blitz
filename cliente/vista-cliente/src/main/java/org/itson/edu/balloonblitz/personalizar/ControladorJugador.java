@@ -32,9 +32,9 @@ public class ControladorJugador {
         return instancia;
     }
     
-    public void cambiarPanel(FramePrincipal framePrincipal) {
-        modeloJugador.cambiarPanel(framePrincipal);
-    }
+//    public void cambiarPanel(FramePrincipal framePrincipal) {
+//        modeloJugador.cambiarPanel(framePrincipal);
+//    }
     
     public void enviarJugador(Jugador jugador){
         Evento evento = new EnvioJugadorEvento();

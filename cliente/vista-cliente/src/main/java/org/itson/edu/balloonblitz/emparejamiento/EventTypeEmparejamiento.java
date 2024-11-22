@@ -8,6 +8,6 @@ package org.itson.edu.balloonblitz.emparejamiento;
  *
  * @author elimo
  */
-public enum EventType {
-    ACTUALIZAR_LABEL;
+public enum EventTypeEmparejamiento {
+    ACTUALIZAR_LABEL, CAMBIAR_PANEL_COLOCACION_NAVES;
 }
