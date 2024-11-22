@@ -7,7 +7,7 @@ package org.itson.edu.balloonblitz.vista;
 
 import org.itson.edu.balloonblitz.FramePrincipal;
 import org.itson.edu.balloonblitz.colocarNaves.ControladorPosicionNaves;
-import org.itson.edu.balloonblitz.esperarJugador.EmparejamientoControlador;
+import org.itson.edu.balloonblitz.emparejamiento.EmparejamientoControlador;
 import org.itson.edu.balloonblitz.modelo.ConexionCliente;
 import org.itson.edu.balloonblitz.personalizar.PersonalizarPanel;
 

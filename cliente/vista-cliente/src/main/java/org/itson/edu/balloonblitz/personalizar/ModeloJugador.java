@@ -4,7 +4,7 @@
  */
 package org.itson.edu.balloonblitz.personalizar;
 
-import org.itson.edu.balloonblitz.esperarJugador.EmparejamientoPanel;
+import org.itson.edu.balloonblitz.emparejamiento.EmparejamientoPanel;
 import org.itson.edu.balloonblitz.vista.FramePrincipal;
 
 /**

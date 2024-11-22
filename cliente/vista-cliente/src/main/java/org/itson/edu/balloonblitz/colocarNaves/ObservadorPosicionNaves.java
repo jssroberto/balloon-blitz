@@ -4,8 +4,6 @@
  */
 package org.itson.edu.balloonblitz.colocarNaves;
 
-import org.itson.edu.balloonblitz.esperarJugador.*;
-
 /**
  *
  * @author elimo
