@@ -64,7 +64,6 @@ public class ModelEmparejamiento {
                     setTexto("Patida encontrada");
                     notifyObservers(new UpdateEventEmparejamiento(this, EventTypeEmparejamiento.ACTUALIZAR_LABEL));
                     Thread.sleep(2000);
-                    notifyObservers(new UpdateEventEmparejamiento(this, EventTypeEmparejamiento.CONFIRMAR_UNION_PARTIDA));
                     SwingUtilities.invokeLater(() -> notifyObservers(
                             new UpdateEventEmparejamiento(
                                     this, EventTypeEmparejamiento.CAMBIAR_PANEL_COLOCACION_NAVES)));

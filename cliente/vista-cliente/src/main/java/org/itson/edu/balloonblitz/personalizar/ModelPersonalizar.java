@@ -6,8 +6,6 @@ package org.itson.edu.balloonblitz.personalizar;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.itson.edu.balloonblitz.FramePrincipal;
-//import org.itson.edu.balloonblitz.vista.FramePrincipal;
 
 /**
  *

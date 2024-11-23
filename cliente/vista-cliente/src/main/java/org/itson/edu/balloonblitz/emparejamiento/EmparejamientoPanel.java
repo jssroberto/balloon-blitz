@@ -16,7 +16,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import org.itson.edu.balloonblitz.colocarNaves.ColocacionPanel;
 import org.itson.edu.balloonblitz.FramePrincipal;
 
 /**
@@ -101,9 +100,7 @@ public class EmparejamientoPanel extends javax.swing.JPanel implements ObserverE
             case ACTUALIZAR_LABEL -> 
                 lblEsperando.setText(event.model().getTexto());
             case CAMBIAR_PANEL_COLOCACION_NAVES -> 
-                framePrincipal.cambiarPanel(new ColocacionPanel(framePrincipal));
-            case CONFIRMAR_UNION_PARTIDA -> 
-                actionHandler.confirmarUnion();
+                framePrincipal.cambiarPanelPosicionarNaves();
             default -> {
             }
         }
@@ -122,7 +119,6 @@ public class EmparejamientoPanel extends javax.swing.JPanel implements ObserverE
         lblMenu = new javax.swing.JLabel();
         lblEsperando = new javax.swing.JLabel();
         lblVolver = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
         lblFondo = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -143,14 +139,6 @@ public class EmparejamientoPanel extends javax.swing.JPanel implements ObserverE
         });
         jPanel1.add(lblVolver, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, -1, -1));
 
-        jButton1.setText("ignorar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1170, 620, -1, -1));
-
         lblFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/espera.png"))); // NOI18N
         jPanel1.add(lblFondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
@@ -170,10 +158,6 @@ public class EmparejamientoPanel extends javax.swing.JPanel implements ObserverE
         framePrincipal.cambiarPanel(new PersonalizarPanel(framePrincipal));
     }//GEN-LAST:event_lblVolverMouseClicked
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        framePrincipal.cambiarPanel(new ColocacionPanel(framePrincipal));
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     public ActionHandlerEmparejamiento getActionHandler() {
         return actionHandler;
     }
@@ -183,14 +167,11 @@ public class EmparejamientoPanel extends javax.swing.JPanel implements ObserverE
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblEsperando;
     private javax.swing.JLabel lblFondo;
     private javax.swing.JLabel lblMenu;
     private javax.swing.JLabel lblVolver;
-
-
     // End of variables declaration//GEN-END:variables
 
 

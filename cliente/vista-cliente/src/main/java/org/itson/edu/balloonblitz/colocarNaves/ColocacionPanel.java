@@ -27,6 +27,7 @@ import org.itson.edu.balloonblitz.entidades.Tablero;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.entidades.eventos.PosicionNavesEvento;
 import org.itson.edu.balloonblitz.FramePrincipal;
+import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.vista.InicioPanel;
 import org.itson.edu.balloonblitz.partida.PartidaPanel;
 
@@ -34,21 +35,21 @@ import org.itson.edu.balloonblitz.partida.PartidaPanel;
  *
  * @author user
  */
-public class ColocacionPanel extends javax.swing.JPanel {
+public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosicionNaves {
 
     private static final Logger LOGGER = Logger.getLogger(InicioPanel.class.getName());
     private static final String FONT_PATH = "/fonts/oetztype/OETZTYPE.TTF";
     private static final float TITLE_FONT_SIZE = 28.0F;
     private static final float TEXT_FONT_SIZE = 20.0F;
     private String balloon_base_path;
+    Jugador jugador;
     private static final int BORDER_THICKNESS = 2;
     private final FramePrincipal framePrincipal;
     private GridDragDropHandler gridDragDropHandler;
-    ControladorPosicionNaves controlador;
+    ActionHandlerColocarNaves actionHandler;
+    ControllerPosicionNaves controlador;
 
     //TODO: portaaviones son 2 no 1
-    
-
     /**
      * Creates new form PersonalizarPanel
      *
@@ -57,11 +58,10 @@ public class ColocacionPanel extends javax.swing.JPanel {
      */
     public ColocacionPanel(FramePrincipal framePrincipal) {
         initComponents();
-        controlador = ControladorPosicionNaves.getInstancia();
 
         this.framePrincipal = framePrincipal;
         this.gridDragDropHandler = new GridDragDropHandler(panelTablero);
-        this.balloon_base_path = "/images/ballons/" + controlador.getJugador().getColorPropio() + "/" + controlador.getJugador().getColorPropio() + "-";
+        this.balloon_base_path = "/images/ballons/" + framePrincipal.getJugador().getColorPropio() + "/" + framePrincipal.getJugador().getColorPropio() + "-";
 
         // Inicializar los labels de cantidad
         cantNave = new JLabel("x4");
@@ -75,7 +75,41 @@ public class ColocacionPanel extends javax.swing.JPanel {
             LOGGER.log(Level.SEVERE, "Error initializing UI: ", e);
         }
     }
+
+    @Override
+    public void actualizarInterfaz(UpdateEventPosicionNaves event) {
+        if (null != event.eventType()) {
+            switch (event.eventType()) {
+                case ACTUALIZAR_LABEL ->
+                    lblTiempoRestante.setText(event.model().getTexto());
+                case CONFIRMAR_UNION_PARTIDA ->
+                    actionHandler.confirmarUnion();
+                case OBTENER_JUGADOR -> {
+                    jugador = event.model().getJugador();
+
+                }
+
+                default -> {
+                }
+            }
+        }
+    }
     
+    
+
+    @Override
+    public void enviarTablero(Tablero tablero) {
+        controlador.enviarPosicionNaves(tablero);
+    }
+
+    public ActionHandlerColocarNaves getActionHandler() {
+        return actionHandler;
+    }
+
+    public void setActionHandler(ActionHandlerColocarNaves actionHandler) {
+        this.actionHandler = actionHandler;
+    }
+
     private static final Map<String, Integer> BALLOON_LIMITS = Map.of(
             "barco", 4, // 4 barcos de 1 casilla
             "submarino", 3, // 3 submarinos de 2 casillas
@@ -162,8 +196,6 @@ public class ColocacionPanel extends javax.swing.JPanel {
 
         Tablero tablero = gridDragDropHandler.obtenerTablero();
         Evento eventoTablero = new PosicionNavesEvento(tablero);
-//        eventoTablero.setEmisor(controlador.obtenerJugador());
-        controlador.enviarEvento(eventoTablero);
 
         return true;
     }

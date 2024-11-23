@@ -23,7 +23,6 @@ import javax.swing.JOptionPane;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.enumeradores.ColorNaves;
 import org.itson.edu.balloonblitz.FramePrincipal;
-import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.vista.InicioPanel;
 
 /**
@@ -148,6 +147,7 @@ public class PersonalizarPanel extends javax.swing.JPanel implements ObserverPer
                 && colorNaves != null
                 && colorNavesRival != null
                 && fotoPerfil != null) {
+            framePrincipal.setJugador(new Jugador(txtNombre.getText(), colorNaves, colorNavesRival, fotoPerfil));
             return new Jugador(txtNombre.getText(), colorNaves, colorNavesRival, fotoPerfil);
         }
         return null;

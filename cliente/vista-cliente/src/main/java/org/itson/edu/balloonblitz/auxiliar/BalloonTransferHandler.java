@@ -19,11 +19,11 @@ public class BalloonTransferHandler extends TransferHandler {
     private static final Map<String, Integer> placedBalloons = new HashMap<>();
 
     // Mapa con los límites para cada tipo de globo
-    private static final Map<String, Integer> BALLOON_LIMITS = Map.of(
+    public static final Map<String, Integer> BALLOON_LIMITS = Map.of(
             "barco", 4, // 4 barcos de 1 casilla
             "submarino", 3, // 3 submarinos de 2 casillas
             "crucero", 2, // 2 cruceros de 3 casillas
-            "portaAviones", 1 // 1 portaaviones de 4 casillas
+            "portaAviones", 2 // 1 portaaviones de 4 casillas
     );
 
     public BalloonTransferHandler(JLabel label, String balloonType) {

@@ -4,12 +4,16 @@
  */
 package org.itson.edu.balloonblitz.colocarNaves;
 
+import org.itson.edu.balloonblitz.entidades.Tablero;
+
 /**
  *
  * @author elimo
  */
-public interface ObservadorPosicionNaves {
+public interface ObserverPosicionNaves {
+
+    public void actualizarInterfaz(UpdateEventPosicionNaves event);
     
-    public void actualizarInterfaz(String mensaje);
-    
+    public void enviarTablero(Tablero tablero);
+
 }

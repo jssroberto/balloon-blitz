@@ -78,6 +78,7 @@ public class ConexionCliente {
             try {
                 mensajeRecibido = (Evento) entrada.readObject();
                 if (mensajeRecibido != null) {
+                    System.out.println(mensajeRecibido.getTipoEvento());
                     procesarMensaje(mensajeRecibido);
                 }
             } catch (IOException | ClassNotFoundException ex) {
@@ -105,17 +106,23 @@ public class ConexionCliente {
                     TimeOutEvento time = (TimeOutEvento) evento;
                     System.out.println(time.getTiempoRestante());
                     observadorTiempo.manejarEvento((TimeOutEvento) evento);
-                }
+                }else{
+                        System.out.println("observador tiempo nulo");
+                        }
                 break;
             case ENVIO_JUGADOR:
                 if(observadorJugador!=null){
                 observadorJugador.manejarEvento((EnvioJugadorEvento) evento);
-                }
+                }else{
+                        System.out.println("observador jugador nulo");
+                        }
                 break;
             case RESULTADO:
                 if (observadorResultado != null) {
                     observadorResultado.manejarEvento((ResultadoEvento) evento);
-                }
+                }else{
+                        System.out.println("observador resultado nulo");
+                        }
                 break;
             case RESULTADO_DISPARO:
                 observadorDisparo.manejarEvento((ResultadoDisparoEvento) evento);

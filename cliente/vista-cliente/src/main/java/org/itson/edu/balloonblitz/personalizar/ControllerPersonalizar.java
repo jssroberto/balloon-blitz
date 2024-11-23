@@ -8,7 +8,6 @@ import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.eventos.EnvioJugadorEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.modelo.ConexionCliente;
-import org.itson.edu.balloonblitz.FramePrincipal;
 
 /**
  *
@@ -18,7 +17,6 @@ public class ControllerPersonalizar implements ActionHandlerPersonalizacion {
 
     private final PersonalizarPanel view;
     private final ModelPersonalizar model;
-    ConexionCliente conexion;
 
     
     public ControllerPersonalizar(PersonalizarPanel view, ModelPersonalizar model) {
