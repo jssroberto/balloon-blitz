@@ -23,19 +23,42 @@ import javax.swing.JOptionPane;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.enumeradores.ColorNaves;
 import org.itson.edu.balloonblitz.FramePrincipal;
+import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.vista.InicioPanel;
 
 /**
  *
  * @author user
  */
-public class PersonalizarPanel extends javax.swing.JPanel {
+public class PersonalizarPanel extends javax.swing.JPanel implements ObserverPersonalizar {
 
     private static final Logger logger = Logger.getLogger(InicioPanel.class.getName());
     private final FramePrincipal framePrincipal;
     private ColorNaves colorNaves;
     private ColorNaves colorNavesRival;
     private String fotoPerfil;
+    private ActionHandlerPersonalizacion actionHandler;
+
+    public ActionHandlerPersonalizacion getActionHandler() {
+        return actionHandler;
+    }
+
+    public void setActionHandler(ActionHandlerPersonalizacion actionHandler) {
+        this.actionHandler = actionHandler;
+    }
+
+    @Override
+    public void update(UpdateEventPersonalizar event) {
+
+        if (event.eventType() != null) {
+            switch (event.eventType()) {
+                case ENVIO_JUGADOR ->
+                    actionHandler.enviarJugador(crearJugador());
+                case CAMBIAR_PANEL_ESPERAR_JUGADOR ->
+                    framePrincipal.cambiarPanelEmparejamiento();
+            }
+        }
+    }
 
     private record ImageProperties(int width, int height, boolean isEnlarged) {
 
@@ -494,9 +517,7 @@ public class PersonalizarPanel extends javax.swing.JPanel {
 
     private void lblContinuarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblContinuarMouseClicked
         if (crearJugador() != null) {
-            ControladorJugador.getInstancia();
-            ControladorJugador.getInstancia().enviarJugador(crearJugador());
-            ControladorJugador.getInstancia().cambiarPanel(framePrincipal);
+            actionHandler.cambiarPanelYEnviarJugador();
         } else {
             JOptionPane.showConfirmDialog(this, "Tienes que llenar todos los datos para poder continuar");
         }

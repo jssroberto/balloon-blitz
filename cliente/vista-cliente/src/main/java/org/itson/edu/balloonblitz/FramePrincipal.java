@@ -21,6 +21,9 @@ import org.itson.edu.balloonblitz.emparejamiento.ControllerEmparejamiento;
 import org.itson.edu.balloonblitz.emparejamiento.EmparejamientoPanel;
 import org.itson.edu.balloonblitz.emparejamiento.ModelEmparejamiento;
 import org.itson.edu.balloonblitz.modelo.ConexionCliente;
+import org.itson.edu.balloonblitz.personalizar.ControllerPersonalizar;
+import org.itson.edu.balloonblitz.personalizar.ModelPersonalizar;
+import org.itson.edu.balloonblitz.personalizar.PersonalizarPanel;
 import org.itson.edu.balloonblitz.vista.music.MusicPlayer;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
 
@@ -136,6 +139,12 @@ public class FramePrincipal extends javax.swing.JFrame {
         ModelEmparejamiento model = new ModelEmparejamiento();
         EmparejamientoPanel view = new EmparejamientoPanel(this);
         ConexionCliente.getInstancia().setObservadorResultado(new ControllerEmparejamiento(view, model));
+        cambiarPanel(view);
+    }
+    public void cambiarPanelPersonalizar() {
+        ModelPersonalizar model = new ModelPersonalizar();
+        PersonalizarPanel view = new PersonalizarPanel(this);
+        ControllerPersonalizar controlador = new ControllerPersonalizar(view, model);
         cambiarPanel(view);
     }
 

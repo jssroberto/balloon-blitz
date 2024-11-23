@@ -38,8 +38,6 @@ public class EmparejamientoPanel extends javax.swing.JPanel implements ObserverE
     public EmparejamientoPanel(FramePrincipal framePrincipal) {
         initComponents();
         this.framePrincipal = framePrincipal;
-//        controlador.cambiarPanel(framePrincipal);
-//        controlador.buscarPartida();
         try {
             setFuentes();
         } catch (FontFormatException | IOException e) {

@@ -69,7 +69,7 @@ public class InicioPanel extends javax.swing.JPanel {
 
     private void btnJugarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnJugarActionPerformed
 
-        framePrincipal.cambiarPanel(new PersonalizarPanel(framePrincipal));
+        framePrincipal.cambiarPanelPersonalizar();
     }//GEN-LAST:event_btnJugarActionPerformed
 
 

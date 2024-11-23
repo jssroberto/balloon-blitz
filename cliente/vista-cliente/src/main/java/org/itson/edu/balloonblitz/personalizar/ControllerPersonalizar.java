@@ -14,32 +14,30 @@ import org.itson.edu.balloonblitz.FramePrincipal;
  *
  * @author elimo
  */
-public class ControladorJugador {
-    
-    private static ControladorJugador instancia;
-    private final ModeloJugador modeloJugador;
+public class ControllerPersonalizar implements ActionHandlerPersonalizacion {
+
+    private final PersonalizarPanel view;
+    private final ModelPersonalizar model;
     ConexionCliente conexion;
+
     
-    public ControladorJugador() {
-        modeloJugador = ModeloJugador.getInstancia();
-        conexion = ConexionCliente.getInstancia();
+    public ControllerPersonalizar(PersonalizarPanel view, ModelPersonalizar model) {
+        this.view = view;
+        this.model = model;
+        this.view.setActionHandler(this);
+        this.model.addObserver(view);
     }
-    
-    public static ControladorJugador getInstancia() {
-        if (instancia == null) {
-            instancia = new ControladorJugador();
-        }
-        return instancia;
+
+    @Override
+    public void cambiarPanelYEnviarJugador(){
+        model.cambiarPanel();
     }
-    
-    public void cambiarPanel(FramePrincipal framePrincipal) {
-        modeloJugador.cambiarPanel(framePrincipal);
-    }
-    
-    public void enviarJugador(Jugador jugador){
+
+    @Override
+    public void enviarJugador(Jugador jugador) {
         Evento evento = new EnvioJugadorEvento();
         evento.setEmisor(jugador);
-        conexion.enviarMensaje(evento);
+        ConexionCliente.getInstancia().enviarMensaje(evento);
     }
-    
+
 }

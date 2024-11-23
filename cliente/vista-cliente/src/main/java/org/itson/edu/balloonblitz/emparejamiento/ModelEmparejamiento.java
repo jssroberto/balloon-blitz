@@ -5,7 +5,6 @@
 package org.itson.edu.balloonblitz.emparejamiento;
 
 
-import org.itson.edu.balloonblitz.entidades.eventos.ResultadoEvento;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,8 +61,9 @@ public class ModelEmparejamiento {
                         contador++;
                         Thread.sleep(500);
                     }
+                    setTexto("Patida encontrada");
                     notifyObservers(new UpdateEventEmparejamiento(this, EventTypeEmparejamiento.ACTUALIZAR_LABEL));
-                    Thread.sleep(3000);
+                    Thread.sleep(2000);
                     notifyObservers(new UpdateEventEmparejamiento(this, EventTypeEmparejamiento.CONFIRMAR_UNION_PARTIDA));
                     SwingUtilities.invokeLater(() -> notifyObservers(
                             new UpdateEventEmparejamiento(
