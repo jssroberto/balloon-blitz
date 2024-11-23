@@ -11,19 +11,16 @@ import java.awt.FontFormatException;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.datatransfer.Transferable;
 import java.io.IOException;
 import java.util.Map;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.TransferHandler;
 import org.itson.edu.balloonblitz.auxiliar.GridDragDropHandler;
 import org.itson.edu.balloonblitz.entidades.Tablero;
@@ -32,7 +29,6 @@ import org.itson.edu.balloonblitz.entidades.eventos.PosicionNavesEvento;
 import org.itson.edu.balloonblitz.FramePrincipal;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.vista.InicioPanel;
-import org.itson.edu.balloonblitz.partida.PartidaPanel;
 
 /**
  *
@@ -57,7 +53,6 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
      * Creates new form PersonalizarPanel
      *
      * @param framePrincipal
-     * @param jugador
      */
     public ColocacionPanel(FramePrincipal framePrincipal) {
         initComponents();
@@ -70,7 +65,7 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
         cantNave = new JLabel("x4");
         cantBarco = new JLabel("x3");
         cantCrucero = new JLabel("x2");
-        cantPortaAviones = new JLabel("x1");
+        cantPortaAviones = new JLabel("x2");
 
         try {
             setupUI();
@@ -112,10 +107,10 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
     }
 
     private static final Map<String, Integer> BALLOON_LIMITS = Map.of(
-            "barco", 4, // 4 barcos de 1 casilla
-            "submarino", 3, // 3 submarinos de 2 casillas
+            "barco", 3, // 3 barcos de 1 casilla
+            "submarino", 4, // 3 submarinos de 2 casillas
             "crucero", 2, // 2 cruceros de 3 casillas
-            "portaAviones", 2 // 1 portaaviones de 4 casillas
+            "portaAviones", 2 // 2 portaaviones de 4 casillas
     );
 
     private void setupUI() throws FontFormatException, IOException {
@@ -203,10 +198,10 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
 
     // Método para verificar si se han colocado todos los barcos necesarios
     private boolean todosLosGlobosColocados() {
-        return BalloonTransferHandler.getPlacedBalloonCount("barco") == 4
-                && BalloonTransferHandler.getPlacedBalloonCount("submarino") == 3
+        return BalloonTransferHandler.getPlacedBalloonCount("barco") == 3
+                && BalloonTransferHandler.getPlacedBalloonCount("submarino") == 4
                 && BalloonTransferHandler.getPlacedBalloonCount("crucero") == 2
-                && BalloonTransferHandler.getPlacedBalloonCount("portaAviones") == 1;
+                && BalloonTransferHandler.getPlacedBalloonCount("portaAviones") == 2;
     }
 
     private void addTextBorder(JLabel label) {
@@ -309,46 +304,43 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
             }
         });
     }
-    
-    
+
     private void killBalloons() {
-    panelContenedorGlobos.setLayout(null);
+        panelContenedorGlobos.setLayout(null);
 
-    // Tipos de barco y sus labels correspondientes
-    String[] balloonTypes = {"barco", "submarino", "crucero", "portaAviones"};
-    JLabel[] countLabels = {cantNave, cantBarco, cantCrucero, cantPortaAviones};
+        // Tipos de barco y sus labels correspondientes
+        String[] balloonTypes = {"barco", "submarino", "crucero", "portaAviones"};
+        JLabel[] countLabels = {cantNave, cantBarco, cantCrucero, cantPortaAviones};
 
-    for (int i = 0; i < balloonTypes.length; i++) {
-        JLabel balloon = createBalloon(i + 1, balloonTypes[i]);
-        JLabel countLabel = countLabels[i];
+        for (int i = 0; i < balloonTypes.length; i++) {
+            JLabel balloon = createBalloon(i + 1, balloonTypes[i]);
+            JLabel countLabel = countLabels[i];
 
+            // Configurar el label de cantidad (inicialmente 0)
+            countLabel.setText("0"); // Establecer la cantidad a 0
+            // Deshabilitar el globo y el label de cantidad (no interactuables)
+            balloon.setEnabled(false); // Deshabilitar el globo
+            countLabel.setEnabled(false); // Deshabilitar el label de cantidad
 
-        // Configurar el label de cantidad (inicialmente 0)
-        countLabel.setText("0"); // Establecer la cantidad a 0
-        // Deshabilitar el globo y el label de cantidad (no interactuables)
-        balloon.setEnabled(false); // Deshabilitar el globo
-        countLabel.setEnabled(false); // Deshabilitar el label de cantidad
+            // Agregar el TransferHandler con listener para actualizar cantidades
+            BalloonTransferHandler handler = new BalloonTransferHandler(balloon, balloonTypes[i]) {
+                @Override
+                protected void exportDone(JComponent source, Transferable data, int action) {
+                    super.exportDone(source, data, action);
+                    actualizarLabelsContadores();
+                }
+            };
+            balloon.setTransferHandler(handler);
 
-        // Agregar el TransferHandler con listener para actualizar cantidades
-        BalloonTransferHandler handler = new BalloonTransferHandler(balloon, balloonTypes[i]) {
-            @Override
-            protected void exportDone(JComponent source, Transferable data, int action) {
-                super.exportDone(source, data, action);
-                actualizarLabelsContadores();
-            }
-        };
-        balloon.setTransferHandler(handler);
+            addDragListener(balloon);
+            panelContenedorGlobos.add(balloon);
+            panelContenedorGlobos.add(countLabel);
+        }
 
-        addDragListener(balloon);
-        panelContenedorGlobos.add(balloon);
-        panelContenedorGlobos.add(countLabel);
+        // Actualizar los contadores de cantidades (aunque estén en 0 inicialmente)
+        actualizarLabelsContadores();
+        panelContenedorGlobos.repaint();
     }
-
-    // Actualizar los contadores de cantidades (aunque estén en 0 inicialmente)
-    actualizarLabelsContadores();
-    panelContenedorGlobos.repaint();
-}
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -474,8 +466,9 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
     }//GEN-LAST:event_btnConfirmarMouseClicked
 
     private void btnReiniciarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnReiniciarMouseClicked
-     gridDragDropHandler.posicionarGlobosExactamente();
-     killBalloons();
+        gridDragDropHandler.posicionarGlobosExactamente();
+        actualizarLabelsContadores();
+//        killBalloons();
     }//GEN-LAST:event_btnReiniciarMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

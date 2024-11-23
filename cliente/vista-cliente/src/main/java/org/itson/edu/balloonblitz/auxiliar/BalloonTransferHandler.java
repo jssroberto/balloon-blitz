@@ -20,8 +20,8 @@ public class BalloonTransferHandler extends TransferHandler {
 
     // Mapa con los límites para cada tipo de globo
     public static final Map<String, Integer> BALLOON_LIMITS = Map.of(
-            "barco", 4, // 4 barcos de 1 casilla
-            "submarino", 3, // 3 submarinos de 2 casillas
+            "barco", 3, // 4 barcos de 1 casilla
+            "submarino", 4, // 3 submarinos de 2 casillas
             "crucero", 2, // 2 cruceros de 3 casillas
             "portaAviones", 2 // 1 portaaviones de 4 casillas
     );
@@ -113,5 +113,34 @@ public class BalloonTransferHandler extends TransferHandler {
     // Método para obtener el número de globos colocados de un tipo
     public static int getPlacedBalloonCount(String type) {
         return placedBalloons.getOrDefault(type, 0);
+    }
+
+    public static void setMaxPlacedBalloons(String type, int count) {
+        placedBalloons.put(type, count);
+
+        // Buscar todos los BalloonTransferHandlers activos para este tipo y actualizar su apariencia
+        for (java.awt.Window window : java.awt.Window.getWindows()) {
+            updateLabelsInContainer(window, type);
+        }
+    }
+
+// Método auxiliar para buscar y actualizar los labels
+    private static void updateLabelsInContainer(java.awt.Container container, String type) {
+        for (java.awt.Component comp : container.getComponents()) {
+            if (comp instanceof JLabel label) {
+                TransferHandler handler = label.getTransferHandler();
+                if (handler instanceof BalloonTransferHandler balloonHandler
+                        && type.equals(balloonHandler.balloonType)) {
+                    // Deshabilitar el label si alcanzó el límite
+                    label.setEnabled(false);
+                    int limit = BALLOON_LIMITS.get(type);
+                    label.setToolTipText("Límite alcanzado (" + limit + "/" + limit + ")");
+                }
+            }
+            // Buscar recursivamente en sub-contenedores
+            if (comp instanceof java.awt.Container) {
+                updateLabelsInContainer((java.awt.Container) comp, type);
+            }
+        }
     }
 }
