@@ -5,13 +5,20 @@ import java.awt.datatransfer.*;
 import java.awt.dnd.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.image.ImageObserver;
 import javax.swing.*;
 import java.io.IOException;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import static org.itson.edu.balloonblitz.auxiliar.BalloonTransferHandler.BALLOON_LIMITS;
 import org.itson.edu.balloonblitz.entidades.*;
+import org.itson.edu.balloonblitz.entidades.enumeradores.TipoNave;
 import org.itson.edu.balloonblitz.entidades.navefactory.Barco;
 import org.itson.edu.balloonblitz.entidades.navefactory.Crucero;
 import org.itson.edu.balloonblitz.entidades.navefactory.PortaAviones;
@@ -26,6 +33,7 @@ public class GridDragDropHandler extends DropTargetAdapter {
     private static final int CELL_SIZE = 45;
     private static final int OFFSET_X = 0;
     private static final int OFFSET_Y = 0;
+    private Nave[][] matriz1 = new Nave[GRID_SIZE][GRID_SIZE];  // Representación de las celdas del tablero
 
     private boolean isVertical = false;
 
@@ -319,4 +327,109 @@ public class GridDragDropHandler extends DropTargetAdapter {
     public List<Nave> obtenerNaves() {
         return naves;
     }
+
+    
+    
+    
+    
+    
+    
+    
+    
+private ImageIcon cargarIcono(String tipo) {
+    String rutaImagen = "";
+
+    switch (tipo) {
+        case "portaAviones":
+            rutaImagen = "/images/ballons/rojo/rojo-4.png"; // Ruta a la imagen del portaaviones
+            break;
+        case "crucero":
+            rutaImagen = "/images/ballons/rojo/rojo-3.png"; // Ruta a la imagen del crucero
+            break;
+        case "submarino":
+            rutaImagen = "/images/ballons/rojo/rojo-2.png"; // Ruta a la imagen del submarino
+            break;
+        case "barco":
+            rutaImagen = "/images/ballons/rojo/rojo-1.png"; // Ruta a la imagen del barco
+            break;
+        default:
+            throw new IllegalArgumentException("Tipo de globo no válido: " + tipo);
+    }
+
+    // Intentar cargar la imagen desde el recurso
+    URL imageUrl = getClass().getResource(rutaImagen);
+    if (imageUrl == null) {
+        System.err.println("Error: no se pudo encontrar la imagen en la ruta: " + rutaImagen);
+        return null; // Retornar null si la imagen no se encuentra
+    }
+
+    return new ImageIcon(imageUrl);
+}
+
+public void posicionarGlobosExactamente() {
+    // Definir las posiciones específicas de cada tipo de nave
+    int[][] posicionesPortaAviones1 = {{3, 9}, {4, 9}, {5, 9}, {6, 9}};
+    int[][] posicionesPortaAviones2 = {{5, 0}, {6, 0}, {7, 0}, {8, 0}};
+    int[][] posicionesCrucero1 = {{4, 3}, {4, 4}, {4, 5}};
+    int[][] posicionesCrucero2 = {{8, 4}, {8, 5}, {8, 6}};
+    int[][] posicionesSubmarino1 = {{1, 0}, {1, 1}};
+    int[][] posicionesSubmarino2 = {{1, 7}, {2, 7}};
+    int[][] posicionesBarco1 = {{2, 3}};
+    int[][] posicionesBarco2 = {{0, 4}};
+    int[][] posicionesBarco3 = {{6, 2}};
+    int[][] posicionesBarco4 = {{3, 0}};
+    int[][] posicionesSubmarino3 = {{5, 7}, {6, 7}};
+
+    // Crear un arreglo de tipos de globos en el orden específico
+    String[] tiposGlobos = {
+        "portaAviones", "portaAviones", "crucero", "crucero", 
+        "submarino", "submarino", "barco", "barco", "barco", 
+        "barco", "submarino"
+    };
+    
+    // Arreglo de las posiciones para cada tipo de globo
+    int[][][] posicionesGlobos = {
+        posicionesPortaAviones1, // Portaaviones 1
+        posicionesPortaAviones2, // Portaaviones 2
+        posicionesCrucero1,      // Crucero 1
+        posicionesCrucero2,      // Crucero 2
+        posicionesSubmarino1,    // Submarino 1
+        posicionesSubmarino2,    // Submarino 2
+        posicionesBarco1,        // Barco 1
+        posicionesBarco2,        // Barco 2
+        posicionesBarco3,        // Barco 3
+        posicionesBarco4,        // Barco 4
+        posicionesSubmarino3     // Submarino 3
+    };
+
+    // Recorrer cada tipo de globo y sus posiciones específicas
+    for (int i = 0; i < tiposGlobos.length; i++) {
+        String tipo = tiposGlobos[i];             // Obtener el tipo de globo
+        int[][] posiciones = posicionesGlobos[i]; // Obtener las posiciones de este globo
+
+        // Cargar el icono correspondiente al tipo de globo
+        ImageIcon icon = cargarIcono(tipo);
+
+        // Verificar si el icono se ha cargado correctamente
+        if (icon == null) {
+            System.err.println("Error al cargar el icono para el tipo: " + tipo);
+            continue; // Si no se puede cargar el icono, se salta al siguiente tipo
+        }
+
+        // Colocar el globo en las casillas correspondientes
+        for (int[] casilla : posiciones) {
+            int gridX = casilla[0];
+            int gridY = casilla[1];
+
+            // Colocar el globo en la posición específica
+            placeBalloons(gridX, gridY, 1, icon); // Aquí '1' es el tamaño, ajustable según el tipo de nave
+        }
+    }
+
+    // Actualizar el tablero para reflejar las posiciones de los globos
+    tableroPanel.repaint();
+}
+
+
+
 }

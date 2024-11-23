@@ -168,9 +168,7 @@ public class FramePrincipal extends javax.swing.JFrame {
         ColocacionPanel view = new ColocacionPanel(this);
         ControllerPosicionNaves controlador = new ControllerPosicionNaves(view, model);
         ConexionCliente.getInstancia().setObservadorTiempo(controlador);
-        System.out.println("observador tiempo puesto");
         ConexionCliente.getInstancia().setObservadorJugador(controlador);
-        System.out.println("observador jugador puesto");
         controlador.confirmarUnion();
         cambiarPanel(view);
     }
