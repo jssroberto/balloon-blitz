@@ -61,7 +61,7 @@ public class ModelEmparejamiento {
                         contador++;
                         Thread.sleep(500);
                     }
-                    setTexto("Patida encontrada");
+                    setTexto("Partida encontrada");
                     notifyObservers(new UpdateEventEmparejamiento(this, EventTypeEmparejamiento.ACTUALIZAR_LABEL));
                     Thread.sleep(2000);
                     SwingUtilities.invokeLater(() -> notifyObservers(

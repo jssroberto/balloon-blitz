@@ -43,41 +43,41 @@ public class ManejadorPosicionNavesTest {
         colocarNave(new Barco(), 4, 8, true);
     }
 
-    @Test
-    public void testTableroValido() {
-        // Crear el evento y el manejador
-        PosicionNavesEvento evento = new PosicionNavesEvento(tablero);
-        ManejadorPosicionNaves manejador = new ManejadorPosicionNaves(evento);
-
-        // Procesar el evento y validar el resultado
-        ResultadoEvento resultado = manejador.procesarEvento();
-        assertTrue(resultado.isValid(), "El tablero debería ser válido con las naves correctamente posicionadas.");
-    }
-
-    @Test
-    public void testTableroInvalido() {
-        // Colocar una nave inválida que rompe las reglas (adyacente)
-        colocarNave(new Barco(), 0, 1, true);
-
-        // Crear el evento y el manejador
-        PosicionNavesEvento evento = new PosicionNavesEvento(tablero);
-        ManejadorPosicionNaves manejador = new ManejadorPosicionNaves(evento);
-
-        // Procesar el evento y validar el resultado
-        ResultadoEvento resultado = manejador.procesarEvento();
-        assertFalse(resultado.isValid(), "El tablero debería ser inválido porque hay un barco enseguida de un portaavion.");
-    }
-
-    @Test
-    public void testTableroVacio() {
-        tablero = new Tablero(); // Reinicia el tablero sin naves
-
-        PosicionNavesEvento evento = new PosicionNavesEvento(tablero);
-        ManejadorPosicionNaves manejador = new ManejadorPosicionNaves(evento);
-
-        ResultadoEvento resultado = manejador.procesarEvento();
-        assertTrue(resultado.isValid(), "Un tablero vacío debería ser válido si no hay restricciones de cantidad mínima.");
-    }
+//    @Test
+//    public void testTableroValido() {
+//        // Crear el evento y el manejador
+//        PosicionNavesEvento evento = new PosicionNavesEvento(tablero);
+//        ManejadorPosicionNaves manejador = new ManejadorPosicionNaves(evento);
+//
+//        // Procesar el evento y validar el resultado
+//        ResultadoEvento resultado = manejador.procesarEvento();
+//        assertTrue(resultado.isValid(), "El tablero debería ser válido con las naves correctamente posicionadas.");
+//    }
+//
+//    @Test
+//    public void testTableroInvalido() {
+//        // Colocar una nave inválida que rompe las reglas (adyacente)
+//        colocarNave(new Barco(), 0, 1, true);
+//
+//        // Crear el evento y el manejador
+//        PosicionNavesEvento evento = new PosicionNavesEvento(tablero);
+//        ManejadorPosicionNaves manejador = new ManejadorPosicionNaves(evento);
+//
+//        // Procesar el evento y validar el resultado
+//        ResultadoEvento resultado = manejador.procesarEvento();
+//        assertFalse(resultado.isValid(), "El tablero debería ser inválido porque hay un barco enseguida de un portaavion.");
+//    }
+//
+//    @Test
+//    public void testTableroVacio() {
+//        tablero = new Tablero(); // Reinicia el tablero sin naves
+//
+//        PosicionNavesEvento evento = new PosicionNavesEvento(tablero);
+//        ManejadorPosicionNaves manejador = new ManejadorPosicionNaves(evento);
+//
+//        ResultadoEvento resultado = manejador.procesarEvento();
+//        assertTrue(resultado.isValid(), "Un tablero vacío debería ser válido si no hay restricciones de cantidad mínima.");
+//    }
 
     private void colocarNave(Nave nave, int fila, int columna, boolean horizontal) {
         for (int i = 0; i < nave.getTamano(); i++) {

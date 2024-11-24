@@ -11,18 +11,22 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import org.itson.edu.balloonblitz.auxiliar.GridDragDropHandler;
 import org.itson.edu.balloonblitz.auxiliar.TableroClickHandler;
 import org.itson.edu.balloonblitz.auxiliar.TableroRenderer;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.Tablero;
 import org.itson.edu.balloonblitz.FramePrincipal;
+import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.vista.GanarPanel;
 import org.itson.edu.balloonblitz.vista.PerderPanel;
 
@@ -30,50 +34,111 @@ import org.itson.edu.balloonblitz.vista.PerderPanel;
  *
  * @author user
  */
-public class PartidaPanel extends javax.swing.JPanel {
+public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida {
 
     private Jugador jugador;
+    private Jugador jugadorRival;
     private Tablero tablero;
+    private Tablero tableroDeRival;
     private GridDragDropHandler gridDragDropHandler;
     private static final Logger logger = Logger.getLogger(PartidaPanel.class.getName());
     private final FramePrincipal framePrincipal;
     private static final String FONT_PATH = "/fonts/oetztype/OETZTYPE.TTF";
     private static final float TITLE_FONT_SIZE = 28.0F;
     private static final int BORDER_THICKNESS = 2;
+    private ActionHandlerPartida actionHandler;
 
     /**
      * Creates new form PersonalizarPanel
      *
      * @param framePrincipal
      * @param gridDragDropHandler
-     * @param jugador
      */
     // Esto está mockeado falta saber como voy a obtener el tablero que ya se hizo antes
     public PartidaPanel(FramePrincipal framePrincipal, GridDragDropHandler gridDragDropHandler) {
         this.framePrincipal = framePrincipal;
         this.gridDragDropHandler = gridDragDropHandler;
-        jugador = framePrincipal.getJugador();
         initComponents();
-        try {
-            setupUI();
-        } catch (FontFormatException | IOException e) {
-            logger.log(Level.SEVERE, "Error al cargar fuentes: ", e);
+        jugador = framePrincipal.getJugador();
+        tablero = jugador.getTableroPropio();
+//        String imagePath1 = jugador.getFotoPerfil();
+//        ImageIcon icon = new ImageIcon(imagePath1);
+//        pfpJugador.setIcon(icon);
+//        try {
+//            setupUI();
+//        } catch (FontFormatException | IOException e) {
+//            logger.log(Level.SEVERE, "Error al cargar fuentes: ", e);
+//        }
+    }
+
+    @Override
+    public void update(UpdateEventPartida event) {
+        if (null != event.eventType()) {
+            switch (event.eventType()) {
+                case ENVIAR_JUGADOR:
+                    System.out.println("entrando al metodo ya tu sabe");
+                    jugadorRival = actionHandler.getJugador();
+                    System.out.println(jugadorRival.getNombre());
+                    System.out.println("la ruta existe");// Crea un ImageIcon usando la ruta
+                    lblNombreEnemigo.setText(jugadorRival.getNombre());
+
+                     {
+                        try {
+                            setupUI();
+                        } catch (FontFormatException | IOException ex) {
+                            Logger.getLogger(PartidaPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    break;
+
+                case ACTUALIZAR_LABEL_TIEMPO:
+                    lblTiempoRestante.setText(event.model().getTexto());
+                    break;
+                case ACTUALIZAR_TABLERO_PROPIO:
+                    tablero = event.model().getTablero();
+                    renderizarTableroJugador();
+                    break;
+                case ACTUALIZAR_TABLERO_RIVAL:
+                    tableroDeRival = event.model().getTableroOponente();
+                    renderizarTableroRival();
+                default: {
+                }
+            }
         }
+
+    }
+
+    @Override
+    public void enviarEvento(Evento event) {
+    }
+
+    public ActionHandlerPartida getActionHandler() {
+        return actionHandler;
+    }
+
+    public void setActionHandler(ActionHandlerPartida actionHandler) {
+        this.actionHandler = actionHandler;
     }
 
     private void setupUI() throws FontFormatException, IOException {
-        TableroClickHandler.configurarTableroRival(tableroRival, jugador);
+        TableroClickHandler.configurarTableroRival(tableroRival, jugador, this);
         setupFonts();
         renderizarTableroJugador();
+
     }
 
     private void renderizarTableroJugador() {
-        TableroRenderer.renderizarTablero(tableroJugador, gridDragDropHandler.obtenerTablero(), framePrincipal.getJugador());
+        TableroRenderer.renderizarTablero(tableroJugador, tablero, jugador);
+    }
+
+    private void renderizarTableroRival() {
+        TableroRenderer.renderizarTablero(tableroRival, tableroDeRival, jugadorRival);
     }
 
     private void setupFonts() throws FontFormatException, IOException {
         Font titleFont = framePrincipal.cargarFuente(FONT_PATH, TITLE_FONT_SIZE);
 
+        lblTiempoRestante.setFont(titleFont);
         lblEsperandoMovimiento.setFont(titleFont);
         lblNombre.setFont(titleFont);
         lblNombreEnemigo.setFont(titleFont);
@@ -85,6 +150,8 @@ public class PartidaPanel extends javax.swing.JPanel {
         lblNombre.setText(jugador.getNombre());
 
         pfpJugador.setIcon(new ImageIcon(getClass().getResource(jugador.getFotoPerfil())));
+        pfpRival.setIcon(new ImageIcon(getClass().getResource(jugadorRival.getFotoPerfil())));
+
     }
 
     private void addTextBorder(JLabel label) {
@@ -126,6 +193,7 @@ public class PartidaPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
@@ -139,7 +207,11 @@ public class PartidaPanel extends javax.swing.JPanel {
         tableroRival = new javax.swing.JLabel();
         panelBorde = new javax.swing.JLabel();
         panelBorde1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        lblTiempoRestante = new javax.swing.JLabel();
         lblFondo = new javax.swing.JLabel();
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/clock.png"))); // NOI18N
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -178,6 +250,7 @@ public class PartidaPanel extends javax.swing.JPanel {
         jPanel1.add(lblEsperandoMovimiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 110, -1, 50));
 
         pfpRival.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/benjamin.png"))); // NOI18N
+        pfpRival.setPreferredSize(new java.awt.Dimension(85, 93));
         jPanel1.add(pfpRival, new org.netbeans.lib.awtextra.AbsoluteConstraints(1180, 20, -1, -1));
 
         pfpJugador.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/patFusty.png"))); // NOI18N
@@ -194,6 +267,12 @@ public class PartidaPanel extends javax.swing.JPanel {
 
         panelBorde1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/borde.png"))); // NOI18N
         jPanel1.add(panelBorde1, new org.netbeans.lib.awtextra.AbsoluteConstraints(656, 156, 458, 458));
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/clock.png"))); // NOI18N
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 630, -1, -1));
+
+        lblTiempoRestante.setText("Hora");
+        jPanel1.add(lblTiempoRestante, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 630, 70, 40));
 
         lblFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/partidaSinTablero.png"))); // NOI18N
         jPanel1.add(lblFondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1280, -1));
@@ -227,11 +306,14 @@ public class PartidaPanel extends javax.swing.JPanel {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblEsperandoMovimiento;
     private javax.swing.JLabel lblFondo;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblNombreEnemigo;
+    private javax.swing.JLabel lblTiempoRestante;
     private javax.swing.JLabel panelBorde;
     private javax.swing.JLabel panelBorde1;
     private javax.swing.JLabel pfpJugador;
@@ -239,4 +321,5 @@ public class PartidaPanel extends javax.swing.JPanel {
     private javax.swing.JLabel tableroJugador;
     private javax.swing.JLabel tableroRival;
     // End of variables declaration//GEN-END:variables
+
 }

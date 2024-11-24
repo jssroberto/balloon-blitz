@@ -9,8 +9,7 @@ import javax.swing.JPanel;
 import org.itson.edu.balloonblitz.entidades.Coordenada;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
-import org.itson.edu.balloonblitz.partida.ControladorPartida;
-import org.itson.edu.balloonblitz.partida.IControladorPartida;
+import org.itson.edu.balloonblitz.partida.PartidaPanel;
 
 public class TableroClickHandler {
 
@@ -18,8 +17,14 @@ public class TableroClickHandler {
     private static final int GRID_SIZE = 10;
     private static final int GRID_OFFSET_X = 0;
     private static final int GRID_OFFSET_Y = 0;
+    private PartidaPanel panel;
 
-    public static void configurarTableroRival(JLabel tableroRival, Jugador jugador) {
+    
+    
+    
+    
+    
+    public static void configurarTableroRival(JLabel tableroRival, Jugador jugador, PartidaPanel panel) {
         // Create an overlay panel for the grid
         JPanel gridPanel = new JPanel(null);
         gridPanel.setOpaque(false);
@@ -28,7 +33,7 @@ public class TableroClickHandler {
         // Create clickable cells
         for (int i = 0; i < GRID_SIZE; i++) {
             for (int j = 0; j < GRID_SIZE; j++) {
-                JPanel cell = createCell(i, j, jugador);
+                JPanel cell = createCell(i, j, jugador, panel);
                 gridPanel.add(cell);
             }
         }
@@ -37,7 +42,7 @@ public class TableroClickHandler {
         tableroRival.add(gridPanel);
     }
 
-    private static JPanel createCell(int row, int col, Jugador jugador) {
+    private static JPanel createCell(int row, int col, Jugador jugador, PartidaPanel panel) {
         JPanel cell = new JPanel();
         cell.setOpaque(false);
         cell.setBounds(
@@ -61,19 +66,16 @@ public class TableroClickHandler {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                realizarDisparo(row, col, jugador);
+                realizarDisparo(row, col, jugador, panel);
             }
         });
 
         return cell;
     }
 
-    private static void realizarDisparo(int row, int col, Jugador jugador) {
+    private static void realizarDisparo(int row, int col, Jugador jugador, PartidaPanel panel) {
         DisparoEvento disparo = new DisparoEvento(new Coordenada(row, col));
         disparo.setEmisor(jugador);
-        IControladorPartida controladorEnvio = new ControladorPartida();
-        controladorEnvio.enviarEvento(disparo);
-
-        System.out.println("Disparo realizado en posicion: " + row + ", " + col);
+        panel.enviarEvento(disparo);
     }
 }

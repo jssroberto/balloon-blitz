@@ -46,7 +46,6 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
     private final FramePrincipal framePrincipal;
     private GridDragDropHandler gridDragDropHandler;
     ActionHandlerColocarNaves actionHandler;
-    ControllerPosicionNaves controlador;
 
     //TODO: portaaviones son 2 no 1
     /**
@@ -90,12 +89,16 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
 
                 case TERMINAR_TIEMPO:
                     lblTiempoRestante.setText(event.model().getTexto());
-                    gridDragDropHandler.colorGlobos(String.valueOf(jugador.getColorPropio()));
+                    gridDragDropHandler.colorGlobos(String.valueOf(framePrincipal.getJugador().getColorPropio()));
                     gridDragDropHandler.limpiarTablero();
                     gridDragDropHandler.posicionarGlobosExactamente();
                     actualizarLabelsContadores();
                     btnReiniciar.setEnabled(false);
                     btnConfirmar.setEnabled(false);
+                    framePrincipal.getJugador().setTableroPropio(gridDragDropHandler.obtenerTablero());
+                    framePrincipal.eliminarObservadores();
+                    framePrincipal.cambiarPanelPartida(gridDragDropHandler);
+                    enviarTablero(gridDragDropHandler.obtenerTablero());
                     break;
 
                 default:
@@ -105,7 +108,8 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
 
     @Override
     public void enviarTablero(Tablero tablero) {
-        controlador.enviarPosicionNaves(tablero);
+        System.out.println("entró");
+        actionHandler.enviarPosicionNaves(tablero);
     }
 
     public ActionHandlerColocarNaves getActionHandler() {
@@ -398,7 +402,7 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
         jPanel1.add(lblPortaAviones, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 320, 160, 40));
 
         lblTiempoRestante.setText("Hora");
-        jPanel1.add(lblTiempoRestante, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 620, 470, 40));
+        jPanel1.add(lblTiempoRestante, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 620, 170, 40));
 
         lblNaves.setText("Naves");
         jPanel1.add(lblNaves, new org.netbeans.lib.awtextra.AbsoluteConstraints(262, 170, 80, 40));
@@ -433,7 +437,10 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
 
     private void btnConfirmarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConfirmarMouseClicked
         if (construirTablero()) {
-            // Así no va quedar final, es para probar que se acomoden los globos en el tablero
+            framePrincipal.getJugador().setTableroPropio(gridDragDropHandler.obtenerTablero());
+            framePrincipal.eliminarObservadores();
+            enviarTablero(gridDragDropHandler.obtenerTablero());
+            framePrincipal.cambiarPanelPartida(gridDragDropHandler);
 
         }
     }//GEN-LAST:event_btnConfirmarMouseClicked

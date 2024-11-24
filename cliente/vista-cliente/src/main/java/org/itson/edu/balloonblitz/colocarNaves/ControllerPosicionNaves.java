@@ -38,7 +38,7 @@ public class ControllerPosicionNaves implements ObservadorTiempo, ObservadorJuga
     }
 
     public void cerrar() {
-        cliente.eliminarObservadorTiempo();
+        cliente.eliminarTodosLosObservadores();
     }
 
     @Override

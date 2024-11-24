@@ -5,14 +5,14 @@
 package org.itson.edu.balloonblitz.partida;
 
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
-import org.itson.edu.balloonblitz.entidades.eventos.ResultadoDisparoEvento;
+
 
 /**
  *
  * @author elimo
  */
-public interface IControladorPartida {
+public interface ObserverPartida {
+    void update(UpdateEventPartida event);
     
-     public void enviarEvento(Evento evento);
-    
+    void enviarEvento(Evento event);
 }

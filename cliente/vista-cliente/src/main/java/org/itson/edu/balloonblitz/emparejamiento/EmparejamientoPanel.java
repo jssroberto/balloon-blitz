@@ -88,9 +88,6 @@ public class EmparejamientoPanel extends javax.swing.JPanel implements ObserverE
         });
     }
 
-    public JLabel getLblEsperando() {
-        return lblEsperando;
-    }
 
 
     @Override

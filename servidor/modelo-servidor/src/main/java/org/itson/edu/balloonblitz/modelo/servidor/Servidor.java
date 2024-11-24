@@ -133,6 +133,7 @@ public final class Servidor {
                 // Leer el objeto enviado por el cliente
                 Evento evento = (Evento) entrada.readObject(); // Esto bloqueará hasta que llegue un objeto
 
+                System.out.println("recibiendo "+evento.getTipoEvento());
                 if (evento.getTipoEvento() != TipoEvento.ENVIO_JUGADOR) {
                     if (observadorEventos != null) {
                         observadorEventos.manejarEvento(evento, entrada);
@@ -162,15 +163,11 @@ public final class Servidor {
      */
     public synchronized void mandarDatosCliente(ObjectOutputStream salida, Evento evento) {
         try {
-            if (evento.getTipoEvento() != TipoEvento.TIMEOUT) {
-                System.out.println(evento.getTipoEvento());
+           
+                System.out.println("enviando desde servidor "+evento.getTipoEvento());
                 salida.writeObject(evento);
                 salida.flush();
-            }else{
-                System.out.println(evento.getTipoEvento());
-                salida.writeObject(evento);
-                salida.flush();
-            }
+            
         } catch (IOException ex) {
             Logger.error("Error al enviar datos al cliente: {}", ex.getMessage());
         }

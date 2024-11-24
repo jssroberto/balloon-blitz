@@ -57,10 +57,6 @@ public class ConexionCliente {
         this.observadorTiempo = observadorTiempo;
     }
 
-    public void eliminarObservadorTiempo() {
-        this.observadorTiempo = null;
-    }
-
     public void setObservadorResultado(ObservadorResultado observadorResultado) {
         this.observadorResultado = observadorResultado;
     }
@@ -73,10 +69,18 @@ public class ConexionCliente {
         this.observadorJugador = observadorJugador;
     }
 
+    public void eliminarTodosLosObservadores() {
+        this.observadorTiempo = null;
+        this.observadorResultado = null;
+        this.observadorDisparo = null;
+        this.observadorJugador = null;
+    }
+
     public void recibirEvento() {
         while (conectado) {
             try {
                 mensajeRecibido = (Evento) entrada.readObject();
+                System.out.println("evento recien llegado " + mensajeRecibido.getTipoEvento());
                 if (mensajeRecibido != null) {
                     System.out.println(mensajeRecibido.getTipoEvento());
                     procesarMensaje(mensajeRecibido);
@@ -91,6 +95,7 @@ public class ConexionCliente {
     public void enviarMensaje(Evento evento) {
         try {
             if (evento != null) {
+                System.out.println("enviando evento" + evento.getTipoEvento());
                 salida.writeObject(evento);
                 salida.flush();
             }
@@ -106,23 +111,23 @@ public class ConexionCliente {
                     TimeOutEvento time = (TimeOutEvento) evento;
                     System.out.println(time.getTiempoRestante());
                     observadorTiempo.manejarEvento((TimeOutEvento) evento);
-                }else{
-                        System.out.println("observador tiempo nulo");
-                        }
+                } else {
+                    System.out.println("observador tiempo nulo");
+                }
                 break;
             case ENVIO_JUGADOR:
-                if(observadorJugador!=null){
-                observadorJugador.manejarEvento((EnvioJugadorEvento) evento);
-                }else{
-                        System.out.println("observador jugador nulo");
-                        }
+                if (observadorJugador != null) {
+                    observadorJugador.manejarEvento((EnvioJugadorEvento) evento);
+                } else {
+                    System.out.println("observador jugador nulo");
+                }
                 break;
             case RESULTADO:
                 if (observadorResultado != null) {
                     observadorResultado.manejarEvento((ResultadoEvento) evento);
-                }else{
-                        System.out.println("observador resultado nulo");
-                        }
+                } else {
+                    System.out.println("observador resultado nulo");
+                }
                 break;
             case RESULTADO_DISPARO:
                 observadorDisparo.manejarEvento((ResultadoDisparoEvento) evento);
