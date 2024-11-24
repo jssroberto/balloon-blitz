@@ -1,7 +1,9 @@
 package org.itson.edu.balloonblitz.auxiliar;
 
-import java.util.List;
+import org.itson.edu.balloonblitz.colocarNaves.*;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import org.itson.edu.balloonblitz.entidades.Casilla;
@@ -16,24 +18,22 @@ public class TableroRenderer {
     private static final int GRID_OFFSET_X = 0;
     private static final int GRID_OFFSET_Y = 0;
 
-    public static void renderizarTablero(JLabel tableroLabel, Tablero tablero, List<Nave> naves, Jugador jugador) {
-        // Eliminar todos los componentes previos
+    public static void renderizarTablero(JLabel tableroLabel, Tablero tablero, Jugador jugador) {
         tableroLabel.removeAll();
         tableroLabel.setLayout(null);
 
-        // Iterar sobre cada nave en la lista de naves
-        for (Nave nave : naves) {
-            // Encontrar todas las casillas que ocupa esta nave
-            Casilla[][] casillas = tablero.getMatriz();
-            for (int i = 0; i < tablero.getFilas(); i++) {
-                for (int j = 0; j < tablero.getColumnas(); j++) {
-                    Optional<Nave> naveOpt = casillas[i][j].getNave();
-                    if (naveOpt.isPresent() && naveOpt.get().equals(nave)) {
-                        // Crear y posicionar un globo para cada casilla de la nave
-                        JLabel globoLabel = crearGloboLabel(nave, jugador);
-                        posicionarGlobo(globoLabel, i, j, nave);
-                        tableroLabel.add(globoLabel);
-                    }
+        Casilla[][] casillas = tablero.getMatriz();
+        Set<Nave> navesYaProcesadas = new HashSet<>();
+
+        for (int i = 0; i < tablero.getFilas(); i++) {
+            for (int j = 0; j < tablero.getColumnas(); j++) {
+                Optional<Nave> naveOpt = casillas[i][j].getNave();
+
+                if (naveOpt.isPresent() && navesYaProcesadas.add(naveOpt.get())) {
+                    Nave nave = naveOpt.get();
+                    JLabel globoLabel = crearGloboLabel(nave, jugador);
+                    posicionarGlobo(globoLabel, i, j, nave);
+                    tableroLabel.add(globoLabel);
                 }
             }
         }
@@ -44,7 +44,6 @@ public class TableroRenderer {
 
     private static JLabel crearGloboLabel(Nave nave, Jugador jugador) {
         String color = jugador.getColorPropio().toString().toLowerCase();
-        String tipo = nave.getTipoNave().toString().toLowerCase();
         int tamano = nave.getTamano();
 
         String imagePath = BALLOON_BASE_PATH + color + "/" + color + "-" + tamano + ".png";

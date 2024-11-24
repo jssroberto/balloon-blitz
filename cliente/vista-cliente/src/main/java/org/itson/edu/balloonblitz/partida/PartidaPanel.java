@@ -68,12 +68,7 @@ public class PartidaPanel extends javax.swing.JPanel {
     }
 
     private void renderizarTableroJugador() {
-        TableroRenderer.renderizarTablero(
-                tableroJugador,
-                gridDragDropHandler.obtenerTablero(),
-                gridDragDropHandler.obtenerNaves(),
-                jugador
-        );
+        TableroRenderer.renderizarTablero(tableroJugador, gridDragDropHandler.obtenerTablero(), framePrincipal.getJugador());
     }
 
     private void setupFonts() throws FontFormatException, IOException {
