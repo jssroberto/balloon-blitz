@@ -52,7 +52,7 @@ public class ModelPosicionNaves {
             ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
             scheduler.scheduleAtFixedRate(() -> {
-                if (tiempoRestante > 1) {
+                if (tiempoRestante > 0) {
                     setTexto(String.valueOf(tiempoRestante));
                     notifyObservers(new UpdateEventPosicionNaves(this, EventTypePosicionNaves.ACTUALIZAR_LABEL));
                     tiempoRestante--;
@@ -62,7 +62,8 @@ public class ModelPosicionNaves {
                 }
             }, 0, 1, TimeUnit.SECONDS);
         } else if (evento.getTiempoRestante() == 0) {
-            notifyObservers(new UpdateEventPosicionNaves(this, EventTypePosicionNaves.ACTUALIZAR_LABEL));
+            setTexto("Tiempo expirado");
+            notifyObservers(new UpdateEventPosicionNaves(this, EventTypePosicionNaves.TERMINAR_TIEMPO));
         }
     }
 

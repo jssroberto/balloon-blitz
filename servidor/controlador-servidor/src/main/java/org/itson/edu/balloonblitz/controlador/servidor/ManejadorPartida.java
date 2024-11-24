@@ -135,7 +135,6 @@ public class ManejadorPartida implements EventoObserver {
         } else if (tipoEvento == TipoEvento.RESULTADO) {
             contadorEnvio++;
             if (contadorEnvio == 2) {
-                System.out.println(contadorEnvio);
                 manejarTurnos();
             }
             return null;
@@ -196,8 +195,8 @@ public class ManejadorPartida implements EventoObserver {
         enviarEventoAJugador(streamsJugador2.getSalida(), new TimeOutEvento(30));
         System.out.println("enviado jugador 2");
         if (turno.iniciarTemporizador(30) == 0) {
-//            enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(0));
-//            enviarEventoAJugador(streamsJugador2.getSalida(), new TimeOutEvento(0));
+            enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(0));
+            enviarEventoAJugador(streamsJugador2.getSalida(), new TimeOutEvento(0));
             partida.getJugador2().setTurno(false);
             partida.getJugador1().setTurno(true);
         }

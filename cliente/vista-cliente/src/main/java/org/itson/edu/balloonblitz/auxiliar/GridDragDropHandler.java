@@ -27,7 +27,8 @@ public class GridDragDropHandler extends DropTargetAdapter {
     private static final int CELL_SIZE = 45;
     private static final int OFFSET_X = 0;
     private static final int OFFSET_Y = 0;
-    private Nave[][] matriz1 = new Nave[GRID_SIZE][GRID_SIZE];  // Representación de las celdas del tablero
+    private Nave[][] matriz1 = new Nave[GRID_SIZE][GRID_SIZE];
+    private String color;// Representación de las celdas del tablero
 
     private boolean isVertical = false;
 
@@ -322,18 +323,22 @@ public class GridDragDropHandler extends DropTargetAdapter {
         return naves;
     }
 
+    public void colorGlobos(String color) {
+        this.color = color;
+    }
+
     private ImageIcon cargarIcono(String tipo) {
         String rutaImagen = "";
 
         switch (tipo) {
             case "portaAviones" ->
-                rutaImagen = "/images/ballons/rojo/rojo-4.png"; // Ruta a la imagen del portaaviones
+                rutaImagen = "/images/ballons/" + color.toLowerCase() + "/" + color.toLowerCase() + "-4.png";
             case "crucero" ->
-                rutaImagen = "/images/ballons/rojo/rojo-3.png"; // Ruta a la imagen del crucero
+                rutaImagen = "/images/ballons/" + color.toLowerCase() + "/" + color.toLowerCase() + "-3.png";
             case "submarino" ->
-                rutaImagen = "/images/ballons/rojo/rojo-2.png"; // Ruta a la imagen del submarino
+                rutaImagen = "/images/ballons/" + color.toLowerCase() + "/" + color.toLowerCase() + "-2.png";
             case "barco" ->
-                rutaImagen = "/images/ballons/rojo/rojo-1.png"; // Ruta a la imagen del barco
+                rutaImagen = "/images/ballons/" + color.toLowerCase() + "/" + color.toLowerCase() + "-1.png";
             default ->
                 throw new IllegalArgumentException("Tipo de globo no válido: " + tipo);
         }
@@ -420,6 +425,28 @@ public class GridDragDropHandler extends DropTargetAdapter {
         BalloonTransferHandler.setMaxPlacedBalloons("submarino", 4);
         BalloonTransferHandler.setMaxPlacedBalloons("crucero", 2);
         BalloonTransferHandler.setMaxPlacedBalloons("portaAviones", 2);
+    }
+
+    public void limpiarTablero() {
+        // Limpiar la matriz lógica de casillas
+        for (int i = 0; i < GRID_SIZE; i++) {
+            for (int j = 0; j < GRID_SIZE; j++) {
+                matriz[i][j].setNave(null);
+            }
+        }
+
+        // Limpiar la lista de naves
+        naves.clear();
+
+        // Eliminar todos los globos (componentes) del tablero visual
+        for (Component component : tableroPanel.getComponents()) {
+            if (component instanceof JLabel) {
+                tableroPanel.remove(component);
+            }
+        }
+
+        // Actualizar el panel para reflejar los cambios
+        tableroPanel.repaint();
     }
 
 }
