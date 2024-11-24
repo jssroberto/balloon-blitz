@@ -8,10 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import javax.swing.SwingUtilities;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.Tablero;
-import org.tinylog.Logger;
+import org.itson.edu.balloonblitz.entidades.eventos.Evento;
+import org.itson.edu.balloonblitz.entidades.eventos.ResultadoEvento;
+import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
 
 /**
  *
@@ -27,6 +30,8 @@ public class ModelPartida {
     private Tablero tablero;
     private Tablero tableroOponente;
     Jugador jugadorRival;
+    int tiempoRestante;
+    boolean turno;
 
     public ModelPartida() {
     }
@@ -53,6 +58,14 @@ public class ModelPartida {
         this.jugadorRival = jugadorRival;
     }
 
+    public boolean isTurno() {
+        return turno;
+    }
+
+    public void setTurno(boolean turno) {
+        this.turno = turno;
+    }
+
     public Tablero getTablero() {
         return tablero;
     }
@@ -68,44 +81,41 @@ public class ModelPartida {
 
     public void setTableroOponente(Tablero tableroOponente) {
         this.tableroOponente = tableroOponente;
-         notifyObservers(new UpdateEventPartida(this, EventTypePartida.ACTUALIZAR_TABLERO_RIVAL));
+        notifyObservers(new UpdateEventPartida(this, EventTypePartida.ACTUALIZAR_TABLERO_RIVAL));
     }
-    
-    
 
     public void notificarJugador() {
         System.out.println("entramos al notificador");
         notifyObservers(new UpdateEventPartida(this, EventTypePartida.ENVIAR_JUGADOR));
     }
 
-    public void correrTiempo() {
-        if (!observers.isEmpty()) {
-            executorService.submit(() -> {
-                try {
-                    while (!partidaEncontrada) {
-                        SwingUtilities.invokeLater(() -> {
-                            switch (contador % 3) {
-                                case 0 ->
-                                    setTexto("Esperando jugador.");
-                                case 1 ->
-                                    setTexto("Esperando jugador..");
-                                case 2 ->
-                                    setTexto("Esperando jugador...");
-                            }
-                            notifyObservers(new UpdateEventPartida(this, EventTypePartida.ACTUALIZAR_LABEL_TIEMPO));
-                        });
-                        contador++;
-                        Thread.sleep(500);
-                    }
-                    setTexto("Partida encontrada");
+    public void correrTiempo(TimeOutEvento evento) {
+        tiempoRestante = evento.getTiempoRestante();
+
+        if (tiempoRestante > 0) {
+            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+            scheduler.scheduleAtFixedRate(() -> {
+                if (tiempoRestante > 0) {
+                    setTexto(String.valueOf(tiempoRestante));
                     notifyObservers(new UpdateEventPartida(this, EventTypePartida.ACTUALIZAR_LABEL_TIEMPO));
-                    Thread.sleep(2000);
-                    
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    Logger.error("Hilo interrumpido durante la espera del jugador.");
+                    tiempoRestante--;
+                } else {
+
+                    scheduler.shutdown(); // Detenemos el scheduler cuando tiempoRestante llega a 1
                 }
-            });
+            }, 0, 1, TimeUnit.SECONDS);
+        } else if (evento.getTiempoRestante() == 0) {
+            setTexto("Tiempo expirado");
+            notifyObservers(new UpdateEventPartida(this, EventTypePartida.TIEMPO_TERMINADO));
+        }
+    }
+
+    public void obtenerTurno(ResultadoEvento evento) {
+        if (evento.isValid()) {
+            notifyObservers(new UpdateEventPartida(this, EventTypePartida.TURNO_ACTIVO));
+        } else {
+            notifyObservers(new UpdateEventPartida(this, EventTypePartida.TURNO_INACTIVO));
         }
     }
 

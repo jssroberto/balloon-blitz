@@ -4,7 +4,6 @@
  */
 package org.itson.edu.balloonblitz.partida;
 
-
 /**
  *
  * @author elimo
@@ -12,8 +11,10 @@ package org.itson.edu.balloonblitz.partida;
 public enum EventTypePartida {
     ENVIAR_JUGADOR,
     ACTUALIZAR_LABEL_TIEMPO,
+    TIEMPO_TERMINADO,
     ACTUALIZAR_LABEL_TURNO,
     ACTUALIZAR_TABLERO_PROPIO,
     ACTUALIZAR_TABLERO_RIVAL,
-    ;
+    TURNO_ACTIVO,
+    TURNO_INACTIVO;
 }

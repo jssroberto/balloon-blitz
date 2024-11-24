@@ -11,6 +11,7 @@ import org.itson.edu.balloonblitz.entidades.eventos.EnvioJugadorEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.entidades.eventos.ResultadoDisparoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.ResultadoEvento;
+import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
 import org.itson.edu.balloonblitz.modelo.ConexionCliente;
 import org.itson.edu.balloonblitz.modelo.ObservadorDisparo;
 import org.itson.edu.balloonblitz.modelo.ObservadorJugador;
@@ -83,18 +84,17 @@ public class ControllerPartida implements ActionHandlerPartida, ObservadorDispar
 
     @Override
     public void manejarEvento(EnvioJugadorEvento evento) {
-        System.out.println("no es nulo");
         setJugador(evento.getEmisor());
     }
 
     @Override
     public void manejarEvento(Evento evento) {
-        model.correrTiempo();
+        model.correrTiempo((TimeOutEvento) evento);
     }
 
     @Override
     public void manejarEvento(ResultadoEvento evento) {
-
+        model.obtenerTurno(evento);
     }
 
 }

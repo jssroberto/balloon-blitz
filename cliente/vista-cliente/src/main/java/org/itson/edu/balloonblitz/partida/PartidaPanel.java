@@ -26,6 +26,7 @@ import org.itson.edu.balloonblitz.auxiliar.TableroRenderer;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.Tablero;
 import org.itson.edu.balloonblitz.FramePrincipal;
+import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.vista.GanarPanel;
 import org.itson.edu.balloonblitz.vista.PerderPanel;
@@ -61,14 +62,6 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
         initComponents();
         jugador = framePrincipal.getJugador();
         tablero = jugador.getTableroPropio();
-//        String imagePath1 = jugador.getFotoPerfil();
-//        ImageIcon icon = new ImageIcon(imagePath1);
-//        pfpJugador.setIcon(icon);
-//        try {
-//            setupUI();
-//        } catch (FontFormatException | IOException e) {
-//            logger.log(Level.SEVERE, "Error al cargar fuentes: ", e);
-//        }
     }
 
     @Override
@@ -76,19 +69,16 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
         if (null != event.eventType()) {
             switch (event.eventType()) {
                 case ENVIAR_JUGADOR:
-                    System.out.println("entrando al metodo ya tu sabe");
                     jugadorRival = actionHandler.getJugador();
                     System.out.println(jugadorRival.getNombre());
-                    System.out.println("la ruta existe");// Crea un ImageIcon usando la ruta
                     lblNombreEnemigo.setText(jugadorRival.getNombre());
 
-                     {
-                        try {
-                            setupUI();
-                        } catch (FontFormatException | IOException ex) {
-                            Logger.getLogger(PartidaPanel.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                    try {
+                        setupUI();
+                    } catch (FontFormatException | IOException ex) {
+                        Logger.getLogger(PartidaPanel.class.getName()).log(Level.SEVERE, null, ex);
                     }
+
                     break;
 
                 case ACTUALIZAR_LABEL_TIEMPO:
@@ -101,6 +91,16 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
                 case ACTUALIZAR_TABLERO_RIVAL:
                     tableroDeRival = event.model().getTableroOponente();
                     renderizarTableroRival();
+                    break;
+                case TURNO_ACTIVO:
+                    tableroRival.setEnabled(true);
+                    break;
+                case TURNO_INACTIVO:
+                    tableroRival.setEnabled(false);
+                    break;
+                case TIEMPO_TERMINADO:
+                    lblTiempoRestante.setText(event.model().getTexto());
+                    break;
                 default: {
                 }
             }
@@ -110,6 +110,7 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
 
     @Override
     public void enviarEvento(Evento event) {
+        actionHandler.enviarEvento((DisparoEvento) event);
     }
 
     public ActionHandlerPartida getActionHandler() {
@@ -269,10 +270,10 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
         jPanel1.add(panelBorde1, new org.netbeans.lib.awtextra.AbsoluteConstraints(656, 156, 458, 458));
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/clock.png"))); // NOI18N
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 630, -1, -1));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 630, -1, -1));
 
         lblTiempoRestante.setText("Hora");
-        jPanel1.add(lblTiempoRestante, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 630, 70, 40));
+        jPanel1.add(lblTiempoRestante, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 630, 70, 40));
 
         lblFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/partidaSinTablero.png"))); // NOI18N
         jPanel1.add(lblFondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1280, -1));

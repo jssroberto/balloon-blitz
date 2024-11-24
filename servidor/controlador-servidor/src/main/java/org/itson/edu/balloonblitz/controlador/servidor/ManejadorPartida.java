@@ -66,6 +66,7 @@ public class ManejadorPartida implements EventoObserver {
         if (eventoProcesado != null) {
             enviarEventoAJugador(streamsJugador1.getSalida(), eventoProcesado);
             enviarEventoAJugador(streamsJugador2.getSalida(), eventoProcesado);
+            manejarTurnos();
         }
     }
 
@@ -142,7 +143,6 @@ public class ManejadorPartida implements EventoObserver {
 
             return null;
         } else if (tipoEvento == TipoEvento.DISPARO) {
-            manejarTurnos();
             Tablero tableroRival = obtenerTableroRival(emisor);
             Jugador jugadorRival = obtenerJugadorRival(emisor);
             ManejadorDisparo manejadorDisparo = new ManejadorDisparo((DisparoEvento) evento, tableroRival, jugadorRival);
