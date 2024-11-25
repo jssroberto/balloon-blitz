@@ -61,7 +61,7 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
         this.gridDragDropHandler = gridDragDropHandler;
         initComponents();
         jugador = framePrincipal.getJugador();
-        tablero = jugador.getTableroPropio();
+        tablero = gridDragDropHandler.obtenerTablero();
     }
 
     @Override

@@ -91,12 +91,23 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
                     lblTiempoRestante.setText(event.model().getTexto());
                     gridDragDropHandler.colorGlobos(String.valueOf(framePrincipal.getJugador().getColorPropio()));
                     gridDragDropHandler.limpiarTablero();
-                    gridDragDropHandler.posicionarGlobosExactamente();
+                    gridDragDropHandler.posicionarGlobosExactamente(); // Asegúrate de que este método funciona correctamente
                     actualizarLabelsContadores();
                     btnReiniciar.setEnabled(false);
                     btnConfirmar.setEnabled(false);
                     framePrincipal.getJugador().setTableroPropio(gridDragDropHandler.obtenerTablero());
                     framePrincipal.eliminarObservadores();
+
+                    // Eliminar el Thread.sleep dentro de este bloque si no es necesario.
+                    // Si quieres introducir una pausa, colócala después de completar las actualizaciones.
+                    try {
+                        // Mueve el Thread.sleep a un lugar posterior si realmente necesitas la pausa
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(ColocacionPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    // Luego de la pausa, actualiza la interfaz de usuario
                     framePrincipal.cambiarPanelPartida(gridDragDropHandler);
                     enviarTablero(gridDragDropHandler.obtenerTablero());
                     break;

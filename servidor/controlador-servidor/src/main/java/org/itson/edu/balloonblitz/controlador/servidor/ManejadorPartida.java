@@ -258,7 +258,7 @@ public class ManejadorPartida implements EventoObserver {
      * @return Tablero del jugador rival.
      */
     private Tablero obtenerTableroRival(Jugador jugador) {
-        return jugador.equals(jugador1) ? partida.getTableroJugador2() : partida.getTableroJugador1();
+        return jugador.equals(jugador1) ? jugador2.getTableroPropio() : jugador1.getTableroPropio();
     }
 
     /**

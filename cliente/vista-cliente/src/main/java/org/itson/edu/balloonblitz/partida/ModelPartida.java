@@ -85,7 +85,6 @@ public class ModelPartida {
     }
 
     public void notificarJugador() {
-        System.out.println("entramos al notificador");
         notifyObservers(new UpdateEventPartida(this, EventTypePartida.ENVIAR_JUGADOR));
     }
 

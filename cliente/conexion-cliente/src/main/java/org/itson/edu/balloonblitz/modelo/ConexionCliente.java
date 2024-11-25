@@ -130,7 +130,11 @@ public class ConexionCliente {
                 }
                 break;
             case RESULTADO_DISPARO:
-                observadorDisparo.manejarEvento((ResultadoDisparoEvento) evento);
+                if (observadorDisparo != null) {
+                    observadorResultado.manejarEvento((ResultadoEvento) evento);
+                } else {
+               System.out.println("observador resultado nulo");
+                }
                 break;
             default:
                 System.out.println("Tipo de evento no reconocido: " + mensajeRecibido.getTipoEvento());

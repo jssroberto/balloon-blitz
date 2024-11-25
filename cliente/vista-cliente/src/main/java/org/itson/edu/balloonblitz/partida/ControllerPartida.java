@@ -26,7 +26,7 @@ public class ControllerPartida implements ActionHandlerPartida, ObservadorDispar
 
     private final PartidaPanel view;
     private final ModelPartida model;
-    private Jugador jugador;
+    private Jugador jugadorRival;
     private Tablero tablero;
     private Tablero tableroOponente;
 
@@ -39,20 +39,18 @@ public class ControllerPartida implements ActionHandlerPartida, ObservadorDispar
 
     @Override
     public Jugador getJugador() {
-        return jugador;
+        return jugadorRival;
     }
 
-    public void setJugador(Jugador jugador) {
-        System.out.println("todo bien hasta aqui");
-        this.jugador = jugador;
-        this.tablero = jugador.getTableroPropio();
-        System.out.println("entrando a notificar");
+    public void setJugador(Jugador jugadorRival) {
+        this.jugadorRival = jugadorRival;
+        this.tableroOponente = jugadorRival.getTableroPropio();
         model.notificarJugador();
     }
 
     public void procesarDisparo(ResultadoDisparoEvento evento) {
-        jugador = evento.getEmisor();
-        if (jugador.equals(this.jugador)) {
+        jugadorRival = evento.getEmisor();
+        if (jugadorRival.equals(this.jugadorRival)) {
             tableroOponente = evento.getTablero();
         } else {
             tablero = evento.getTablero();
@@ -70,10 +68,10 @@ public class ControllerPartida implements ActionHandlerPartida, ObservadorDispar
 
     @Override
     public void manejarEvento(ResultadoDisparoEvento evento) {
-        if (jugador.isTurno()) {
-            model.setTableroOponente(evento.getTablero());
-        } else {
+        if (jugadorRival.isTurno()) {
             model.setTablero(evento.getTablero());
+        } else {
+            model.setTableroOponente(evento.getTablero());
         }
     }
 

@@ -271,25 +271,13 @@ public class GridDragDropHandler extends DropTargetAdapter {
         naves.add(nave);
 
         System.out.println("\nNave de tipo " + nave.getTipoNave().toString().toLowerCase() + " colocada en las casillas:");
-        if (isVertical) {
-            for (int i = 0; i < size; i++) {
-                int snapX = gridX * CELL_SIZE + OFFSET_X;
-                int snapY = ((gridY + i) * CELL_SIZE) + OFFSET_Y;
-                matriz[gridY + i][gridX].setNave(nave);
-                JLabel balloon = createBalloonLabel(icon, snapX, snapY);
-                tableroPanel.add(balloon);
-                System.out.printf("Casilla [%d, %d]%n", gridY + i, gridX);
-            }
-        } else {
-            for (int i = 0; i < size; i++) {
-                int snapX = ((gridX + i) * CELL_SIZE) + OFFSET_X;
-                int snapY = gridY * CELL_SIZE + OFFSET_Y;
-                matriz[gridY][gridX + i].setNave(nave);
-                JLabel balloon = createBalloonLabel(icon, snapX, snapY);
-                tableroPanel.add(balloon);
-                System.out.printf("Casilla [%d, %d]%n", gridY, gridX + i);
-            }
-        }
+
+        int snapX = ((gridX) * CELL_SIZE) + OFFSET_X;
+        int snapY = gridY * CELL_SIZE + OFFSET_Y;
+        matriz[gridY][gridX].setNave(nave);
+        JLabel balloon = createBalloonLabel(icon, snapX, snapY);
+        tableroPanel.add(balloon);
+        System.out.printf("Casilla [%d, %d]%n", gridY, gridX);
 
         tableroPanel.repaint();
     }
@@ -409,7 +397,7 @@ public class GridDragDropHandler extends DropTargetAdapter {
                 int gridY = casilla[1];
 
                 // Colocar el globo en la posición específica
-                placeBalloons(gridX, gridY, 1, icon); // Aquí '1' es el tamaño, ajustable según el tipo de nave
+                placeBalloons(gridX, gridY, getBalloonSize(tipo), icon); // Aquí '1' es el tamaño, ajustable según el tipo de nave
             }
         }
 
