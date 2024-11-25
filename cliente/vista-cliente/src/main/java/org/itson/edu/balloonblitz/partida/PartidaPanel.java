@@ -11,21 +11,19 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import org.itson.edu.balloonblitz.auxiliar.GridDragDropHandler;
 import org.itson.edu.balloonblitz.auxiliar.TableroClickHandler;
 import org.itson.edu.balloonblitz.auxiliar.TableroRenderer;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.Tablero;
 import org.itson.edu.balloonblitz.FramePrincipal;
+import org.itson.edu.balloonblitz.entidades.Casilla;
 import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.vista.GanarPanel;
@@ -85,12 +83,11 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
                     lblTiempoRestante.setText(event.model().getTexto());
                     break;
                 case ACTUALIZAR_TABLERO_PROPIO:
-                    tablero = event.model().getTablero();
+//                    tablero = event.model().getTablero();
                     renderizarTableroJugador();
                     break;
                 case ACTUALIZAR_TABLERO_RIVAL:
-                    tableroDeRival = event.model().getTableroOponente();
-                    renderizarTableroRival();
+                    renderizarTableroRival(tableroRival, event.model().getCasilla(), event.model().hundido, event.model().atinado);
                     break;
                 case TURNO_ACTIVO:
                     tableroRival.setEnabled(true);
@@ -132,8 +129,8 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
         TableroRenderer.renderizarTablero(tableroJugador, tablero, jugador);
     }
 
-    private void renderizarTableroRival() {
-        TableroRenderer.renderizarTablero(tableroRival, tableroDeRival, jugadorRival);
+    private void renderizarTableroRival(JLabel tableroRival, Casilla casilla, boolean hundido, boolean atinado) {
+        TableroRenderer.cargarTableroRival(tableroRival, casilla, hundido, atinado);
     }
 
     private void setupFonts() throws FontFormatException, IOException {

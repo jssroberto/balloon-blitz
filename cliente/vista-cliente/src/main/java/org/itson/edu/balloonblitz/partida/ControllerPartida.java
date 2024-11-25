@@ -48,16 +48,6 @@ public class ControllerPartida implements ActionHandlerPartida, ObservadorDispar
         model.notificarJugador();
     }
 
-    public void procesarDisparo(ResultadoDisparoEvento evento) {
-        jugadorRival = evento.getEmisor();
-        if (jugadorRival.equals(this.jugadorRival)) {
-            tableroOponente = evento.getTablero();
-        } else {
-            tablero = evento.getTablero();
-        }
-
-    }
-
     public void actualizarTablero(Tablero tablero) {
         this.tablero = tablero;
     }
@@ -68,10 +58,13 @@ public class ControllerPartida implements ActionHandlerPartida, ObservadorDispar
 
     @Override
     public void manejarEvento(ResultadoDisparoEvento evento) {
+            model.setAtinado(evento.isValido());
+            model.setHundido(evento.isHundido());
+            model.setCasilla(evento.getCasilla());
         if (jugadorRival.isTurno()) {
-            model.setTablero(evento.getTablero());
+            model.cargarDisparoTurnoRival();
         } else {
-            model.setTableroOponente(evento.getTablero());
+            model.cargarDisparoMiTurno();
         }
     }
 

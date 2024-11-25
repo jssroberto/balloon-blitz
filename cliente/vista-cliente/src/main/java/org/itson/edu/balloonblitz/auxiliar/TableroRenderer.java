@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import org.itson.edu.balloonblitz.entidades.Casilla;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.Nave;
@@ -32,7 +33,7 @@ public class TableroRenderer {
                 if (naveOpt.isPresent() && navesYaProcesadas.add(naveOpt.get())) {
                     Nave nave = naveOpt.get();
                     JLabel globoLabel = crearGloboLabel(nave, jugador);
-                    posicionarGlobo(globoLabel, i, j, nave);
+                    posicionarGlobo(globoLabel, i, j);
                     tableroLabel.add(globoLabel);
                 }
             }
@@ -40,6 +41,20 @@ public class TableroRenderer {
 
         tableroLabel.revalidate();
         tableroLabel.repaint();
+    }
+
+    public static void cargarTableroRival(JLabel tableroRival, Casilla casilla, boolean hundido, boolean atinado) {
+        tableroRival.removeAll();
+        tableroRival.setLayout(null);
+
+        if (atinado) {
+            JLabel globoLabel = crearGloboImpactado();
+            posicionarGlobo(globoLabel, casilla.getCoordenada().fila(), casilla.getCoordenada().columna());
+            tableroRival.add(globoLabel);
+        }
+
+        tableroRival.revalidate();
+        tableroRival.repaint();
     }
 
     private static JLabel crearGloboLabel(Nave nave, Jugador jugador) {
@@ -54,7 +69,17 @@ public class TableroRenderer {
         return label;
     }
 
-    private static void posicionarGlobo(JLabel globoLabel, int fila, int columna, Nave nave) {
+    private static JLabel crearGloboImpactado() {
+
+        String imagePath = BALLOON_BASE_PATH + "destruida" + ".png";
+        ImageIcon icon = new ImageIcon(TableroRenderer.class.getResource(imagePath));
+
+        JLabel label = new JLabel(icon);
+        label.setSize(icon.getIconWidth(), icon.getIconHeight());
+        return label;
+    }
+
+    private static void posicionarGlobo(JLabel globoLabel, int fila, int columna) {
         int x = GRID_OFFSET_X + (columna * CELL_SIZE) + 2;  // Añadimos +8 aquí
         int y = GRID_OFFSET_Y + (fila * CELL_SIZE) + 2;
         globoLabel.setLocation(x, y);

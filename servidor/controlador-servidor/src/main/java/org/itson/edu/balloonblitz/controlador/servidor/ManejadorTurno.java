@@ -25,28 +25,25 @@ public class ManejadorTurno {
     public ManejadorTurno() {
     }
 
-    public int iniciarTemporizador(int segundos) {
-    ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-    CountDownLatch latch = new CountDownLatch(1); // Sincronizador para esperar al temporizador
-    try {
-        scheduler.schedule(() -> {
-            System.out.println("El tiempo ha expirado.");
-            latch.countDown(); // Libera el hilo principal
-        }, segundos, TimeUnit.SECONDS);
+    public int iniciarTemporizador(ScheduledExecutorService scheduler, int segundos) {
+        scheduler = Executors.newSingleThreadScheduledExecutor();
+        CountDownLatch latch = new CountDownLatch(1); // Sincronizador para esperar al temporizador
+        try {
+            scheduler.schedule(() -> {
+                System.out.println("El tiempo ha expirado.");
+                latch.countDown(); // Libera el hilo principal
+            }, segundos, TimeUnit.SECONDS);
 
-        // Espera a que el latch se libere o el tiempo expire
-        latch.await(); // Bloquea hasta que el tiempo expira
-        return 0; // Devuelve 0 cuando el tiempo expira
-    } catch (InterruptedException e) {
-        Thread.currentThread().interrupt(); // Manejo adecuado de interrupciones
-        return -1; // Devuelve -1 si ocurre una interrupción
-    } finally {
-        scheduler.shutdown(); // Detenemos el scheduler
+            // Espera a que el latch se libere o el tiempo expire
+            latch.await(); // Bloquea hasta que el tiempo expira
+            return 0; // Devuelve 0 cuando el tiempo expira
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt(); // Manejo adecuado de interrupciones
+            return -1; // Devuelve -1 si ocurre una interrupción
+        } finally {
+            scheduler.shutdown(); // Detenemos el scheduler
+        }
     }
-}
-
-
-
 
     private String mostrarMensajeTiempoExcedido() {
         return "El tiempo ha expirado.";

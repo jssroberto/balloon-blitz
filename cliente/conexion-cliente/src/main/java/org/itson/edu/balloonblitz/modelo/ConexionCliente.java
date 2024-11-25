@@ -131,7 +131,7 @@ public class ConexionCliente {
                 break;
             case RESULTADO_DISPARO:
                 if (observadorDisparo != null) {
-                    observadorResultado.manejarEvento((ResultadoEvento) evento);
+                    observadorDisparo.manejarEvento((ResultadoDisparoEvento) evento);
                 } else {
                System.out.println("observador resultado nulo");
                 }
