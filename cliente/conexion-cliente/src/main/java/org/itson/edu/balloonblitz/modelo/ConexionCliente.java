@@ -100,6 +100,7 @@ public class ConexionCliente {
                 salida.flush();
             }
         } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

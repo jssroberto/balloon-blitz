@@ -33,6 +33,8 @@ public class ManejadorPartida implements EventoObserver {
     private final ControladorStreams streamsJugador2; // Streams del jugador 2.
     private final Jugador jugador1; // Instancia del jugador 1.
     private final Jugador jugador2; // Instancia del jugador 2.
+    private Tablero tableroJugador1; // Tablero del jugador 1.
+    private Tablero tableroJugador2; // Tablero del jugador 2.
     private final ManejadorTurno turno; // Gestor de turnos.
     private final Partida partida; // Representación de la partida.
     int contadorEnvio = 0;
@@ -55,7 +57,8 @@ public class ManejadorPartida implements EventoObserver {
     public ManejadorPartida(Map<ControladorStreams, Jugador> jugadores) {
         this.partida = new Partida();
         this.turno = new ManejadorTurno();
-
+        this.partida.setTableroJugador1(new Tablero());
+        this.partida.setTableroJugador2(new Tablero());
         // Asignar jugadores y sus streams.
         ControladorStreams[] streamsArray = jugadores.keySet().toArray(new ControladorStreams[0]);
         Jugador[] jugadoresArray = jugadores.values().toArray(new Jugador[0]);
@@ -64,6 +67,8 @@ public class ManejadorPartida implements EventoObserver {
         this.streamsJugador2 = streamsArray[1];
         this.jugador1 = jugadoresArray[0];
         this.jugador2 = jugadoresArray[1];
+        this.tableroJugador1 = partida.getTableroJugador1();
+        this.tableroJugador2 = partida.getTableroJugador2();
 
         verificarYCrearPartida();
     }
@@ -79,13 +84,9 @@ public class ManejadorPartida implements EventoObserver {
         Evento eventoProcesado = procesarEvento(evento, entrada);
 
         if (eventoProcesado != null) {
-            try {
-                enviarEventoAJugador(streamsJugador1.getSalida(), eventoProcesado);
-                enviarEventoAJugador(streamsJugador2.getSalida(), eventoProcesado);
-                manejarTurnos();
-            } catch (InterruptedException ex) {
-                java.util.logging.Logger.getLogger(ManejadorPartida.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            enviarEventoAJugador(streamsJugador1.getSalida(), eventoProcesado);
+            enviarEventoAJugador(streamsJugador2.getSalida(), eventoProcesado);
+            manejarTurnos();
         }
     }
 
@@ -148,9 +149,9 @@ public class ManejadorPartida implements EventoObserver {
         if (tipoEvento == TipoEvento.POSICION_NAVES) {
             PosicionNavesEvento posicion = (PosicionNavesEvento) evento;
             if (entrada.equals(streamsJugador1.getEntrada())) {
-                jugador1.setTableroPropio(posicion.getTablero());
+                tableroJugador1 = posicion.getTablero();
             } else if (entrada.equals(streamsJugador2.getEntrada())) {
-                jugador2.setTableroPropio(posicion.getTablero());
+                tableroJugador2 = posicion.getTablero();
             }
 
             contadorEnvio++;
@@ -332,7 +333,7 @@ public class ManejadorPartida implements EventoObserver {
      * @return Tablero del jugador rival.
      */
     private Tablero obtenerTableroRival(Jugador jugador) {
-        return jugador.equals(jugador1) ? jugador2.getTableroPropio() : jugador1.getTableroPropio();
+        return jugador.equals(jugador1) ? tableroJugador2 : tableroJugador1;
     }
 
     /**

@@ -4,6 +4,7 @@
  */
 package org.itson.edu.balloonblitz.colocarNaves;
 
+import org.itson.edu.balloonblitz.entidades.Coordenada;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.Tablero;
 import org.itson.edu.balloonblitz.entidades.eventos.EnvioJugadorEvento;
@@ -23,7 +24,7 @@ public class ControllerPosicionNaves implements ObservadorTiempo, ObservadorJuga
     ModelPosicionNaves model;
     Jugador jugador;
 
-    
+
     public ControllerPosicionNaves(ColocacionPanel view, ModelPosicionNaves model) {
         cliente = ConexionCliente.getInstancia();
         this.model = model;
@@ -56,10 +57,17 @@ public class ControllerPosicionNaves implements ObservadorTiempo, ObservadorJuga
     public void enviarPosicionNaves(Tablero tablero) {
         Evento eventoTablero = new PosicionNavesEvento(tablero);
         eventoTablero.setEmisor(jugador);
+        for (int i = 0; i < tablero.getFilas(); i++) {
+            StringBuilder fila = new StringBuilder();
+            for (int j = 0; j < tablero.getColumnas(); j++) {
+                fila.append(tablero.getCasilla(new Coordenada(i, j)).getNave().isPresent() ? "1 " : "0 ");
+            }
+            System.out.println(fila.toString().trim());
+        }
         enviarEvento(eventoTablero);
     }
-    
-     @Override
+
+    @Override
     public void confirmarUnion() {
         enviarEvento(new ResultadoEvento(true));
     }
