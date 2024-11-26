@@ -60,9 +60,9 @@ public class ControllerPartida implements ActionHandlerPartida, ObservadorDispar
     @Override
     public void manejarEvento(ResultadoDisparoEvento evento) {
         if (jugadorRival.isTurno()) {
-            model.cargarDisparoTurnoRival();
+            model.setTablero(evento.getTablero());
         } else {
-            model.cargarDisparoMiTurno();
+            model.setTableroDeRival(evento.getTablero());
         }
     }
 

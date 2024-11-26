@@ -83,11 +83,12 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
                     lblTiempoRestante.setText(event.model().getTexto());
                     break;
                 case ACTUALIZAR_TABLERO_PROPIO:
-//                    tablero = event.model().getTablero();
-                    renderizarTableroJugador();
+                    tablero = event.model().getTablero();
+                    cargarTableroPropio(tableroJugador, tablero);
                     break;
                 case ACTUALIZAR_TABLERO_RIVAL:
-                    renderizarTableroRival(tableroRival, event.model().getCasilla(), event.model().hundido, event.model().atinado);
+                    tableroDeRival = event.model().getTableroDeRival();
+                    cargarTableroRival(tableroRival, tableroDeRival);
                     break;
                 case TURNO_ACTIVO:
                     tableroRival.setEnabled(true);
@@ -129,8 +130,12 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
         TableroRenderer.renderizarTablero(tableroJugador, tablero, jugador);
     }
 
-    private void renderizarTableroRival(JLabel tableroRival, Casilla casilla, boolean hundido, boolean atinado) {
-        TableroRenderer.cargarTableroRival(tableroRival, casilla, hundido, atinado);
+    private void cargarTableroPropio(JLabel tableroLabel, Tablero tablero) {
+        TableroRenderer.renderizarTablero(tableroLabel, tablero, jugador);
+    }
+
+    private void cargarTableroRival(JLabel tableroLabel, Tablero tablero) {
+        TableroRenderer.cargarTableroRival(tableroLabel, tablero, String.valueOf(jugador.getColorRival()).toLowerCase());
     }
 
     private void setupFonts() throws FontFormatException, IOException {

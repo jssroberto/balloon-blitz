@@ -11,6 +11,8 @@ import org.itson.edu.balloonblitz.entidades.Casilla;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.Nave;
 import org.itson.edu.balloonblitz.entidades.Tablero;
+import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoCasilla;
+import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoNave;
 
 public class TableroRenderer {
 
@@ -29,12 +31,24 @@ public class TableroRenderer {
         for (int i = 0; i < tablero.getFilas(); i++) {
             for (int j = 0; j < tablero.getColumnas(); j++) {
                 Optional<Nave> naveOpt = casillas[i][j].getNave();
+                Casilla casilla = casillas[i][j];
 
                 if (naveOpt.isPresent() && navesYaProcesadas.add(naveOpt.get())) {
                     Nave nave = naveOpt.get();
                     JLabel globoLabel = crearGloboLabel(nave, jugador);
                     posicionarGlobo(globoLabel, i, j);
                     tableroLabel.add(globoLabel);
+                }
+                if (naveOpt.isPresent() && naveOpt.get().getEstadoNave().equals(EstadoNave.AVERIADA)) {
+                    JLabel globoLabel = crearGloboImpactado(String.valueOf(jugador.getColorPropio()));
+                    posicionarGlobo(globoLabel, i, j);
+                    tableroLabel.add(globoLabel);
+                } else {
+                    if (casilla.getEstado().equals(EstadoCasilla.GOLPEADA)) {
+                        JLabel globoLabel = crearGloboNoImpactado();
+                        posicionarGlobo(globoLabel, i, j);
+                        tableroLabel.add(globoLabel);
+                    }
                 }
             }
         }
@@ -43,18 +57,58 @@ public class TableroRenderer {
         tableroLabel.repaint();
     }
 
-    public static void cargarTableroRival(JLabel tableroRival, Casilla casilla, boolean hundido, boolean atinado) {
-        tableroRival.removeAll();
-        tableroRival.setLayout(null);
+    public static void cargarTableroRival(JLabel tableroLabel, Tablero tablero, String colorRival) {
+        tableroLabel.removeAll();
+        tableroLabel.setLayout(null);
 
-        if (atinado) {
-            JLabel globoLabel = crearGloboImpactado();
-            posicionarGlobo(globoLabel, casilla.getCoordenada().fila(), casilla.getCoordenada().columna());
-            tableroRival.add(globoLabel);
+        Casilla[][] casillas = tablero.getMatriz();
+        Set<Nave> navesYaProcesadas = new HashSet<>();
+
+        for (int i = 0; i < tablero.getFilas(); i++) {
+            for (int j = 0; j < tablero.getColumnas(); j++) {
+                Optional<Nave> naveOpt = casillas[i][j].getNave();
+                Casilla casilla = casillas[i][j];
+
+                if (naveOpt.isPresent() && naveOpt.get().getEstadoNave().equals(EstadoNave.AVERIADA)) {
+                    JLabel globoLabel = crearGloboImpactado(colorRival);
+                    posicionarGlobo(globoLabel, i, j);
+                    tableroLabel.add(globoLabel);
+                } else {
+                    if (casilla.getEstado().equals(EstadoCasilla.GOLPEADA)) {
+                        JLabel globoLabel = crearGloboNoImpactado();
+                        posicionarGlobo(globoLabel, i, j);
+                        tableroLabel.add(globoLabel);
+                    }
+                }
+            }
         }
 
-        tableroRival.revalidate();
-        tableroRival.repaint();
+        tableroLabel.revalidate();
+        tableroLabel.repaint();
+    }
+
+    public static void cargarTableroPropio(JLabel tableroLabel, Tablero tablero, String color) {
+        tableroLabel.removeAll();
+        tableroLabel.setLayout(null);
+
+        Casilla[][] casillas = tablero.getMatriz();
+        Set<Nave> navesYaProcesadas = new HashSet<>();
+
+        for (int i = 0; i < tablero.getFilas(); i++) {
+            for (int j = 0; j < tablero.getColumnas(); j++) {
+                Optional<Nave> naveOpt = casillas[i][j].getNave();
+
+                if (naveOpt.isPresent() && navesYaProcesadas.add(naveOpt.get())) {
+                    Nave nave = naveOpt.get();
+                    JLabel globoLabel = crearGloboImpactado(color);
+                    posicionarGlobo(globoLabel, i, j);
+                    tableroLabel.add(globoLabel);
+                }
+            }
+        }
+
+        tableroLabel.revalidate();
+        tableroLabel.repaint();
     }
 
     private static JLabel crearGloboLabel(Nave nave, Jugador jugador) {
@@ -69,11 +123,18 @@ public class TableroRenderer {
         return label;
     }
 
-    private static JLabel crearGloboImpactado() {
-
-        String imagePath = BALLOON_BASE_PATH + "destruida" + ".png";
+    private static JLabel crearGloboImpactado(String color) {
+        String imagePath = BALLOON_BASE_PATH + color + "/" + color + "-tocado.png";
         ImageIcon icon = new ImageIcon(TableroRenderer.class.getResource(imagePath));
+        JLabel label = new JLabel(icon);
+        label.setSize(icon.getIconWidth(), icon.getIconHeight());
+        return label;
+    }
 
+    private static JLabel crearGloboNoImpactado() {
+
+        String imagePath = BALLOON_BASE_PATH + "agua" + ".png";
+        ImageIcon icon = new ImageIcon(TableroRenderer.class.getResource(imagePath));
         JLabel label = new JLabel(icon);
         label.setSize(icon.getIconWidth(), icon.getIconHeight());
         return label;
