@@ -16,6 +16,5 @@ public interface ActionHandlerPartida {
 //    void clickRegresar();
     void enviarEvento(DisparoEvento evento);
     
-    public Jugador getJugador();
 
 }

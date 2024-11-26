@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
 
@@ -21,6 +22,8 @@ public class ModelPosicionNaves {
     private String texto;
     Jugador jugador;
     private final List<ObserverPosicionNaves> observers = new ArrayList<>();
+    private ScheduledExecutorService temporizadorActual; // Referencia al temporizador actual.
+    private final AtomicBoolean detener = new AtomicBoolean(false); // Señal para detener el temporizador.
     int tiempoRestante;
 
     public ModelPosicionNaves() {
@@ -46,24 +49,43 @@ public class ModelPosicionNaves {
     }
 
     public void correrTiempo(TimeOutEvento evento) {
+        detenerTemporizadorActivo(); // Limpia cualquier temporizador previo.
         tiempoRestante = evento.getTiempoRestante();
 
         if (tiempoRestante > 0) {
-            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+            temporizadorActual = Executors.newSingleThreadScheduledExecutor();
+            detener.set(false); // Reinicia la señal de detención.
 
-            scheduler.scheduleAtFixedRate(() -> {
+            temporizadorActual.scheduleAtFixedRate(() -> {
+                if (detener.get()) {
+                    temporizadorActual.shutdown(); // Detenemos el temporizador si se activa la señal.
+                    return;
+                }
+
                 if (tiempoRestante > 0) {
                     setTexto(String.valueOf(tiempoRestante));
                     notifyObservers(new UpdateEventPosicionNaves(this, EventTypePosicionNaves.ACTUALIZAR_LABEL));
                     tiempoRestante--;
                 } else {
-
-                    scheduler.shutdown(); // Detenemos el scheduler cuando tiempoRestante llega a 1
+                    setTexto("Tiempo expirado");
+                    notifyObservers(new UpdateEventPosicionNaves(this, EventTypePosicionNaves.TERMINAR_TIEMPO));
+                    temporizadorActual.shutdown(); // Detenemos el scheduler cuando el tiempo expira.
                 }
             }, 0, 1, TimeUnit.SECONDS);
         } else if (evento.getTiempoRestante() == 0) {
             setTexto("Tiempo expirado");
             notifyObservers(new UpdateEventPosicionNaves(this, EventTypePosicionNaves.TERMINAR_TIEMPO));
+        }
+    }
+
+    /**
+     * Detiene cualquier temporizador activo.
+     */
+    private void detenerTemporizadorActivo() {
+        detener.set(true); // Activa la señal de detención.
+        if (temporizadorActual != null && !temporizadorActual.isShutdown()) {
+            temporizadorActual.shutdownNow(); // Detenemos cualquier temporizador activo.
+            temporizadorActual = null;
         }
     }
 

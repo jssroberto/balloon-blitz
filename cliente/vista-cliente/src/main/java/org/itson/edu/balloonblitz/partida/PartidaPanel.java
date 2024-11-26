@@ -67,8 +67,7 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
         if (null != event.eventType()) {
             switch (event.eventType()) {
                 case ENVIAR_JUGADOR:
-                    jugadorRival = actionHandler.getJugador();
-                    System.out.println(jugadorRival.getNombre());
+                    jugadorRival = event.model().getJugadorRival();
                     lblNombreEnemigo.setText(jugadorRival.getNombre());
 
                     try {

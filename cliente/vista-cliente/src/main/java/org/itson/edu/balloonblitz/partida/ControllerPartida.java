@@ -26,10 +26,6 @@ public class ControllerPartida implements ActionHandlerPartida, ObservadorDispar
 
     private final PartidaPanel view;
     private final ModelPartida model;
-    private Jugador jugadorRival;
-    private Tablero tablero;
-    private Tablero tableroOponente;
-    int contador = 1;
 
     public ControllerPartida(PartidaPanel view, ModelPartida model) {
         this.view = view;
@@ -38,47 +34,21 @@ public class ControllerPartida implements ActionHandlerPartida, ObservadorDispar
         this.model.addObserver(view);
     }
 
-    @Override
-    public Jugador getJugador() {
-        return jugadorRival;
-    }
-
     public void setJugador(Jugador jugadorRival) {
-        this.jugadorRival = jugadorRival;
-        this.tableroOponente = jugadorRival.getTableroPropio();
+        model.setJugadorRival(jugadorRival);
         model.notificarJugador();
     }
 
-    public void actualizarTablero(Tablero tablero) {
-        this.tablero = tablero;
-    }
-
-    public void actualizarTableroOponente(Tablero tablero) {
-        this.tableroOponente = tablero;
-    }
-
-
     @Override
     public void manejarEvento(ResultadoDisparoEvento evento) {
-        if(contador ==3){
-        if (jugadorRival.isTurno()) {
+
+        if (evento.getEmisor().equals(model.getJugadorRival())) {
             model.setTablero(evento.getTablero());
-            jugadorRival.setTurno(false);
+            
         } else {
             model.setTableroDeRival(evento.getTablero());
-            jugadorRival.setTurno(true);
         }
-        contador++;
-        }else{
-            if (jugadorRival.isTurno()) {
-            model.setTablero(evento.getTablero());
-            jugadorRival.setTurno(false);
-        } else {
-            model.setTableroDeRival(evento.getTablero());
-            jugadorRival.setTurno(true);
-        }
-        contador++;
-        }
+
     }
 
     @Override
@@ -100,5 +70,7 @@ public class ControllerPartida implements ActionHandlerPartida, ObservadorDispar
     public void manejarEvento(ResultadoEvento evento) {
         model.obtenerTurno(evento);
     }
+
+    
 
 }
