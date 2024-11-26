@@ -27,14 +27,15 @@ public class ManejadorDisparo {
         this.jugadorRival = jugadorRival;
     }
 
+    public ResultadoDisparoEvento procesar(){
+        return procesarEvento();
+    }
+    
     //Los cambios que se le hagan al tablero y jugador en esta clase se reflejarán en la partida que tiene el servidor (i hope)
     public ResultadoDisparoEvento procesarEvento() {
         Casilla casilla = tableroRival.getCasilla(disparoEvento.getCoordenada());
 
-        // Verificar si la casilla ya fue golpeada
-        if (casilla.getEstado() == EstadoCasilla.GOLPEADA) {
-            throw new IllegalArgumentException("La casilla ya fue golpeada");
-        }
+        
         casilla.setEstado(EstadoCasilla.GOLPEADA);
 
         // Usar Optional para obtener la nave en la casilla

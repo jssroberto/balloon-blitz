@@ -17,13 +17,7 @@ public class TableroClickHandler {
     private static final int GRID_SIZE = 10;
     private static final int GRID_OFFSET_X = 0;
     private static final int GRID_OFFSET_Y = 0;
-    private PartidaPanel panel;
 
-    
-    
-    
-    
-    
     public static void configurarTableroRival(JLabel tableroRival, Jugador jugador, PartidaPanel panel) {
         // Create an overlay panel for the grid
         JPanel gridPanel = new JPanel(null);
@@ -56,17 +50,26 @@ public class TableroClickHandler {
         cell.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                cell.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255, 128), 2));
+                if (cell.isEnabled()) {
+                    cell.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255, 128), 2));
+                }
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
                 cell.setBorder(null);
+
             }
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                realizarDisparo(row, col, jugador, panel);
+                if (cell.isEnabled()) {
+                    cell.setEnabled(false);
+
+                    realizarDisparo(row, col, jugador, panel);
+                } else {
+                    System.out.println("no permitido");
+                }
             }
         });
 
@@ -78,4 +81,5 @@ public class TableroClickHandler {
         disparo.setEmisor(jugador);
         panel.enviarEvento(disparo);
     }
+
 }

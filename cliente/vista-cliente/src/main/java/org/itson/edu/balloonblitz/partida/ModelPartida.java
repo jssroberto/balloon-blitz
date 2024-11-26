@@ -75,14 +75,6 @@ public class ModelPartida {
           notifyObservers(new UpdateEventPartida(this, EventTypePartida.ACTUALIZAR_TABLERO_RIVAL));
     }
 
-    public boolean isTurno() {
-        return turno;
-    }
-
-    public void setTurno(boolean turno) {
-        this.turno = turno;
-    }
-
     
 
     public void notificarJugador() {

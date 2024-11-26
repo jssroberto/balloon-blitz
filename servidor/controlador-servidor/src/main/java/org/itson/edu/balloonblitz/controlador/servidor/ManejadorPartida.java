@@ -35,12 +35,14 @@ public class ManejadorPartida implements EventoObserver {
     private final Jugador jugador2; // Instancia del jugador 2.
     private Tablero tableroJugador1; // Tablero del jugador 1.
     private Tablero tableroJugador2; // Tablero del jugador 2.
+    private Tablero tableroRival; // Tablero del jugador 2.
     private final ManejadorTurno turno; // Gestor de turnos.
     private final Partida partida; // Representación de la partida.
     int contadorEnvio = 0;
-    private final ExecutorService executorService = Executors.newFixedThreadPool(10);
+    private final ExecutorService executorService = Executors.newFixedThreadPool(500);
     private ScheduledExecutorService temporizadorActual = null; // Referencia al temporizador activo.
     boolean activo;
+    int contadorJugada = 1;
 
     /**
      * Constructor para inicializar la partida con los jugadores y sus streams.
@@ -65,7 +67,9 @@ public class ManejadorPartida implements EventoObserver {
 
         this.streamsJugador1 = streamsArray[0];
         this.streamsJugador2 = streamsArray[1];
-        this.jugador1 = jugadoresArray[0];
+        partida.setJugador1(jugadoresArray[0]);
+        partida.setJugador2(jugadoresArray[1]);
+        this.jugador1 = partida.getJugador1();
         this.jugador2 = jugadoresArray[1];
         this.tableroJugador1 = partida.getTableroJugador1();
         this.tableroJugador2 = partida.getTableroJugador2();
@@ -84,8 +88,10 @@ public class ManejadorPartida implements EventoObserver {
         Evento eventoProcesado = procesarEvento(evento, entrada);
 
         if (eventoProcesado != null) {
+
             enviarEventoAJugador(streamsJugador1.getSalida(), eventoProcesado);
             enviarEventoAJugador(streamsJugador2.getSalida(), eventoProcesado);
+            mandarTurno();
             manejarTurnos();
         }
     }
@@ -156,27 +162,27 @@ public class ManejadorPartida implements EventoObserver {
 
             contadorEnvio++;
             if (contadorEnvio == 2) {
-                if (activo) {
-                    detenerTemporizadorActivo();
-                }
+                detenerTemporizadorActivo();
+
+                mandarTurno();
                 manejarTurnos();
                 contadorEnvio = 0;
             }
             return null;
 
         } else if (tipoEvento == TipoEvento.DISPARO) {
-
             detenerTemporizadorActivo();
-            Tablero tableroRival = obtenerTableroRival(emisor);
+            tableroRival = obtenerTableroRival(emisor);
             Jugador jugadorRival = obtenerJugadorRival(emisor);
             ManejadorDisparo manejadorDisparo = new ManejadorDisparo((DisparoEvento) evento, tableroRival, jugadorRival);
-            return manejadorDisparo.procesarEvento();
+            contadorJugada++;
+            return manejadorDisparo.procesar();
+
         } else if (tipoEvento == TipoEvento.RESULTADO) {
             contadorEnvio++;
             if (contadorEnvio == 2) {
-                if (activo) {
-                    detenerTemporizadorActivo();
-                }
+                detenerTemporizadorActivo();
+                mandarTurno();
                 manejarTurnos();
                 contadorEnvio = 0;
             }
@@ -258,12 +264,13 @@ public class ManejadorPartida implements EventoObserver {
             enviarEventoAJugador(streamsJugador2.getSalida(), new ResultadoEvento(false));
             enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(30));
             enviarEventoAJugador(streamsJugador2.getSalida(), new TimeOutEvento(30));
+            jugador1.setTurno(false);
+            jugador2.setTurno(true);
             if (iniciarTemporizadorActivo(30) == 0) {
                 activo = false;
                 enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(0));
                 enviarEventoAJugador(streamsJugador2.getSalida(), new TimeOutEvento(0));
-                jugador1.setTurno(false);
-                jugador2.setTurno(true);
+                mandarTurno();
             }
         });
 
@@ -283,12 +290,13 @@ public class ManejadorPartida implements EventoObserver {
             enviarEventoAJugador(streamsJugador1.getSalida(), new ResultadoEvento(false));
             enviarEventoAJugador(streamsJugador2.getSalida(), new TimeOutEvento(30));
             enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(30));
+            jugador1.setTurno(true);
+            jugador2.setTurno(false);
             if (iniciarTemporizadorActivo(30) == 0) {
                 activo = false;
                 enviarEventoAJugador(streamsJugador2.getSalida(), new TimeOutEvento(0));
                 enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(0));
-                jugador1.setTurno(true);
-                jugador2.setTurno(false);
+                mandarTurno();
             }
         });
     }
@@ -298,30 +306,19 @@ public class ManejadorPartida implements EventoObserver {
      * establecido el turno de disparo
      */
     private void manejarTurnoJugador() {
-
-        Evento evento1 = new EnvioJugadorEvento();
-        evento1.setEmisor(jugador1);
-        enviarEventoAJugador(streamsJugador1.getSalida(), evento1);
-        Evento evento2 = new EnvioJugadorEvento();
-        evento2.setEmisor(jugador2);
-        enviarEventoAJugador(streamsJugador2.getSalida(), evento2);
-
-        iniciarTiempo();
-    }
-
-    public void iniciarTiempo() {
         executorService.submit(() -> {
             activo = true;
             enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(2));
             System.out.println("enviado jugador 1");
             enviarEventoAJugador(streamsJugador2.getSalida(), new TimeOutEvento(2));
             System.out.println("enviado jugador 2");
+            partida.getJugador2().setTurno(false);
+            partida.getJugador1().setTurno(true);
             if (iniciarTemporizadorActivo(2) == 0) {
                 activo = false;
                 enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(0));
                 enviarEventoAJugador(streamsJugador2.getSalida(), new TimeOutEvento(0));
-                partida.getJugador2().setTurno(false);
-                partida.getJugador1().setTurno(true);
+                mandarTurno();
             }
         });
     }
@@ -333,7 +330,7 @@ public class ManejadorPartida implements EventoObserver {
      * @return Tablero del jugador rival.
      */
     private Tablero obtenerTableroRival(Jugador jugador) {
-        return jugador.equals(jugador1) ? tableroJugador2 : tableroJugador1;
+        return jugador.equals(jugador1) ? partida.getTableroJugador2() : partida.getTableroJugador1();
     }
 
     /**
@@ -343,7 +340,7 @@ public class ManejadorPartida implements EventoObserver {
      * @return Instancia del jugador rival.
      */
     private Jugador obtenerJugadorRival(Jugador jugador) {
-        return jugador.equals(jugador1) ? jugador2 : jugador1;
+        return jugador.equals(jugador1) ? partida.getJugador2() : partida.getJugador1();
     }
 
     /**
@@ -359,5 +356,16 @@ public class ManejadorPartida implements EventoObserver {
             return jugador2;
         }
         return null;
+    }
+
+    public void mandarTurno() {
+        if (jugador1.isTurno()) {
+            enviarEventoAJugador(streamsJugador1.getSalida(), new ResultadoEvento(false));
+            enviarEventoAJugador(streamsJugador2.getSalida(), new ResultadoEvento(true));
+
+        } else {
+            enviarEventoAJugador(streamsJugador1.getSalida(), new ResultadoEvento(true));
+            enviarEventoAJugador(streamsJugador2.getSalida(), new ResultadoEvento(false));
+        }
     }
 }

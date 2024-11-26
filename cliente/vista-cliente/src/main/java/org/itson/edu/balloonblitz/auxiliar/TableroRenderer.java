@@ -1,5 +1,6 @@
 package org.itson.edu.balloonblitz.auxiliar;
 
+import java.awt.Color;
 import org.itson.edu.balloonblitz.colocarNaves.*;
 import java.util.HashSet;
 import java.util.Optional;
@@ -33,16 +34,22 @@ public class TableroRenderer {
                 Optional<Nave> naveOpt = casillas[i][j].getNave();
                 Casilla casilla = casillas[i][j];
 
-                if (naveOpt.isPresent() && navesYaProcesadas.add(naveOpt.get())) {
+                if (naveOpt.isPresent() && naveOpt.get().getEstadoNave().equals(EstadoNave.COMPLETA)) {
                     Nave nave = naveOpt.get();
                     JLabel globoLabel = crearGloboLabel(nave, jugador);
                     posicionarGlobo(globoLabel, i, j);
                     tableroLabel.add(globoLabel);
                 }
                 if (naveOpt.isPresent() && naveOpt.get().getEstadoNave().equals(EstadoNave.AVERIADA)) {
-                    JLabel globoLabel = crearGloboImpactado(String.valueOf(jugador.getColorPropio()));
+                    JLabel globoLabel = crearGloboImpactado(String.valueOf(jugador.getColorPropio()).toLowerCase());
                     posicionarGlobo(globoLabel, i, j);
                     tableroLabel.add(globoLabel);
+                } else if (naveOpt.isPresent() && naveOpt.get().getEstadoNave().equals(EstadoNave.HUNDIDA)) {
+                    JLabel globoLabel = crearGloboHundido();
+                    posicionarGlobo(globoLabel, i, j);
+                    tableroLabel.add(globoLabel);
+                    tableroLabel.revalidate();
+                    tableroLabel.repaint();
                 } else {
                     if (casilla.getEstado().equals(EstadoCasilla.GOLPEADA)) {
                         JLabel globoLabel = crearGloboNoImpactado();
@@ -73,36 +80,20 @@ public class TableroRenderer {
                     JLabel globoLabel = crearGloboImpactado(colorRival);
                     posicionarGlobo(globoLabel, i, j);
                     tableroLabel.add(globoLabel);
+                } else if (naveOpt.isPresent() && naveOpt.get().getEstadoNave().equals(EstadoNave.HUNDIDA)) {
+                    JLabel globoLabel = crearGloboHundido();
+                    posicionarGlobo(globoLabel, i, j);
+                    tableroLabel.add(globoLabel);
+                    tableroLabel.revalidate();
+                    tableroLabel.repaint();
                 } else {
                     if (casilla.getEstado().equals(EstadoCasilla.GOLPEADA)) {
                         JLabel globoLabel = crearGloboNoImpactado();
                         posicionarGlobo(globoLabel, i, j);
+                        globoLabel.setEnabled(false);
                         tableroLabel.add(globoLabel);
+//                        
                     }
-                }
-            }
-        }
-
-        tableroLabel.revalidate();
-        tableroLabel.repaint();
-    }
-
-    public static void cargarTableroPropio(JLabel tableroLabel, Tablero tablero, String color) {
-        tableroLabel.removeAll();
-        tableroLabel.setLayout(null);
-
-        Casilla[][] casillas = tablero.getMatriz();
-        Set<Nave> navesYaProcesadas = new HashSet<>();
-
-        for (int i = 0; i < tablero.getFilas(); i++) {
-            for (int j = 0; j < tablero.getColumnas(); j++) {
-                Optional<Nave> naveOpt = casillas[i][j].getNave();
-
-                if (naveOpt.isPresent() && navesYaProcesadas.add(naveOpt.get())) {
-                    Nave nave = naveOpt.get();
-                    JLabel globoLabel = crearGloboImpactado(color);
-                    posicionarGlobo(globoLabel, i, j);
-                    tableroLabel.add(globoLabel);
                 }
             }
         }
@@ -125,6 +116,14 @@ public class TableroRenderer {
 
     private static JLabel crearGloboImpactado(String color) {
         String imagePath = BALLOON_BASE_PATH + color + "/" + color + "-tocado.png";
+        ImageIcon icon = new ImageIcon(TableroRenderer.class.getResource(imagePath));
+        JLabel label = new JLabel(icon);
+        label.setSize(icon.getIconWidth(), icon.getIconHeight());
+        return label;
+    }
+
+    private static JLabel crearGloboHundido() {
+        String imagePath = BALLOON_BASE_PATH + "destruida.png";
         ImageIcon icon = new ImageIcon(TableroRenderer.class.getResource(imagePath));
         JLabel label = new JLabel(icon);
         label.setSize(icon.getIconWidth(), icon.getIconHeight());

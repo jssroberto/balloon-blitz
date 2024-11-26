@@ -652,7 +652,7 @@ public class PersonalizarPanel extends javax.swing.JPanel implements ObserverPer
     }//GEN-LAST:event_pfpQuincyMouseClicked
 
     private void globoRojoOPMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_globoRojoOPMouseClicked
-        handleGloboClick("/images/ballons/59x73/rojo.png", globoRojoOP, ColorNaves.ROSA, true);
+        handleGloboClick("/images/ballons/59x73/rojo.png", globoRojoOP, ColorNaves.ROJO, true);
     }//GEN-LAST:event_globoRojoOPMouseClicked
 
     private void globoAzulOPMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_globoAzulOPMouseClicked

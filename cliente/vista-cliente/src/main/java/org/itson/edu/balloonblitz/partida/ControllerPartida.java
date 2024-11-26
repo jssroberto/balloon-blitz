@@ -29,6 +29,7 @@ public class ControllerPartida implements ActionHandlerPartida, ObservadorDispar
     private Jugador jugadorRival;
     private Tablero tablero;
     private Tablero tableroOponente;
+    int contador = 1;
 
     public ControllerPartida(PartidaPanel view, ModelPartida model) {
         this.view = view;
@@ -59,10 +60,24 @@ public class ControllerPartida implements ActionHandlerPartida, ObservadorDispar
 
     @Override
     public void manejarEvento(ResultadoDisparoEvento evento) {
+        if(contador ==3){
         if (jugadorRival.isTurno()) {
             model.setTablero(evento.getTablero());
+            jugadorRival.setTurno(false);
         } else {
             model.setTableroDeRival(evento.getTablero());
+            jugadorRival.setTurno(true);
+        }
+        contador++;
+        }else{
+            if (jugadorRival.isTurno()) {
+            model.setTablero(evento.getTablero());
+            jugadorRival.setTurno(false);
+        } else {
+            model.setTableroDeRival(evento.getTablero());
+            jugadorRival.setTurno(true);
+        }
+        contador++;
         }
     }
 

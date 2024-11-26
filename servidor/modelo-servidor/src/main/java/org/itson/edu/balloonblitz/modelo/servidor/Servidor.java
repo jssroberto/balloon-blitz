@@ -23,7 +23,7 @@ public final class Servidor {
     private ConexionObserver observadorConexion;
     private EventoObserver observadorEventos;
     private JugadorObserver observadorJugador;
-    private final ExecutorService executorService = Executors.newFixedThreadPool(10);
+    private final ExecutorService executorService = Executors.newFixedThreadPool(500);
     private ServerSocket serverSocket;
 
     /**
