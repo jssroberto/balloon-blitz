@@ -65,12 +65,13 @@ public class ManejadorPartida implements EventoObserver {
         ControladorStreams[] streamsArray = jugadores.keySet().toArray(new ControladorStreams[0]);
         Jugador[] jugadoresArray = jugadores.values().toArray(new Jugador[0]);
 
+        //aquí hay declacraciones repetidas
         this.streamsJugador1 = streamsArray[0];
         this.streamsJugador2 = streamsArray[1];
-        partida.setJugador1(jugadoresArray[0]);
-        partida.setJugador2(jugadoresArray[1]);
+        this.partida.setJugador1(jugadoresArray[0]);
+        this.partida.setJugador2(jugadoresArray[1]);
         this.jugador1 = partida.getJugador1();
-        this.jugador2 = jugadoresArray[1];
+        this.jugador2 = partida.getJugador2();
         this.tableroJugador1 = partida.getTableroJugador1();
         this.tableroJugador2 = partida.getTableroJugador2();
 
@@ -176,7 +177,9 @@ public class ManejadorPartida implements EventoObserver {
             Jugador jugadorRival = obtenerJugadorRival(emisor);
             ManejadorDisparo manejadorDisparo = new ManejadorDisparo((DisparoEvento) evento, tableroRival, jugadorRival);
             contadorJugada++;
-            return manejadorDisparo.procesar();
+            ResultadoDisparoEvento resultado = manejadorDisparo.procesar();
+            resultado.setEmisor(emisor);
+            return resultado;
 
         } else if (tipoEvento == TipoEvento.RESULTADO) {
             contadorEnvio++;
@@ -247,9 +250,6 @@ public class ManejadorPartida implements EventoObserver {
     /**
      * Maneja el turno del jugador actual.
      *
-     * @param streamsJugador Streams del jugador actual.
-     * @param jugadorActual Jugador actual.
-     * @param jugadorSiguiente Jugador siguiente.
      */
     private void manejarTurnoJugador1() {
         executorService.submit(() -> {
@@ -278,10 +278,6 @@ public class ManejadorPartida implements EventoObserver {
 
     /**
      * Maneja el turno del jugador actual.
-     *
-     * @param streamsJugador Streams del jugador actual.
-     * @param jugadorActual Jugador actual.
-     * @param jugadorSiguiente Jugador siguiente.
      */
     private void manejarTurnoJugador2() {
         executorService.submit(() -> {
@@ -330,7 +326,7 @@ public class ManejadorPartida implements EventoObserver {
      * @return Tablero del jugador rival.
      */
     private Tablero obtenerTableroRival(Jugador jugador) {
-        return jugador.equals(jugador1) ? partida.getTableroJugador2() : partida.getTableroJugador1();
+        return jugador.equals(jugador1) ? tableroJugador2 : tableroJugador1;
     }
 
     /**

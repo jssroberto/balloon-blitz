@@ -147,8 +147,9 @@ public class PersonalizarPanel extends javax.swing.JPanel implements ObserverPer
                 && colorNaves != null
                 && colorNavesRival != null
                 && fotoPerfil != null) {
-            framePrincipal.setJugador(new Jugador(txtNombre.getText(), colorNaves, colorNavesRival, fotoPerfil));
-            return new Jugador(txtNombre.getText(), colorNaves, colorNavesRival, fotoPerfil);
+            Jugador jugador = new Jugador(txtNombre.getText(), colorNaves, colorNavesRival, fotoPerfil);
+            framePrincipal.setJugador(jugador);
+            return jugador;
         }
         return null;
     }
