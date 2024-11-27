@@ -25,6 +25,7 @@ public class ManejadorTurno {
     public ManejadorTurno() {
     }
 
+    //este no se usa
     public int iniciarTemporizador(ScheduledExecutorService scheduler, int segundos) {
         scheduler = Executors.newSingleThreadScheduledExecutor();
         CountDownLatch latch = new CountDownLatch(1); // Sincronizador para esperar al temporizador

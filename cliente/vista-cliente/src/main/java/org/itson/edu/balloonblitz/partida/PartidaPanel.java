@@ -78,7 +78,7 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
 
                     break;
 
-                case ACTUALIZAR_LABEL_TIEMPO:
+                case ACTUALIZAR_LABEL_TIEMPO, TIEMPO_TERMINADO:
                     lblTiempoRestante.setText(event.model().getTexto());
                     break;
                 case ACTUALIZAR_TABLERO_PROPIO:
@@ -89,6 +89,7 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
                     tableroDeRival = event.model().getTableroDeRival();
                     cargarTableroRival(tableroRival, tableroDeRival);
                     break;
+                    //TODO específicar sufijo lbl
                 case TURNO_ACTIVO:
                     TableroClickHandler.configurarTableroRival(tableroRival, jugador, this);
                     tableroRival.setEnabled(true);
@@ -96,9 +97,6 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
                     break;
                 case TURNO_INACTIVO:
                     tableroRival.setEnabled(false);
-                    break;
-                case TIEMPO_TERMINADO:
-                    lblTiempoRestante.setText(event.model().getTexto());
                     break;
                 default: {
                 }

@@ -41,7 +41,6 @@ public class ControllerPartida implements ActionHandlerPartida, ObservadorDispar
 
     @Override
     public void manejarEvento(ResultadoDisparoEvento evento) {
-
         if (evento.getEmisor().equals(model.getJugadorRival())) {
             model.setTablero(evento.getTablero());
             
@@ -61,16 +60,16 @@ public class ControllerPartida implements ActionHandlerPartida, ObservadorDispar
         setJugador(evento.getEmisor());
     }
 
+    //TODO aquí se tiene que recibir un evento específico, no el evento padre
     @Override
     public void manejarEvento(Evento evento) {
         model.correrTiempo((TimeOutEvento) evento);
     }
 
+
+    //Resultado para los turnos
     @Override
     public void manejarEvento(ResultadoEvento evento) {
         model.obtenerTurno(evento);
     }
-
-    
-
 }

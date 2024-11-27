@@ -135,13 +135,13 @@ public final class Servidor {
 
                 System.out.println(evento.getTipoEvento());
                 System.out.println(evento.getEmisor());
-                if (evento.getTipoEvento() != TipoEvento.ENVIO_JUGADOR) {
-                    if (observadorEventos != null) {
-                        observadorEventos.manejarEvento(evento, entrada);
-                    }
-                } else {
+                if (evento.getTipoEvento() == TipoEvento.ENVIO_JUGADOR) {
                     if (observadorJugador != null) {
                         observadorJugador.agregarJugador(evento, entrada);
+                    }
+                } else {
+                    if (observadorEventos != null) {
+                        observadorEventos.manejarEvento(evento, entrada);
                     }
                 }
 

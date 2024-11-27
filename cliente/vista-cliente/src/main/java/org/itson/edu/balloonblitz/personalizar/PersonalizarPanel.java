@@ -520,7 +520,7 @@ public class PersonalizarPanel extends javax.swing.JPanel implements ObserverPer
         if (crearJugador() != null) {
             actionHandler.cambiarPanelYEnviarJugador();
         } else {
-            JOptionPane.showConfirmDialog(this, "Tienes que llenar todos los datos para poder continuar");
+            framePrincipal.mostrarAviso("Tienes que llenar todos los datos para poder continuar", "No puedes continuar");
         }
     }//GEN-LAST:event_lblContinuarMouseClicked
 
