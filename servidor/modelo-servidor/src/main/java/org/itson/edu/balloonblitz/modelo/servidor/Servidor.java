@@ -164,15 +164,15 @@ public final class Servidor {
      */
     public synchronized void mandarDatosCliente(ObjectOutputStream salida, Evento evento) {
         try {
-           
-                System.out.println("enviando desde servidor "+evento.getTipoEvento());
-                salida.writeObject(evento);
-                salida.flush();
-            
+            System.out.println("Enviando desde servidor " + evento.getTipoEvento());
+            salida.reset(); // Limpiar la caché antes de enviar
+            salida.writeObject(evento);
+            salida.flush();
         } catch (IOException ex) {
             Logger.error("Error al enviar datos al cliente: {}", ex.getMessage());
         }
     }
+
 
     /**
      * Método para cerrar todos los recursos y hilos correctamente

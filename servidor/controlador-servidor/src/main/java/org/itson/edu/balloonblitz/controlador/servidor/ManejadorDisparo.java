@@ -16,7 +16,6 @@ import java.util.List;
  * @author elimo
  */
 public class ManejadorDisparo {
-
     private final DisparoEvento disparoEvento;
     private final Tablero tableroRival;
     private final Jugador jugadorRival;
