@@ -21,6 +21,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import org.itson.edu.balloonblitz.auxiliar.GridDragDropHandler;
 import org.itson.edu.balloonblitz.entidades.Tablero;
@@ -46,6 +47,7 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
     private final FramePrincipal framePrincipal;
     private GridDragDropHandler gridDragDropHandler;
     ActionHandlerColocarNaves actionHandler;
+    int contador = 0;
 
     //TODO: portaaviones son 2 no 1
     /**
@@ -96,15 +98,6 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
                     btnConfirmar.setEnabled(false);
                     gridDragDropHandler.posicionarGlobosExactamente(); // Asegúrate de que este método funciona correctamente
                     framePrincipal.getJugador().setTableroPropio(gridDragDropHandler.obtenerTablero());
-                     {
-                        try {
-                            Thread.sleep(2000);
-                        } catch (InterruptedException ex) {
-                            Logger.getLogger(ColocacionPanel.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-
-                    // Luego de la pausa, actualiza la interfaz de usuario
                     framePrincipal.eliminarObservadores();
                     framePrincipal.cambiarPanelPartida(gridDragDropHandler);
                     enviarTablero(gridDragDropHandler.obtenerTablero());

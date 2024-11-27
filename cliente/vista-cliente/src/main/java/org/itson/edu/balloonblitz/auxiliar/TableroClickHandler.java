@@ -20,20 +20,21 @@ public class TableroClickHandler {
 
     public static void configurarTableroRival(JLabel tableroRival, Jugador jugador, PartidaPanel panel) {
         // Create an overlay panel for the grid
-        JPanel gridPanel = new JPanel(null);
-        gridPanel.setOpaque(false);
-        gridPanel.setBounds(0, 0, CELL_SIZE * GRID_SIZE, CELL_SIZE * GRID_SIZE);
+            JPanel gridPanel = new JPanel(null);
+            gridPanel.setOpaque(false);
+            gridPanel.setBounds(0, 0, CELL_SIZE * GRID_SIZE, CELL_SIZE * GRID_SIZE);
 
-        // Create clickable cells
-        for (int i = 0; i < GRID_SIZE; i++) {
-            for (int j = 0; j < GRID_SIZE; j++) {
-                JPanel cell = createCell(i, j, jugador, panel);
-                gridPanel.add(cell);
+            // Create clickable cells
+            for (int i = 0; i < GRID_SIZE; i++) {
+                for (int j = 0; j < GRID_SIZE; j++) {
+                    JPanel cell = createCell(i, j, jugador, panel);
+                    gridPanel.add(cell);
+                }
             }
-        }
 
-        tableroRival.setLayout(null);
-        tableroRival.add(gridPanel);
+            tableroRival.setLayout(null);
+            tableroRival.add(gridPanel);
+        
     }
 
     private static JPanel createCell(int row, int col, Jugador jugador, PartidaPanel panel) {
@@ -65,8 +66,8 @@ public class TableroClickHandler {
             public void mouseClicked(MouseEvent e) {
                 if (cell.isEnabled()) {
                     cell.setEnabled(false);
-
                     realizarDisparo(row, col, jugador, panel);
+                    System.out.println("permitido");
                 } else {
                     System.out.println("no permitido");
                 }
@@ -74,6 +75,7 @@ public class TableroClickHandler {
         });
 
         return cell;
+
     }
 
     private static void realizarDisparo(int row, int col, Jugador jugador, PartidaPanel panel) {

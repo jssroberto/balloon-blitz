@@ -133,6 +133,8 @@ public final class Servidor {
                 // Leer el objeto enviado por el cliente
                 Evento evento = (Evento) entrada.readObject(); // Esto bloqueará hasta que llegue un objeto
 
+                System.out.println(evento.getTipoEvento());
+                System.out.println(evento.getEmisor());
                 if (evento.getTipoEvento() != TipoEvento.ENVIO_JUGADOR) {
                     if (observadorEventos != null) {
                         observadorEventos.manejarEvento(evento, entrada);

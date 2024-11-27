@@ -90,7 +90,9 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
                     cargarTableroRival(tableroRival, tableroDeRival);
                     break;
                 case TURNO_ACTIVO:
+                    TableroClickHandler.configurarTableroRival(tableroRival, jugador, this);
                     tableroRival.setEnabled(true);
+
                     break;
                 case TURNO_INACTIVO:
                     tableroRival.setEnabled(false);
@@ -119,7 +121,6 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
     }
 
     private void setupUI() throws FontFormatException, IOException {
-        TableroClickHandler.configurarTableroRival(tableroRival, jugador, this);
         setupFonts();
         renderizarTableroJugador();
 

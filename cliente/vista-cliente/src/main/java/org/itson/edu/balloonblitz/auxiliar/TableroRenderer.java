@@ -50,12 +50,11 @@ public class TableroRenderer {
                     tableroLabel.add(globoLabel);
                     tableroLabel.revalidate();
                     tableroLabel.repaint();
-                } else {
-                    if (casilla.getEstado().equals(EstadoCasilla.GOLPEADA)) {
-                        JLabel globoLabel = crearGloboNoImpactado();
-                        posicionarGlobo(globoLabel, i, j);
-                        tableroLabel.add(globoLabel);
-                    }
+                } else if (casilla.getEstado().equals(EstadoCasilla.GOLPEADA) && !naveOpt.isPresent()) {
+                    JLabel globoLabel = crearGloboNoImpactado();
+                    posicionarGlobo(globoLabel, i, j);
+                    tableroLabel.add(globoLabel);
+
                 }
             }
         }
@@ -84,17 +83,14 @@ public class TableroRenderer {
                     JLabel globoLabel = crearGloboHundido();
                     posicionarGlobo(globoLabel, i, j);
                     tableroLabel.add(globoLabel);
-                    tableroLabel.revalidate();
-                    tableroLabel.repaint();
-                } else {
-                    if (casilla.getEstado().equals(EstadoCasilla.GOLPEADA)) {
-                        JLabel globoLabel = crearGloboNoImpactado();
-                        posicionarGlobo(globoLabel, i, j);
-                        globoLabel.setEnabled(false);
-                        tableroLabel.add(globoLabel);
+                } else if (casilla.getEstado().equals(EstadoCasilla.GOLPEADA) && !naveOpt.isPresent()) {
+                    JLabel globoLabel = crearGloboNoImpactado();
+                    posicionarGlobo(globoLabel, i, j);
+                    globoLabel.setEnabled(false);
+                    tableroLabel.add(globoLabel);
 //                        
-                    }
                 }
+
             }
         }
 

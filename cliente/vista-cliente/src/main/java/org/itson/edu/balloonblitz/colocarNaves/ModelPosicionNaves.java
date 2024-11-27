@@ -66,10 +66,6 @@ public class ModelPosicionNaves {
                     setTexto(String.valueOf(tiempoRestante));
                     notifyObservers(new UpdateEventPosicionNaves(this, EventTypePosicionNaves.ACTUALIZAR_LABEL));
                     tiempoRestante--;
-                } else {
-                    setTexto("Tiempo expirado");
-                    notifyObservers(new UpdateEventPosicionNaves(this, EventTypePosicionNaves.TERMINAR_TIEMPO));
-                    temporizadorActual.shutdown(); // Detenemos el scheduler cuando el tiempo expira.
                 }
             }, 0, 1, TimeUnit.SECONDS);
         } else if (evento.getTiempoRestante() == 0) {
