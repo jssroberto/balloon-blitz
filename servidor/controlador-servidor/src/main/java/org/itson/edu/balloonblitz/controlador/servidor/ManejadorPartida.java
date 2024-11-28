@@ -156,6 +156,7 @@ public class ManejadorPartida implements EventoObserver {
             ManejadorDisparo manejadorDisparo = new ManejadorDisparo((DisparoEvento) evento, tableroRival, jugadorRival);
             ResultadoDisparoEvento resultado = manejadorDisparo.procesar();
             resultado.setEmisor(emisor);
+            resultado.setCoordenada(((DisparoEvento) evento).getCoordenada());
             return resultado;
         } else if (tipoEvento == TipoEvento.RESULTADO) {
             contadorEnvio++;

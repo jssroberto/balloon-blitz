@@ -40,6 +40,14 @@ public class MusicPlayer {
         }
     }
 
+    public void playOnce() {
+        if (clip != null) {
+            clip.stop(); // Detiene cualquier reproducción actual
+            clip.setFramePosition(0); // Resetea la posición al inicio
+            clip.start(); // Comienza la reproducción
+        }
+    }
+
     // Método para pausar el audio
     public void pause() {
         if (clip.isRunning()) {

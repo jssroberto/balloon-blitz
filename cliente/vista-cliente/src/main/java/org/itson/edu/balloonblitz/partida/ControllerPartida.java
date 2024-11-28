@@ -6,6 +6,8 @@ package org.itson.edu.balloonblitz.partida;
 
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.Tablero;
+import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoCasilla;
+import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoNave;
 import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.EnvioJugadorEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
@@ -41,14 +43,15 @@ public class ControllerPartida implements ActionHandlerPartida, ObservadorDispar
 
     @Override
     public void manejarEvento(ResultadoDisparoEvento evento) {
+        reproducirSonidoDisparo(evento);
         if (evento.getEmisor().equals(model.getJugadorRival())) {
             model.setTablero(evento.getTablero());
-            
         } else {
             model.setTableroDeRival(evento.getTablero());
         }
 
     }
+
 
     @Override
     public void enviarEvento(DisparoEvento evento) {
@@ -71,5 +74,18 @@ public class ControllerPartida implements ActionHandlerPartida, ObservadorDispar
     @Override
     public void manejarEvento(ResultadoEvento evento) {
         model.obtenerTurno(evento);
+    }
+
+
+    private void reproducirSonidoDisparo(ResultadoDisparoEvento evento) {
+        if (evento.getTablero().getCasilla(evento.getCoordenada()).getNave().isEmpty()){
+            model.getPlayerQuack().playOnce();
+        } else{
+            if (evento.getTablero().getCasilla(evento.getCoordenada()).getNave().get().getEstadoNave() == EstadoNave.AVERIADA){
+                model.getPlayerPop().playOnce();
+            } else{
+                model.getPlayerExplosion().playOnce();
+            }
+        }
     }
 }

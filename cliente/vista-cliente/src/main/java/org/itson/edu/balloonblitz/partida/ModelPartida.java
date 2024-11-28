@@ -12,10 +12,13 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.itson.edu.balloonblitz.entidades.Coordenada;
+import org.itson.edu.balloonblitz.entidades.Disparo;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.Tablero;
 import org.itson.edu.balloonblitz.entidades.eventos.ResultadoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
+import org.itson.edu.balloonblitz.vista.music.MusicPlayer;
 
 /**
  * @author elimo
@@ -32,8 +35,14 @@ public class ModelPartida {
     private ScheduledExecutorService temporizadorActual;
     // Señal para detener el temporizador
     private final AtomicBoolean detener = new AtomicBoolean(false);
+    private MusicPlayer playerPop;
+    private MusicPlayer playerQuack;
+    private MusicPlayer playerExplosion;
 
     public ModelPartida() {
+        playerPop = new MusicPlayer("/audio/sound-effects/pop.wav");
+        playerQuack = new MusicPlayer("/audio/sound-effects/quack.wav");
+        playerExplosion = new MusicPlayer("/audio/sound-effects/explosion.wav");
     }
 
     public void addObserver(ObserverPartida observer) {
@@ -142,4 +151,28 @@ public class ModelPartida {
         this.texto = texto;
     }
 
+
+    public MusicPlayer getPlayerPop() {
+        return playerPop;
+    }
+
+    public void setPlayerPop(MusicPlayer playerPop) {
+        this.playerPop = playerPop;
+    }
+
+    public MusicPlayer getPlayerQuack() {
+        return playerQuack;
+    }
+
+    public void setPlayerQuack(MusicPlayer playerQuack) {
+        this.playerQuack = playerQuack;
+    }
+
+    public MusicPlayer getPlayerExplosion() {
+        return playerExplosion;
+    }
+
+    public void setPlayerExplosion(MusicPlayer playerExplosion) {
+        this.playerExplosion = playerExplosion;
+    }
 }

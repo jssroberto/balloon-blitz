@@ -1,13 +1,16 @@
 package org.itson.edu.balloonblitz.auxiliar;
 
 import java.awt.Color;
+
 import org.itson.edu.balloonblitz.colocarNaves.*;
+
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
 import org.itson.edu.balloonblitz.entidades.Casilla;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.Nave;
@@ -41,9 +44,16 @@ public class TableroRenderer {
                     tableroLabel.add(globoLabel);
                 }
                 if (naveOpt.isPresent() && naveOpt.get().getEstadoNave().equals(EstadoNave.AVERIADA)) {
-                    JLabel globoLabel = crearGloboImpactado(String.valueOf(jugador.getColorPropio()).toLowerCase());
-                    posicionarGlobo(globoLabel, i, j);
-                    tableroLabel.add(globoLabel);
+                    if (casilla.getEstado() == EstadoCasilla.INTACTA) {
+                        Nave nave = naveOpt.get();
+                        JLabel globoLabel = crearGloboLabel(nave, jugador);
+                        posicionarGlobo(globoLabel, i, j);
+                        tableroLabel.add(globoLabel);
+                    } else {
+                        JLabel globoLabel = crearGloboImpactado(String.valueOf(jugador.getColorPropio()).toLowerCase());
+                        posicionarGlobo(globoLabel, i, j);
+                        tableroLabel.add(globoLabel);
+                    }
                 } else if (naveOpt.isPresent() && naveOpt.get().getEstadoNave().equals(EstadoNave.HUNDIDA)) {
                     JLabel globoLabel = crearGloboHundido();
                     posicionarGlobo(globoLabel, i, j);
@@ -74,7 +84,9 @@ public class TableroRenderer {
             for (int j = 0; j < tablero.getColumnas(); j++) {
                 Optional<Nave> naveOpt = casillas[i][j].getNave();
                 Casilla casilla = casillas[i][j];
-
+                if (casilla.getEstado() == EstadoCasilla.INTACTA) {
+                    continue;
+                }
                 if (naveOpt.isPresent() && naveOpt.get().getEstadoNave().equals(EstadoNave.AVERIADA)) {
                     JLabel globoLabel = crearGloboImpactado(colorRival);
                     posicionarGlobo(globoLabel, i, j);
@@ -88,7 +100,7 @@ public class TableroRenderer {
                     posicionarGlobo(globoLabel, i, j);
                     globoLabel.setEnabled(false);
                     tableroLabel.add(globoLabel);
-//                        
+                    //
                 }
 
             }

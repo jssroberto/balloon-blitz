@@ -1,6 +1,7 @@
 package org.itson.edu.balloonblitz.entidades.eventos;
 
 import org.itson.edu.balloonblitz.entidades.Casilla;
+import org.itson.edu.balloonblitz.entidades.Coordenada;
 import org.itson.edu.balloonblitz.entidades.Nave;
 import org.itson.edu.balloonblitz.entidades.Tablero;
 import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
@@ -12,6 +13,7 @@ public class ResultadoDisparoEvento extends Evento {
 
     private final Tablero tablero;
     private final List<Nave> naves;
+    private Coordenada coordenada;
 
     public ResultadoDisparoEvento(Tablero tablero, List<Nave> naves) {
         super(TipoEvento.RESULTADO_DISPARO);
@@ -25,5 +27,13 @@ public class ResultadoDisparoEvento extends Evento {
 
     public List<Nave> getNaves() {
         return naves;
+    }
+
+    public Coordenada getCoordenada() {
+        return coordenada;
+    }
+
+    public void setCoordenada(Coordenada coordenada) {
+        this.coordenada = coordenada;
     }
 }
