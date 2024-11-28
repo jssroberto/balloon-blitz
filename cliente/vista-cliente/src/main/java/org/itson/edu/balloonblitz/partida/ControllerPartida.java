@@ -46,8 +46,10 @@ public class ControllerPartida implements ActionHandlerPartida, ObservadorDispar
         reproducirSonidoDisparo(evento);
         if (evento.getEmisor().equals(model.getJugadorRival())) {
             model.setTablero(evento.getTablero());
+            view.getFramePrincipal().getJugador().setNaves(evento.getNaves());
         } else {
             model.setTableroDeRival(evento.getTablero());
+            model.getJugadorRival().setNaves(evento.getNaves());
         }
 
     }
@@ -68,7 +70,6 @@ public class ControllerPartida implements ActionHandlerPartida, ObservadorDispar
     public void manejarEvento(Evento evento) {
         model.correrTiempo((TimeOutEvento) evento);
     }
-
 
     //Resultado para los turnos
     @Override

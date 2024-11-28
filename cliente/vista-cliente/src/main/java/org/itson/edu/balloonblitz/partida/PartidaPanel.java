@@ -211,6 +211,7 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
         jLabel2 = new javax.swing.JLabel();
         lblTiempoRestante = new javax.swing.JLabel();
         lblFondo = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/clock.png"))); // NOI18N
 
@@ -278,6 +279,9 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
         lblFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/partidaSinTablero.png"))); // NOI18N
         jPanel1.add(lblFondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1280, -1));
 
+        jLabel3.setText("jLabel3");
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 200, -1, -1));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -303,12 +307,17 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
     }//GEN-LAST:event_jButton4ActionPerformed
 
 
+    public FramePrincipal getFramePrincipal() {
+        return framePrincipal;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblEsperandoMovimiento;
     private javax.swing.JLabel lblFondo;

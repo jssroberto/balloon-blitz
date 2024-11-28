@@ -128,7 +128,7 @@ public class FramePrincipal extends javax.swing.JFrame {
     private void iniciarMusica() {
         MusicPlayer musicPlayer = new MusicPlayer("/audio/main-theme.wav");
         musicPlayer.play();
-        musicPlayer.setVolume((float) 80.0);
+        musicPlayer.setVolume((float) 70.0);
     }
 
     // Métodos de aviso, confirmación, etc., sin cambios
@@ -195,6 +195,8 @@ public class FramePrincipal extends javax.swing.JFrame {
     public void eliminarObservadores() {
         ConexionCliente.getInstancia().eliminarTodosLosObservadores();
     }
+
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables

@@ -28,8 +28,8 @@ public class ModelPartida {
     private final List<ObserverPartida> observers = new ArrayList<>();
     private String texto;
     private final int contador = 0;
-    Jugador jugadorRival;
-    int tiempoRestante;
+    private Jugador jugadorRival;
+    private int tiempoRestante;
     private Tablero tablero;
     private Tablero tableroDeRival;
     private ScheduledExecutorService temporizadorActual;
