@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.List;
 import java.util.ArrayList;
+
 import org.itson.edu.balloonblitz.entidades.*;
 import org.itson.edu.balloonblitz.entidades.navefactory.Barco;
 import org.itson.edu.balloonblitz.entidades.navefactory.Crucero;
@@ -254,19 +255,15 @@ public class GridDragDropHandler extends DropTargetAdapter {
         }
     }
 
-    
-     private void placeBalloons(int gridX, int gridY, int size, ImageIcon icon) {
+
+    private void placeBalloons(int gridX, int gridY, int size, ImageIcon icon) {
         Nave nave;
 
         switch (size) {
-            case 4 ->
-                nave = new PortaAviones();
-            case 3 ->
-                nave = new Crucero();
-            case 2 ->
-                nave = new Submarino();
-            default ->
-                nave = new Barco();
+            case 4 -> nave = new PortaAviones();
+            case 3 -> nave = new Crucero();
+            case 2 -> nave = new Submarino();
+            default -> nave = new Barco();
         }
 
         naves.add(nave);
@@ -295,55 +292,95 @@ public class GridDragDropHandler extends DropTargetAdapter {
         tableroPanel.repaint();
     }
 
-    private JLabel createBalloonLabel(ImageIcon icon, int x, int y) {
-        JLabel balloon = new JLabel(new ImageIcon(icon.getImage()));
-        balloon.setBounds(x, y, CELL_SIZE, CELL_SIZE);
-        return balloon;
-    }
-    
-    
-    
-    private void placeBalloonsRandom(int gridX, int gridY, int size, ImageIcon icon) {
+    private void placeBalloonsDefecto(int gridX, int gridY, int size, ImageIcon icon) {
         Nave nave;
 
         switch (size) {
-            case 4 ->
-                nave = new PortaAviones();
-            case 3 ->
-                nave = new Crucero();
-            case 2 ->
-                nave = new Submarino();
-            default ->
-                nave = new Barco();
+            case 4 -> nave = new PortaAviones();
+            case 3 -> nave = new Crucero();
+            case 2 -> nave = new Submarino();
+            default -> nave = new Barco();
         }
 
         naves.add(nave);
 
         System.out.println("\nNave de tipo " + nave.getTipoNave().toString().toLowerCase() + " colocada en las casillas:");
-
-        int snapX = ((gridX) * CELL_SIZE) + OFFSET_X;
-        int snapY = gridY * CELL_SIZE + OFFSET_Y;
-        matriz[gridY][gridX].setNave(nave);
-        JLabel balloon = createBalloonLabel(icon, snapX, snapY);
-        tableroPanel.add(balloon);
-        System.out.printf("Casilla [%d, %d]%n", gridY, gridX);
+        if (isVertical) {
+            for (int i = 0; i < size; i++) {
+                int snapX = gridX * CELL_SIZE + OFFSET_X;
+                int snapY = ((gridY + i) * CELL_SIZE) + OFFSET_Y;
+                matriz[gridX + i][gridY].setNave(nave);
+                JLabel balloon = createBalloonLabel(icon, snapX, snapY);
+                tableroPanel.add(balloon);
+                System.out.printf("Casilla [%d, %d]%n",gridX + i, gridY);
+            }
+        } else {
+            for (int i = 0; i < size; i++) {
+                int snapX = ((gridX + i) * CELL_SIZE) + OFFSET_X;
+                int snapY = gridY * CELL_SIZE + OFFSET_Y;
+                matriz[gridX][gridY + i].setNave(nave);
+                JLabel balloon = createBalloonLabel(icon, snapX, snapY);
+                tableroPanel.add(balloon);
+                System.out.printf("Casilla [%d, %d]%n", gridX, gridY + i);
+            }
+        }
 
         tableroPanel.repaint();
     }
 
+    private JLabel createBalloonLabel(ImageIcon icon, int x, int y) {
+        JLabel balloon = new JLabel(new ImageIcon(icon.getImage()));
+        balloon.setBounds(x, y, CELL_SIZE, CELL_SIZE);
+        return balloon;
+    }
+
+    //    private void placeBalloonsRandom(int gridX, int gridY, int size, ImageIcon icon) {
+    //        Nave nave;
+    //
+    //        switch (size) {
+    //            case 4 ->
+    //                nave = new PortaAviones();
+    //            case 3 ->
+    //                nave = new Crucero();
+    //            case 2 ->
+    //                nave = new Submarino();
+    //            default ->
+    //                nave = new Barco();
+    //        }
+    //
+    //        naves.add(nave);
+    //
+    //        System.out.println("\nNave de tipo " + nave.getTipoNave().toString().toLowerCase() + " colocada en las casillas:");
+    //        if (isVertical) {
+    //            for (int i = 0; i < size; i++) {
+    //                int snapX = gridX * CELL_SIZE + OFFSET_X;
+    //                int snapY = ((gridY + i) * CELL_SIZE) + OFFSET_Y;
+    //                matriz[gridY + i][gridX].setNave(nave);
+    //                JLabel balloon = createBalloonLabel(icon, snapX, snapY);
+    //                tableroPanel.add(balloon);
+    //                System.out.printf("Casilla [%d, %d]%n", gridY + i, gridX);
+    //            }
+    //        } else {
+    //            for (int i = 0; i < size; i++) {
+    //                int snapX = ((gridX + i) * CELL_SIZE) + OFFSET_X;
+    //                int snapY = gridY * CELL_SIZE + OFFSET_Y;
+    //                matriz[gridY][gridX + i].setNave(nave);
+    //                JLabel balloon = createBalloonLabel(icon, snapX, snapY);
+    //                tableroPanel.add(balloon);
+    //                System.out.printf("Casilla [%d, %d]%n", gridY, gridX + i);
+    //            }
+    //        }
+    //        tableroPanel.repaint();
+    //    }
+
 
     private int getBalloonSize(String balloonType) {
         return switch (balloonType) {
-            case "barco" ->
-                1;
-            case "submarino" ->
-                2;
-            case "crucero" ->
-                3;
-            case "portaAviones" ->
-                4;
-            default ->
-                throw new IllegalArgumentException("Tipo de globo no válido: " + balloonType);
+            case "barco" -> 1;
+            case "submarino" -> 2;
+            case "crucero" -> 3;
+            case "portaAviones" -> 4;
+            default -> throw new IllegalArgumentException("Tipo de globo no válido: " + balloonType);
         };
     }
 
@@ -364,15 +401,14 @@ public class GridDragDropHandler extends DropTargetAdapter {
 
         switch (tipo) {
             case "portaAviones" ->
-                rutaImagen = "/images/ballons/" + color.toLowerCase() + "/" + color.toLowerCase() + "-4.png";
+                    rutaImagen = "/images/ballons/" + color.toLowerCase() + "/" + color.toLowerCase() + "-4.png";
             case "crucero" ->
-                rutaImagen = "/images/ballons/" + color.toLowerCase() + "/" + color.toLowerCase() + "-3.png";
+                    rutaImagen = "/images/ballons/" + color.toLowerCase() + "/" + color.toLowerCase() + "-3.png";
             case "submarino" ->
-                rutaImagen = "/images/ballons/" + color.toLowerCase() + "/" + color.toLowerCase() + "-2.png";
+                    rutaImagen = "/images/ballons/" + color.toLowerCase() + "/" + color.toLowerCase() + "-2.png";
             case "barco" ->
-                rutaImagen = "/images/ballons/" + color.toLowerCase() + "/" + color.toLowerCase() + "-1.png";
-            default ->
-                throw new IllegalArgumentException("Tipo de globo no válido: " + tipo);
+                    rutaImagen = "/images/ballons/" + color.toLowerCase() + "/" + color.toLowerCase() + "-1.png";
+            default -> throw new IllegalArgumentException("Tipo de globo no válido: " + tipo);
         }
 
         // Intentar cargar la imagen desde el recurso
@@ -385,70 +421,50 @@ public class GridDragDropHandler extends DropTargetAdapter {
         return new ImageIcon(imageUrl);
     }
 
-    public void posicionarGlobosExactamente() {
-        // Definir las posiciones específicas de cada tipo de nave
-        int[][] posicionesPortaAviones1 = {{3, 9}, {4, 9}, {5, 9}, {6, 9}};
-        int[][] posicionesPortaAviones2 = {{5, 0}, {6, 0}, {7, 0}, {8, 0}};
-        int[][] posicionesCrucero1 = {{4, 3}, {4, 4}, {4, 5}};
-        int[][] posicionesCrucero2 = {{8, 4}, {8, 5}, {8, 6}};
-        int[][] posicionesSubmarino1 = {{1, 0}, {1, 1}};
-        int[][] posicionesSubmarino2 = {{1, 7}, {2, 7}};
-        int[][] posicionesBarco1 = {{2, 3}};
-        int[][] posicionesBarco2 = {{0, 4}};
-        int[][] posicionesBarco3 = {{6, 2}};
-        int[][] posicionesBarco4 = {{3, 0}};
-        int[][] posicionesSubmarino3 = {{5, 7}, {6, 7}};
+    public void posicionarGlobosPorDefecto() {
+            isVertical = false;
+            placeBalloonsDefecto(8, 1, 4, cargarIcono("portaAviones"));
+            placeBalloonsDefecto(1, 7, 3, cargarIcono("crucero"));
+            placeBalloonsDefecto(2, 1, 2, cargarIcono("submarino"));
+            placeBalloonsDefecto(6, 0, 2, cargarIcono("submarino"));
+            placeBalloonsDefecto(9, 7, 1, cargarIcono("submarino"));
 
-        // Crear un arreglo de tipos de globos en el orden específico
-        String[] tiposGlobos = {
-            "portaAviones", "portaAviones", "crucero", "crucero",
-            "submarino", "submarino", "barco", "barco", "barco",
-            "barco", "submarino"
-        };
+            isVertical = true;
+            placeBalloonsDefecto(4, 8, 4, cargarIcono("portaAviones"));
+            placeBalloonsDefecto(1, 4, 3, cargarIcono("crucero"));
+            placeBalloonsDefecto(4, 6, 2, cargarIcono("submarino"));
+            placeBalloonsDefecto(0, 0, 1, cargarIcono("barco"));
+            placeBalloonsDefecto(4, 2, 1, cargarIcono("barco"));
+            placeBalloonsDefecto(6, 4, 1, cargarIcono("barco"));
 
-        // Arreglo de las posiciones para cada tipo de globo
-        int[][][] posicionesGlobos = {
-            posicionesPortaAviones1, // Portaaviones 1
-            posicionesPortaAviones2, // Portaaviones 2
-            posicionesCrucero1, // Crucero 1
-            posicionesCrucero2, // Crucero 2
-            posicionesSubmarino1, // Submarino 1
-            posicionesSubmarino2, // Submarino 2
-            posicionesBarco1, // Barco 1
-            posicionesBarco2, // Barco 2
-            posicionesBarco3, // Barco 3
-            posicionesBarco4, // Barco 4
-            posicionesSubmarino3 // Submarino 3
-        };
-
-        // Recorrer cada tipo de globo y sus posiciones específicas
-        for (int i = 0; i < tiposGlobos.length; i++) {
-            String tipo = tiposGlobos[i];             // Obtener el tipo de globo
-            int[][] posiciones = posicionesGlobos[i]; // Obtener las posiciones de este globo
-
-            // Cargar el icono correspondiente al tipo de globo
-            ImageIcon icon = cargarIcono(tipo);
-
-            // Verificar si el icono se ha cargado correctamente
-            if (icon == null) {
-                System.err.println("Error al cargar el icono para el tipo: " + tipo);
-                continue; // Si no se puede cargar el icono, se salta al siguiente tipo
-            }
-
-            // Colocar el globo en las casillas correspondientes
-            for (int[] casilla : posiciones) {
-                int gridX = casilla[0];
-                int gridY = casilla[1];
-
-                // Colocar el globo en la posición específica
-                placeBalloonsRandom(gridX, gridY, getBalloonSize(tipo), icon); // Aquí '1' es el tamaño, ajustable según el tipo de nave
-            }
-        }
-
-        // Actualizar el tablero para reflejar las posiciones de los globos
-        tableroPanel.repaint();
-
-        deshabilitarColocacionGlobos();
+        //        // Recorrer cada tipo de globo y sus posiciones específicas
+        //        for (int i = 0; i < tiposGlobos.length; i++) {
+        //            String tipo = tiposGlobos[i];             // Obtener el tipo de globo
+        //            int[][] posiciones = posicionesGlobos[i]; // Obtener las posiciones de este globo
+        //
+        //            // Cargar el icono correspondiente al tipo de globo
+        //            ImageIcon icon = cargarIcono(tipo);
+        //
+        //            // Verificar si el icono se ha cargado correctamente
+        //            if (icon == null) {
+        //                System.err.println("Error al cargar el icono para el tipo: " + tipo);
+        //                continue; // Si no se puede cargar el icono, se salta al siguiente tipo
+        //            }
+        //
+        //            // Colocar el globo en las casillas correspondientes
+        //            for (int[] casilla : posiciones) {
+        //                int gridX = casilla[0];
+        //                int gridY = casilla[1];
+        //
+        //                // Colocar el globo en la posición específica
+        //                placeBalloons(gridX, gridY, getBalloonSize(tipo), icon); // Aquí '1' es el tamaño, ajustable según el tipo de nave
+        //            }
+        //        }
+        //
+        //        // Actualizar el tablero para reflejar las posiciones de los globos
+                tableroPanel.repaint();
+        //
+                deshabilitarColocacionGlobos();
     }
 
     public void deshabilitarColocacionGlobos() {

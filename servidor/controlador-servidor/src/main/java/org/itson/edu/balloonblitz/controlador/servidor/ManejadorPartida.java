@@ -20,7 +20,6 @@ import java.util.Map;
  */
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -31,26 +30,17 @@ public class ManejadorPartida implements EventoObserver {
     private final ControladorStreams streamsJugador1; // Streams del jugador 1.
     private final ControladorStreams streamsJugador2; // Streams del jugador 2.
     private final Partida partida; // Representación de la partida.
-    int contadorEnvio = 0;
-    private ScheduledExecutorService temporizadorActual = null; // Referencia al temporizador activo.
-    private final AtomicBoolean detener = new AtomicBoolean(false);
+    private int contadorEnvio;
+    private ScheduledExecutorService temporizadorActual; // Referencia al temporizador activo.
+    private final AtomicBoolean detener;
 
     /**
-     * Constructor para inicializar la partida con los jugadores y sus streams.
-     *
-     *
-     * public int iniciarTemporizador(int tiempo) { if(tiempo>0){
-     * turno.iniciarTemporizador(tiempo); }else{ return 0; } return 0; }
-     *
-     * /**
      * Constructor para inicializar la partida con los jugadores y sus streams.
      *
      * @param jugadores Mapa que asocia streams con jugadores.
      */
     public ManejadorPartida(Map<ControladorStreams, Jugador> jugadores) {
         this.partida = new Partida();
-        this.partida.setTableroJugador1(new Tablero());
-        this.partida.setTableroJugador2(new Tablero());
         // Asignar jugadores y sus streams.
         ControladorStreams[] streamsArray = jugadores.keySet().toArray(new ControladorStreams[0]);
         Jugador[] jugadoresArray = jugadores.values().toArray(new Jugador[0]);
@@ -58,16 +48,20 @@ public class ManejadorPartida implements EventoObserver {
         //aquí hay declacraciones repetidas
         this.streamsJugador1 = streamsArray[0];
         this.streamsJugador2 = streamsArray[1];
+
         this.partida.setJugador1(jugadoresArray[0]);
         this.partida.setJugador2(jugadoresArray[1]);
 
+
+        detener = new AtomicBoolean(false);
+        contadorEnvio = 0;
         verificarYCrearPartida();
     }
 
     /**
      * Maneja los eventos enviados por los clientes.
      *
-     * @param evento Evento enviado por el cliente.
+     * @param evento  Evento enviado por el cliente.
      * @param entrada Stream de entrada del cliente.
      */
     @Override
@@ -75,7 +69,6 @@ public class ManejadorPartida implements EventoObserver {
         Evento eventoProcesado = procesarEvento(evento, entrada);
 
         if (eventoProcesado != null) {
-
             enviarEventoAJugador(streamsJugador1.getSalida(), eventoProcesado);
             enviarEventoAJugador(streamsJugador2.getSalida(), eventoProcesado);
             mandarTurno();
@@ -112,9 +105,8 @@ public class ManejadorPartida implements EventoObserver {
     /**
      * Inicializa los recursos de la partida.
      */
-    public void crearPartida() {
-        partida.setTableroJugador1(new Tablero());
-        partida.setTableroJugador2(new Tablero());
+    public void
+    crearPartida() {
         partida.setEstadoPartida(EstadoPartida.ACTIVA);
         partida.getJugador1().setTurno(true);
         partida.getJugador2().setTurno(true);
@@ -123,7 +115,7 @@ public class ManejadorPartida implements EventoObserver {
     /**
      * Procesa un evento recibido y lo asocia con el jugador correspondiente.
      *
-     * @param evento Evento recibido.
+     * @param evento  Evento recibido.
      * @param entrada Stream del jugador emisor.
      * @return Evento procesado o null si hay un error.
      */
@@ -138,8 +130,14 @@ public class ManejadorPartida implements EventoObserver {
             assert emisor != null;
             if (emisor.equals(partida.getJugador1())) {
                 partida.setTableroJugador1(posicion.getTablero());
+                partida.getJugador1().setNaves(
+                        ManejadorPosicionNaves.inicializarNaves(partida.getTableroJugador1())
+                );
             } else {
                 partida.setTableroJugador2(posicion.getTablero());
+                partida.getJugador2().setNaves(
+                        ManejadorPosicionNaves.inicializarNaves(partida.getTableroJugador2())
+                );
             }
             contadorEnvio++;
             if (!detener.get()) {
@@ -163,7 +161,7 @@ public class ManejadorPartida implements EventoObserver {
             contadorEnvio++;
             if (contadorEnvio == 2) {
                 manejarTurnos();
-                contadorEnvio=0;
+                contadorEnvio = 0;
             }
             return null;
         } else {
@@ -193,7 +191,7 @@ public class ManejadorPartida implements EventoObserver {
         }
     }
 
-    private int iniciarTemporizadorActivo(int segundos) {
+    private void iniciarTemporizadorActivo(int segundos) {
         detenerTemporizadorActivo(); // Asegúrate de limpiar temporizadores anteriores.
 
         temporizadorActual = Executors.newSingleThreadScheduledExecutor();
@@ -209,10 +207,8 @@ public class ManejadorPartida implements EventoObserver {
                 }
             }, segundos, TimeUnit.SECONDS);
 
-            return 0; // Devuelve 0 si todo está correcto.
         } catch (Exception e) {
             e.printStackTrace();
-            return -1; // Devuelve -1 si ocurre algún error.
         }
     }
 
@@ -241,7 +237,6 @@ public class ManejadorPartida implements EventoObserver {
 
     /**
      * Maneja el turno del jugador actual.
-     *
      */
     private void manejarTurnoJugador1() {
         enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(30));
@@ -272,7 +267,7 @@ public class ManejadorPartida implements EventoObserver {
         enviarEventoAJugador(streamsJugador2.getSalida(), new TimeOutEvento(5));
         partida.getJugador2().setTurno(false);
         partida.getJugador1().setTurno(true);
-        iniciarTemporizadorActivo(10);
+        iniciarTemporizadorActivo(5);
     }
 
     /**

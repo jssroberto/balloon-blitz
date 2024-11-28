@@ -6,6 +6,10 @@ import org.itson.edu.balloonblitz.entidades.Nave;
 import org.itson.edu.balloonblitz.entidades.Tablero;
 import org.itson.edu.balloonblitz.entidades.enumeradores.TipoNave;
 import org.itson.edu.balloonblitz.entidades.eventos.PosicionNavesEvento;
+import org.itson.edu.balloonblitz.entidades.navefactory.Barco;
+import org.itson.edu.balloonblitz.entidades.navefactory.Crucero;
+import org.itson.edu.balloonblitz.entidades.navefactory.PortaAviones;
+import org.itson.edu.balloonblitz.entidades.navefactory.Submarino;
 
 import java.util.*;
 
@@ -104,5 +108,22 @@ public class ManejadorPosicionNaves {
                 contadorNaves.get(TipoNave.CRUCERO) == 2 &&
                 contadorNaves.get(TipoNave.SUBMARINO) == 3 &&
                 contadorNaves.get(TipoNave.BARCO) == 4;
+    }
+
+    public static List<Nave> inicializarNaves(Tablero tablero) {
+        List<Nave> naves = new ArrayList<>();
+        Casilla[][] casillas = tablero.getMatriz();
+
+        for (int i = 0; i < tablero.getFilas(); i++) {
+            for (int j = 0; j < tablero.getColumnas(); j++) {
+                if (casillas[i][j].getNave().isPresent()) {
+                    Nave nave = casillas[i][j].getNave().get();
+                    if (!naves.contains(nave)) {
+                        naves.add(nave);
+                    }
+                }
+            }
+        }
+        return naves;
     }
 }

@@ -96,7 +96,7 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
                     actualizarLabelsContadores();
                     btnReiniciar.setEnabled(false);
                     btnConfirmar.setEnabled(false);
-                    gridDragDropHandler.posicionarGlobosExactamente(); // Asegúrate de que este método funciona correctamente
+                    gridDragDropHandler.posicionarGlobosPorDefecto(); // Asegúrate de que este método funciona correctamente
                     framePrincipal.getJugador().setTableroPropio(gridDragDropHandler.obtenerTablero());
                     framePrincipal.eliminarObservadores();
                     framePrincipal.cambiarPanelPartida(gridDragDropHandler);

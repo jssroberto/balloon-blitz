@@ -26,21 +26,21 @@ public class ManejadorDisparo {
         this.jugadorRival = jugadorRival;
     }
 
-    public ResultadoDisparoEvento procesar(){
+    public ResultadoDisparoEvento procesar() {
         return procesarEvento();
     }
-    
+
     //Los cambios que se le hagan al tablero y jugador en esta clase se reflejarán en la partida que tiene el servidor (i hope)
     public ResultadoDisparoEvento procesarEvento() {
         Casilla casilla = tableroRival.getCasilla(disparoEvento.getCoordenada());
 
-        
+
         casilla.setEstado(EstadoCasilla.GOLPEADA);
 
         // Usar Optional para obtener la nave en la casilla
         if (casilla.getNave().isEmpty()) {
             // Si no hay nave en la casilla, retornar un evento de resultado sin impacto
-            return new ResultadoDisparoEvento(tableroRival);
+            return new ResultadoDisparoEvento(tableroRival, jugadorRival.getNaves());
         }
         return procesarDisparo(casilla);
     }
@@ -61,9 +61,9 @@ public class ManejadorDisparo {
         } else {
             // Si la nave está hundida, procesar el hundimiento
             procesarNaveHundida(tableroRival, jugadorRival, casilla);
-             return new ResultadoDisparoEvento(tableroRival);
+            return new ResultadoDisparoEvento(tableroRival, jugadorRival.getNaves());
         }
-        return new ResultadoDisparoEvento(tableroRival);
+        return new ResultadoDisparoEvento(tableroRival, jugadorRival.getNaves());
     }
 
     private void procesarNaveAveriada(Casilla casilla, Nave nave) {
@@ -73,10 +73,9 @@ public class ManejadorDisparo {
 
     private void procesarNaveHundida(Tablero tableroRival, Jugador jugadorRival, Casilla casilla) {
         Nave nave = casilla.getNave().orElseThrow();
-        List<Nave> navesJugador = jugadorRival.getNaves();
 
         // Usar un stream para encontrar la nave en la lista de naves del jugador rival y marcarla como hundida
-        boolean naveEncontrada = navesJugador.stream()
+        boolean naveEncontrada = jugadorRival.getNaves().stream()
                 .filter(n -> n.equals(nave))
                 .peek(n -> n.setEstadoNave(EstadoNave.HUNDIDA))
                 .findFirst()
