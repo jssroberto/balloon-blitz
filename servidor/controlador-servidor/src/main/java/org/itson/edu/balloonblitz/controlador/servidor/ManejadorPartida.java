@@ -151,8 +151,6 @@ public class ManejadorPartida implements EventoObserver {
             detenerTemporizadorActivo();
             Tablero tableroRival = obtenerTableroRival(emisor);
             Jugador jugadorRival = obtenerJugadorRival(emisor);
-            //TODO
-            //Error de referencia, la primera entra porque no ha sido modificado
             ManejadorDisparo manejadorDisparo = new ManejadorDisparo((DisparoEvento) evento, tableroRival, jugadorRival);
             ResultadoDisparoEvento resultado = manejadorDisparo.procesar();
             resultado.setEmisor(emisor);

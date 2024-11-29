@@ -396,7 +396,7 @@ public class GridDragDropHandler extends DropTargetAdapter {
         this.color = color;
     }
 
-    private ImageIcon cargarIcono(String tipo) {
+    public ImageIcon cargarIcono(String tipo) {
         String rutaImagen = "";
 
         switch (tipo) {

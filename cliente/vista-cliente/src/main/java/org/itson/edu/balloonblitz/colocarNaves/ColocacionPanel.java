@@ -99,9 +99,17 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
                     gridDragDropHandler.posicionarGlobosPorDefecto(); // Asegúrate de que este método funciona correctamente
                     framePrincipal.getJugador().setTableroPropio(gridDragDropHandler.obtenerTablero());
                     framePrincipal.eliminarObservadores();
+                {
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(ColocacionPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
                     framePrincipal.cambiarPanelPartida(gridDragDropHandler);
                     enviarTablero(gridDragDropHandler.obtenerTablero());
                     break;
+
 
                 default:
             }

@@ -34,7 +34,7 @@ import org.itson.edu.balloonblitz.vista.PerderPanel;
  * @author user
  */
 public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida {
-
+    
     private Jugador jugador;
     private Jugador jugadorRival;
     private Tablero tablero;
@@ -61,7 +61,7 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
         jugador = framePrincipal.getJugador();
         tablero = gridDragDropHandler.obtenerTablero();
     }
-
+    
     @Override
     public void update(UpdateEventPartida event) {
         if (null != event.eventType()) {
@@ -69,15 +69,15 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
                 case ENVIAR_JUGADOR:
                     jugadorRival = event.model().getJugadorRival();
                     lblNombreEnemigo.setText(jugadorRival.getNombre());
-
+                    
                     try {
                         setupUI();
                     } catch (FontFormatException | IOException ex) {
                         Logger.getLogger(PartidaPanel.class.getName()).log(Level.SEVERE, null, ex);
                     }
-
+                    
                     break;
-
+                
                 case ACTUALIZAR_LABEL_TIEMPO, TIEMPO_TERMINADO:
                     lblTiempoRestante.setText(event.model().getTexto());
                     break;
@@ -89,72 +89,91 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
                     tableroDeRival = event.model().getTableroDeRival();
                     cargarTableroRival(tableroRival, tableroDeRival);
                     break;
-                    //TODO específicar sufijo lbl
+                //TODO específicar sufijo lbl
                 case TURNO_ACTIVO:
                     TableroClickHandler.configurarTableroRival(tableroRival, jugador, this);
                     tableroRival.setEnabled(true);
-
+                    lblEsperandoMovimiento.setText("¡Haz tu movimiento!");
                     break;
                 case TURNO_INACTIVO:
+                    lblEsperandoMovimiento.setText("Esperando movimiento...");
                     tableroRival.setEnabled(false);
                     break;
                 default: {
                 }
             }
         }
-
+        
     }
-
+    
     @Override
     public void enviarEvento(Evento event) {
         actionHandler.enviarEvento((DisparoEvento) event);
     }
-
+    
     public ActionHandlerPartida getActionHandler() {
         return actionHandler;
     }
-
+    
     public void setActionHandler(ActionHandlerPartida actionHandler) {
         this.actionHandler = actionHandler;
     }
-
+    
     private void setupUI() throws FontFormatException, IOException {
         setupFonts();
         renderizarTableroJugador();
-
+        
     }
-
+    
     private void renderizarTableroJugador() {
         TableroRenderer.renderizarTablero(tableroJugador, tablero, jugador);
     }
-
+    
     private void cargarTableroPropio(JLabel tableroLabel, Tablero tablero) {
         TableroRenderer.renderizarTablero(tableroLabel, tablero, jugador);
     }
-
+    
     private void cargarTableroRival(JLabel tableroLabel, Tablero tablero) {
         TableroRenderer.cargarTableroRival(tableroLabel, tablero, String.valueOf(jugador.getColorRival()).toLowerCase());
     }
-
+    
     private void setupFonts() throws FontFormatException, IOException {
         Font titleFont = framePrincipal.cargarFuente(FONT_PATH, TITLE_FONT_SIZE);
-
+        lblBarcoIntacto.setFont(titleFont);
+        lblBarcoAveriado.setFont(titleFont);
+        lblBarcoHundido.setFont(titleFont);
+        lblSubmarinoIntacto.setFont(titleFont);
+        lblSubmarinoAveriado.setFont(titleFont);
+        lblSubmarinoHundido.setFont(titleFont);
+        lblCruceroIntacto.setFont(titleFont);
+        lblCruceroAveriado.setFont(titleFont);
+        lblCruceroHundido.setFont(titleFont);
+        lblPortaAvionesIntacto.setFont(titleFont);
+        lblPortaAvionesAveriado.setFont(titleFont);
+        lblPortaAvionesHundido.setFont(titleFont);
         lblTiempoRestante.setFont(titleFont);
         lblEsperandoMovimiento.setFont(titleFont);
         lblNombre.setFont(titleFont);
         lblNombreEnemigo.setFont(titleFont);
-
+        
         addTextBorder(lblEsperandoMovimiento);
         addTextBorder(lblNombre);
         addTextBorder(lblNombreEnemigo);
-
+        
         lblNombre.setText(jugador.getNombre());
-
         pfpJugador.setIcon(new ImageIcon(getClass().getResource(jugador.getFotoPerfil())));
+        gridDragDropHandler.colorGlobos(String.valueOf(jugador.getColorPropio()));
+        lblGloboBarco.setIcon(gridDragDropHandler.cargarIcono("barco"));
+        lblGloboSubmarino.setIcon(gridDragDropHandler.cargarIcono("submarino"));
+        lblGloboCrucero.setIcon(gridDragDropHandler.cargarIcono("crucero"));
+        lblGloboPortaAviones.setIcon(gridDragDropHandler.cargarIcono("portaAviones"));
+        
+        pfpJugador.setIcon(new ImageIcon(getClass().getResource(jugador.getFotoPerfil())));
+        
         pfpRival.setIcon(new ImageIcon(getClass().getResource(jugadorRival.getFotoPerfil())));
-
+        
     }
-
+    
     private void addTextBorder(JLabel label) {
         label.setForeground(Color.WHITE);
         label.setUI(new javax.swing.plaf.basic.BasicLabelUI() {
@@ -163,7 +182,7 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
                 Graphics2D g2d = (Graphics2D) g.create();
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                         RenderingHints.VALUE_ANTIALIAS_ON);
-
+                
                 String text = label.getText();
                 FontMetrics metrics = g2d.getFontMetrics(label.getFont());
                 int x = (label.getWidth() - metrics.stringWidth(text)) / 2;
@@ -197,7 +216,6 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
         jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         lblNombre = new javax.swing.JLabel();
         lblNombreEnemigo = new javax.swing.JLabel();
@@ -210,6 +228,22 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
         panelBorde1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         lblTiempoRestante = new javax.swing.JLabel();
+        lblSubmarinoHundido = new javax.swing.JLabel();
+        lblCruceroIntacto = new javax.swing.JLabel();
+        lblSubmarinoAveriado = new javax.swing.JLabel();
+        lblCruceroHundido = new javax.swing.JLabel();
+        lblSubmarinoIntacto = new javax.swing.JLabel();
+        lblCruceroAveriado = new javax.swing.JLabel();
+        lblBarcoIntacto = new javax.swing.JLabel();
+        lblBarcoAveriado = new javax.swing.JLabel();
+        lblBarcoHundido = new javax.swing.JLabel();
+        lblPortaAvionesIntacto = new javax.swing.JLabel();
+        lblPortaAvionesAveriado = new javax.swing.JLabel();
+        lblPortaAvionesHundido = new javax.swing.JLabel();
+        lblGloboBarco = new javax.swing.JLabel();
+        lblGloboSubmarino = new javax.swing.JLabel();
+        lblGloboCrucero = new javax.swing.JLabel();
+        lblGloboPortaAviones = new javax.swing.JLabel();
         lblFondo = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
 
@@ -225,14 +259,6 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
             }
         });
         jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 630, -1, -1));
-
-        jButton3.setText("perder");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1180, 630, -1, -1));
 
         jButton4.setText("volver");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -276,6 +302,74 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
         lblTiempoRestante.setText("Hora");
         jPanel1.add(lblTiempoRestante, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 630, 70, 40));
 
+        lblSubmarinoHundido.setForeground(new java.awt.Color(255, 0, 0));
+        lblSubmarinoHundido.setText("0");
+        jPanel1.add(lblSubmarinoHundido, new org.netbeans.lib.awtextra.AbsoluteConstraints(93, 303, 24, 38));
+
+        lblCruceroIntacto.setForeground(new java.awt.Color(102, 255, 51));
+        lblCruceroIntacto.setText("2");
+        jPanel1.add(lblCruceroIntacto, new org.netbeans.lib.awtextra.AbsoluteConstraints(34, 401, 24, 38));
+
+        lblSubmarinoAveriado.setForeground(new java.awt.Color(255, 255, 51));
+        lblSubmarinoAveriado.setText("0");
+        jPanel1.add(lblSubmarinoAveriado, new org.netbeans.lib.awtextra.AbsoluteConstraints(65, 303, 24, 38));
+
+        lblCruceroHundido.setForeground(new java.awt.Color(255, 0, 0));
+        lblCruceroHundido.setText("0");
+        jPanel1.add(lblCruceroHundido, new org.netbeans.lib.awtextra.AbsoluteConstraints(92, 401, 24, 38));
+
+        lblSubmarinoIntacto.setForeground(new java.awt.Color(102, 255, 51));
+        lblSubmarinoIntacto.setText("4");
+        jPanel1.add(lblSubmarinoIntacto, new org.netbeans.lib.awtextra.AbsoluteConstraints(34, 301, 24, 38));
+
+        lblCruceroAveriado.setForeground(new java.awt.Color(255, 255, 51));
+        lblCruceroAveriado.setText("0");
+        jPanel1.add(lblCruceroAveriado, new org.netbeans.lib.awtextra.AbsoluteConstraints(64, 401, 24, 38));
+
+        lblBarcoIntacto.setForeground(new java.awt.Color(102, 255, 51));
+        lblBarcoIntacto.setText("3");
+        jPanel1.add(lblBarcoIntacto, new org.netbeans.lib.awtextra.AbsoluteConstraints(35, 205, 24, 38));
+
+        lblBarcoAveriado.setForeground(new java.awt.Color(255, 255, 51));
+        lblBarcoAveriado.setText("0");
+        jPanel1.add(lblBarcoAveriado, new org.netbeans.lib.awtextra.AbsoluteConstraints(65, 205, 24, 38));
+
+        lblBarcoHundido.setForeground(new java.awt.Color(255, 0, 0));
+        lblBarcoHundido.setText("0");
+        jPanel1.add(lblBarcoHundido, new org.netbeans.lib.awtextra.AbsoluteConstraints(93, 205, 24, 38));
+
+        lblPortaAvionesIntacto.setForeground(new java.awt.Color(102, 255, 51));
+        lblPortaAvionesIntacto.setText("2");
+        jPanel1.add(lblPortaAvionesIntacto, new org.netbeans.lib.awtextra.AbsoluteConstraints(34, 499, 24, 38));
+
+        lblPortaAvionesAveriado.setForeground(new java.awt.Color(255, 0, 0));
+        lblPortaAvionesAveriado.setText("0");
+        jPanel1.add(lblPortaAvionesAveriado, new org.netbeans.lib.awtextra.AbsoluteConstraints(92, 499, 24, 38));
+
+        lblPortaAvionesHundido.setForeground(new java.awt.Color(255, 255, 51));
+        lblPortaAvionesHundido.setText("0");
+        jPanel1.add(lblPortaAvionesHundido, new org.netbeans.lib.awtextra.AbsoluteConstraints(64, 499, 24, 38));
+
+        lblGloboBarco.setText("jLabel3");
+        lblGloboBarco.setMaximumSize(new java.awt.Dimension(40, 40));
+        lblGloboBarco.setPreferredSize(new java.awt.Dimension(40, 40));
+        jPanel1.add(lblGloboBarco, new org.netbeans.lib.awtextra.AbsoluteConstraints(55, 161, 40, 40));
+
+        lblGloboSubmarino.setText("jLabel3");
+        lblGloboSubmarino.setMaximumSize(new java.awt.Dimension(40, 40));
+        lblGloboSubmarino.setPreferredSize(new java.awt.Dimension(40, 40));
+        jPanel1.add(lblGloboSubmarino, new org.netbeans.lib.awtextra.AbsoluteConstraints(54, 258, 40, 40));
+
+        lblGloboCrucero.setText("jLabel3");
+        lblGloboCrucero.setMaximumSize(new java.awt.Dimension(40, 40));
+        lblGloboCrucero.setPreferredSize(new java.awt.Dimension(40, 40));
+        jPanel1.add(lblGloboCrucero, new org.netbeans.lib.awtextra.AbsoluteConstraints(53, 356, 40, 40));
+
+        lblGloboPortaAviones.setText("jLabel3");
+        lblGloboPortaAviones.setMaximumSize(new java.awt.Dimension(40, 40));
+        lblGloboPortaAviones.setPreferredSize(new java.awt.Dimension(40, 40));
+        jPanel1.add(lblGloboPortaAviones, new org.netbeans.lib.awtextra.AbsoluteConstraints(55, 454, 40, 40));
+
         lblFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/partidaSinTablero.png"))); // NOI18N
         jPanel1.add(lblFondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1280, -1));
 
@@ -294,17 +388,13 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        //        framePrincipal.cambiarPanel(new ColocacionPanel(framePrincipal, jugador));
+    }//GEN-LAST:event_jButton4ActionPerformed
+
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         framePrincipal.cambiarPanel(new GanarPanel(framePrincipal));
     }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        framePrincipal.cambiarPanel(new PerderPanel(framePrincipal));
-    }//GEN-LAST:event_jButton3ActionPerformed
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-//        framePrincipal.cambiarPanel(new ColocacionPanel(framePrincipal, jugador));
-    }//GEN-LAST:event_jButton4ActionPerformed
 
 
     public FramePrincipal getFramePrincipal() {
@@ -313,16 +403,31 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lblBarcoAveriado;
+    private javax.swing.JLabel lblBarcoHundido;
+    private javax.swing.JLabel lblBarcoIntacto;
+    private javax.swing.JLabel lblCruceroAveriado;
+    private javax.swing.JLabel lblCruceroHundido;
+    private javax.swing.JLabel lblCruceroIntacto;
     private javax.swing.JLabel lblEsperandoMovimiento;
     private javax.swing.JLabel lblFondo;
+    private javax.swing.JLabel lblGloboBarco;
+    private javax.swing.JLabel lblGloboCrucero;
+    private javax.swing.JLabel lblGloboPortaAviones;
+    private javax.swing.JLabel lblGloboSubmarino;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblNombreEnemigo;
+    private javax.swing.JLabel lblPortaAvionesAveriado;
+    private javax.swing.JLabel lblPortaAvionesHundido;
+    private javax.swing.JLabel lblPortaAvionesIntacto;
+    private javax.swing.JLabel lblSubmarinoAveriado;
+    private javax.swing.JLabel lblSubmarinoHundido;
+    private javax.swing.JLabel lblSubmarinoIntacto;
     private javax.swing.JLabel lblTiempoRestante;
     private javax.swing.JLabel panelBorde;
     private javax.swing.JLabel panelBorde1;
