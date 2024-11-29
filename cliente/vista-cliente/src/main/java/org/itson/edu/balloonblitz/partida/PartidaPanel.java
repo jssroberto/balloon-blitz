@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+
 import org.itson.edu.balloonblitz.auxiliar.GridDragDropHandler;
 import org.itson.edu.balloonblitz.auxiliar.TableroClickHandler;
 import org.itson.edu.balloonblitz.auxiliar.TableroRenderer;
@@ -30,11 +31,10 @@ import org.itson.edu.balloonblitz.vista.GanarPanel;
 import org.itson.edu.balloonblitz.vista.PerderPanel;
 
 /**
- *
  * @author user
  */
 public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida {
-    
+
     private Jugador jugador;
     private Jugador jugadorRival;
     private Tablero tablero;
@@ -61,7 +61,7 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
         jugador = framePrincipal.getJugador();
         tablero = gridDragDropHandler.obtenerTablero();
     }
-    
+
     @Override
     public void update(UpdateEventPartida event) {
         if (null != event.eventType()) {
@@ -69,15 +69,15 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
                 case ENVIAR_JUGADOR:
                     jugadorRival = event.model().getJugadorRival();
                     lblNombreEnemigo.setText(jugadorRival.getNombre());
-                    
+
                     try {
                         setupUI();
                     } catch (FontFormatException | IOException ex) {
                         Logger.getLogger(PartidaPanel.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    
+
                     break;
-                
+
                 case ACTUALIZAR_LABEL_TIEMPO, TIEMPO_TERMINADO:
                     lblTiempoRestante.setText(event.model().getTexto());
                     break;
@@ -99,44 +99,48 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
                     lblEsperandoMovimiento.setText("Esperando movimiento...");
                     tableroRival.setEnabled(false);
                     break;
+                case ACTUALIZAR_ULTIMO_DISPARO:
+                    Casilla casilla = event.model().getUltimoDisparo();
+
+                    break;
                 default: {
                 }
             }
         }
-        
+
     }
-    
+
     @Override
     public void enviarEvento(Evento event) {
         actionHandler.enviarEvento((DisparoEvento) event);
     }
-    
+
     public ActionHandlerPartida getActionHandler() {
         return actionHandler;
     }
-    
+
     public void setActionHandler(ActionHandlerPartida actionHandler) {
         this.actionHandler = actionHandler;
     }
-    
+
     private void setupUI() throws FontFormatException, IOException {
         setupFonts();
         renderizarTableroJugador();
-        
+
     }
-    
+
     private void renderizarTableroJugador() {
         TableroRenderer.renderizarTablero(tableroJugador, tablero, jugador);
     }
-    
+
     private void cargarTableroPropio(JLabel tableroLabel, Tablero tablero) {
         TableroRenderer.renderizarTablero(tableroLabel, tablero, jugador);
     }
-    
+
     private void cargarTableroRival(JLabel tableroLabel, Tablero tablero) {
         TableroRenderer.cargarTableroRival(tableroLabel, tablero, String.valueOf(jugador.getColorRival()).toLowerCase());
     }
-    
+
     private void setupFonts() throws FontFormatException, IOException {
         Font titleFont = framePrincipal.cargarFuente(FONT_PATH, TITLE_FONT_SIZE);
         lblBarcoIntacto.setFont(titleFont);
@@ -155,11 +159,11 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
         lblEsperandoMovimiento.setFont(titleFont);
         lblNombre.setFont(titleFont);
         lblNombreEnemigo.setFont(titleFont);
-        
+
         addTextBorder(lblEsperandoMovimiento);
         addTextBorder(lblNombre);
         addTextBorder(lblNombreEnemigo);
-        
+
         lblNombre.setText(jugador.getNombre());
         pfpJugador.setIcon(new ImageIcon(getClass().getResource(jugador.getFotoPerfil())));
         gridDragDropHandler.colorGlobos(String.valueOf(jugador.getColorPropio()));
@@ -167,13 +171,13 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
         lblGloboSubmarino.setIcon(gridDragDropHandler.cargarIcono("submarino"));
         lblGloboCrucero.setIcon(gridDragDropHandler.cargarIcono("crucero"));
         lblGloboPortaAviones.setIcon(gridDragDropHandler.cargarIcono("portaAviones"));
-        
+
         pfpJugador.setIcon(new ImageIcon(getClass().getResource(jugador.getFotoPerfil())));
-        
+
         pfpRival.setIcon(new ImageIcon(getClass().getResource(jugadorRival.getFotoPerfil())));
-        
+
     }
-    
+
     private void addTextBorder(JLabel label) {
         label.setForeground(Color.WHITE);
         label.setUI(new javax.swing.plaf.basic.BasicLabelUI() {
@@ -182,7 +186,7 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
                 Graphics2D g2d = (Graphics2D) g.create();
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                         RenderingHints.VALUE_ANTIALIAS_ON);
-                
+
                 String text = label.getText();
                 FontMetrics metrics = g2d.getFontMetrics(label.getFont());
                 int x = (label.getWidth() - metrics.stringWidth(text)) / 2;
@@ -379,12 +383,12 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -395,6 +399,39 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         framePrincipal.cambiarPanel(new GanarPanel(framePrincipal));
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void actualizarLabelsNaves(Casilla casilla) {
+        if (casilla.getNave().isEmpty()) {
+            return;
+        }
+
+        switch (casilla.getNave().get().getTipoNave()) {
+            case BARCO:
+                actualizarTextoLabelsNaves(casilla, lblBarcoIntacto, lblBarcoAveriado, lblBarcoHundido);
+                break;
+            case SUBMARINO:
+                actualizarTextoLabelsNaves(casilla, lblSubmarinoIntacto, lblSubmarinoAveriado, lblSubmarinoHundido);
+                break;
+            case CRUCERO:
+                actualizarTextoLabelsNaves(casilla, lblCruceroIntacto, lblCruceroAveriado, lblCruceroHundido);
+                break;
+            case PORTAAVIONES:
+                actualizarTextoLabelsNaves(casilla, lblPortaAvionesIntacto, lblPortaAvionesAveriado, lblPortaAvionesHundido);
+        }
+    }
+
+    private void actualizarTextoLabelsNaves(Casilla casilla, JLabel lblBarcoIntacto, JLabel lblBarcoAveriado, JLabel lblBarcoHundido) {
+        switch (casilla.getNave().get().getEstadoNave()) {
+            case AVERIADA:
+                lblBarcoIntacto.setText(String.valueOf(Integer.parseInt(lblBarcoAveriado.getText()) - 1));
+                lblBarcoAveriado.setText(String.valueOf(Integer.parseInt(lblBarcoAveriado.getText()) + 1));
+                break;
+            case HUNDIDA:
+                lblBarcoAveriado.setText(String.valueOf(Integer.parseInt(lblBarcoAveriado.getText()) - 1));
+                lblBarcoHundido.setText(String.valueOf(Integer.parseInt(lblBarcoHundido.getText()) + 1));
+                break;
+        }
+    }
 
 
     public FramePrincipal getFramePrincipal() {

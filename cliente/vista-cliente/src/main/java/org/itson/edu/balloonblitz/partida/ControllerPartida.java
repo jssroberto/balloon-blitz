@@ -4,7 +4,9 @@
  */
 package org.itson.edu.balloonblitz.partida;
 
+import org.itson.edu.balloonblitz.entidades.Casilla;
 import org.itson.edu.balloonblitz.entidades.Jugador;
+import org.itson.edu.balloonblitz.entidades.Nave;
 import org.itson.edu.balloonblitz.entidades.Tablero;
 import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoCasilla;
 import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoNave;
@@ -14,14 +16,19 @@ import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.entidades.eventos.ResultadoDisparoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.ResultadoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
+import org.itson.edu.balloonblitz.entidades.navefactory.Barco;
+import org.itson.edu.balloonblitz.entidades.navefactory.Crucero;
+import org.itson.edu.balloonblitz.entidades.navefactory.PortaAviones;
+import org.itson.edu.balloonblitz.entidades.navefactory.Submarino;
 import org.itson.edu.balloonblitz.modelo.ConexionCliente;
 import org.itson.edu.balloonblitz.modelo.ObservadorDisparo;
 import org.itson.edu.balloonblitz.modelo.ObservadorJugador;
 import org.itson.edu.balloonblitz.modelo.ObservadorResultado;
 import org.itson.edu.balloonblitz.modelo.ObservadorTiempo;
 
+import java.util.List;
+
 /**
- *
  * @author elimo
  */
 public class ControllerPartida implements ActionHandlerPartida, ObservadorDisparo, ObservadorJugador, ObservadorTiempo, ObservadorResultado {
@@ -47,6 +54,8 @@ public class ControllerPartida implements ActionHandlerPartida, ObservadorDispar
         if (evento.getEmisor().equals(model.getJugadorRival())) {
             model.setTablero(evento.getTablero());
             view.getFramePrincipal().getJugador().setNaves(evento.getNaves());
+//            Casilla casilla = model.getTablero().getCasilla(evento.getCoordenada());
+//            model.setUltimoDisparo(casilla);
         } else {
             model.setTableroDeRival(evento.getTablero());
             model.getJugadorRival().setNaves(evento.getNaves());
@@ -77,14 +86,13 @@ public class ControllerPartida implements ActionHandlerPartida, ObservadorDispar
         model.obtenerTurno(evento);
     }
 
-
     private void reproducirSonidoDisparo(ResultadoDisparoEvento evento) {
-        if (evento.getTablero().getCasilla(evento.getCoordenada()).getNave().isEmpty()){
+        if (evento.getTablero().getCasilla(evento.getCoordenada()).getNave().isEmpty()) {
             model.getPlayerQuack().playOnce();
-        } else{
-            if (evento.getTablero().getCasilla(evento.getCoordenada()).getNave().get().getEstadoNave() == EstadoNave.AVERIADA){
+        } else {
+            if (evento.getTablero().getCasilla(evento.getCoordenada()).getNave().get().getEstadoNave() == EstadoNave.AVERIADA) {
                 model.getPlayerPop().playOnce();
-            } else{
+            } else {
                 model.getPlayerExplosion().playOnce();
             }
         }

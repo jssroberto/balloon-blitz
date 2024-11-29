@@ -12,10 +12,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.itson.edu.balloonblitz.entidades.Coordenada;
-import org.itson.edu.balloonblitz.entidades.Disparo;
-import org.itson.edu.balloonblitz.entidades.Jugador;
-import org.itson.edu.balloonblitz.entidades.Tablero;
+import org.itson.edu.balloonblitz.entidades.*;
 import org.itson.edu.balloonblitz.entidades.eventos.ResultadoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
 import org.itson.edu.balloonblitz.vista.music.MusicPlayer;
@@ -35,6 +32,7 @@ public class ModelPartida {
     private ScheduledExecutorService temporizadorActual;
     // Señal para detener el temporizador
     private final AtomicBoolean detener = new AtomicBoolean(false);
+    private Casilla ultimoDisparo;
     private MusicPlayer playerPop;
     private MusicPlayer playerQuack;
     private MusicPlayer playerExplosion;
@@ -174,5 +172,14 @@ public class ModelPartida {
 
     public void setPlayerExplosion(MusicPlayer playerExplosion) {
         this.playerExplosion = playerExplosion;
+    }
+
+    public Casilla getUltimoDisparo() {
+        return ultimoDisparo;
+    }
+
+    public void setUltimoDisparo(Casilla ultimoDisparo) {
+        this.ultimoDisparo = ultimoDisparo;
+        notifyObservers(new UpdateEventPartida(this, EventTypePartida.ACTUALIZAR_ULTIMO_DISPARO));
     }
 }

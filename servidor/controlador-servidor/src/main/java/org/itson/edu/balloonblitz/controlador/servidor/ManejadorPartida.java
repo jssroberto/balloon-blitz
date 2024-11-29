@@ -1,8 +1,10 @@
 package org.itson.edu.balloonblitz.controlador.servidor;
 
 import org.itson.edu.balloonblitz.entidades.Jugador;
+import org.itson.edu.balloonblitz.entidades.Nave;
 import org.itson.edu.balloonblitz.entidades.Partida;
 import org.itson.edu.balloonblitz.entidades.Tablero;
+import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoNave;
 import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoPartida;
 import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.*;
@@ -11,6 +13,7 @@ import org.itson.edu.balloonblitz.modelo.servidor.EventoObserver;
 import org.itson.edu.balloonblitz.modelo.servidor.Servidor;
 import org.tinylog.Logger;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -155,6 +158,7 @@ public class ManejadorPartida implements EventoObserver {
             ResultadoDisparoEvento resultado = manejadorDisparo.procesar();
             resultado.setEmisor(emisor);
             resultado.setCoordenada(((DisparoEvento) evento).getCoordenada());
+            verificarVictoria(jugadorRival);
             return resultado;
         } else if (tipoEvento == TipoEvento.RESULTADO) {
             contadorEnvio++;
@@ -314,5 +318,15 @@ public class ManejadorPartida implements EventoObserver {
             enviarEventoAJugador(streamsJugador1.getSalida(), new ResultadoEvento(true));
             enviarEventoAJugador(streamsJugador2.getSalida(), new ResultadoEvento(false));
         }
+    }
+
+    private boolean verificarVictoria(Jugador jugadorRival){
+        List<Nave> naves = jugadorRival.getNaves();
+        for (Nave nave: naves){
+            if (nave.getEstadoNave() == EstadoNave.COMPLETA || nave.getEstadoNave() == EstadoNave.AVERIADA){
+                return false;
+            }
+        }
+        return true;
     }
 }
