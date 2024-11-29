@@ -1,19 +1,33 @@
 package org.itson.edu.balloonblitz.auxiliar;
 
-import java.awt.*;
-import java.awt.datatransfer.*;
-import java.awt.dnd.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Image;
+import java.awt.KeyboardFocusManager;
+import java.awt.Point;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetAdapter;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.List;
-import java.util.ArrayList;
 
-import org.itson.edu.balloonblitz.entidades.*;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+
+import org.itson.edu.balloonblitz.entidades.Casilla;
+import org.itson.edu.balloonblitz.entidades.Nave;
+import org.itson.edu.balloonblitz.entidades.Tablero;
 import org.itson.edu.balloonblitz.entidades.navefactory.Barco;
 import org.itson.edu.balloonblitz.entidades.navefactory.Crucero;
 import org.itson.edu.balloonblitz.entidades.navefactory.PortaAviones;
@@ -495,6 +509,13 @@ public class GridDragDropHandler extends DropTargetAdapter {
 
         // Actualizar el panel para reflejar los cambios
         tableroPanel.repaint();
+        
+        // Esto resetea el contador de globos
+        BalloonTransferHandler.resetPlacedBalloons();
+        
+        // Y se tiene que habilidar la funcionalidad del preview de los labels
+        setupPreviewLabels();
+        new DropTarget(tableroPanel, DnDConstants.ACTION_COPY, this);
     }
 
 }

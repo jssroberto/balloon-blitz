@@ -5,6 +5,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -94,7 +95,7 @@ public class BalloonTransferHandler extends TransferHandler {
         if (!canPlaceMoreBalloons()) {
             // Deshabilitar visualmente el label cuando se alcanza el límite
             sourceLabel.setEnabled(false);
-            // Opcional: Agregar un texto indicando que se alcanzó el límite
+            // Agregar un texto indicando que se alcanzó el límite
             int limit = BALLOON_LIMITS.get(balloonType);
             sourceLabel.setToolTipText("Límite alcanzado (" + limit + "/" + limit + ")");
         } else {
@@ -105,9 +106,12 @@ public class BalloonTransferHandler extends TransferHandler {
         }
     }
 
-    // Método para resetear los contadores (útil para reiniciar el juego)
+    // Método para resetear los contadores
     public static void resetPlacedBalloons() {
         placedBalloons.clear();
+        for (java.awt.Window window : java.awt.Window.getWindows()) {
+            updateLabelsInContainer(window, null);
+        }
     }
 
     // Método para obtener el número de globos colocados de un tipo
@@ -124,20 +128,19 @@ public class BalloonTransferHandler extends TransferHandler {
         }
     }
 
-// Método auxiliar para buscar y actualizar los labels
+    // Método auxiliar para buscar y actualizar los labels
     private static void updateLabelsInContainer(java.awt.Container container, String type) {
         for (java.awt.Component comp : container.getComponents()) {
             if (comp instanceof JLabel label) {
                 TransferHandler handler = label.getTransferHandler();
-                if (handler instanceof BalloonTransferHandler balloonHandler
-                        && type.equals(balloonHandler.balloonType)) {
-                    // Deshabilitar el label si alcanzó el límite
-                    label.setEnabled(false);
-                    int limit = BALLOON_LIMITS.get(type);
-                    label.setToolTipText("Límite alcanzado (" + limit + "/" + limit + ")");
+                if (handler instanceof BalloonTransferHandler balloonHandler) {
+                    if (type == null || type.equals(balloonHandler.balloonType)) {
+                        label.setEnabled(true);
+                        label.setToolTipText(null);
+                    }
                 }
             }
-            // Buscar recursivamente en sub-contenedores
+            
             if (comp instanceof java.awt.Container) {
                 updateLabelsInContainer((java.awt.Container) comp, type);
             }

@@ -6,6 +6,7 @@ package org.itson.edu.balloonblitz.colocarNaves;
 
 import org.itson.edu.balloonblitz.auxiliar.BalloonTransferHandler;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.FontMetrics;
@@ -21,7 +22,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import org.itson.edu.balloonblitz.auxiliar.GridDragDropHandler;
 import org.itson.edu.balloonblitz.entidades.Tablero;
@@ -139,7 +139,8 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
     private void setupUI() throws FontFormatException, IOException {
         setupFonts();
         setupBalloons();
-        // Asegurarse de que los contadores estén en cero al iniciar
+        
+        // Reinicia los contadores estén en cero al iniciar
         BalloonTransferHandler.resetPlacedBalloons();
     }
 
@@ -175,15 +176,6 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
         addTextBorder(lblPortaAviones);
     }
 
-    public void reiniciarColocacion() {
-//        panelContenedorGlobos.removeAll();
-//        BalloonTransferHandler.resetPlacedBalloons();
-//        this.gridDragDropHandler = new GridDragDropHandler(panelTablero);
-//        setupBalloons();
-//        panelContenedorGlobos.revalidate();
-//        panelContenedorGlobos.repaint();
-    }
-
     private void actualizarLabelsContadores() {
         int barcosRestantes = BALLOON_LIMITS.get("barco") - BalloonTransferHandler.getPlacedBalloonCount("barco");
         int submarinosRestantes = BALLOON_LIMITS.get("submarino") - BalloonTransferHandler.getPlacedBalloonCount("submarino");
@@ -195,7 +187,7 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
         cantCrucero.setText("x" + crucerosRestantes);
         cantPortaAviones.setText("x" + portaAvionesRestantes);
 
-        // Opcional: cambiar el color si no quedan más
+        // Cambiar el color si no quedan más
         cantNave.setForeground(barcosRestantes > 0 ? Color.WHITE : Color.RED);
         cantBarco.setForeground(submarinosRestantes > 0 ? Color.WHITE : Color.RED);
         cantCrucero.setForeground(crucerosRestantes > 0 ? Color.WHITE : Color.RED);
@@ -315,17 +307,29 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
         balloon.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                // Iniciar el arrastre
+                // Inicia el arrastre
                 TransferHandler handler = balloon.getTransferHandler();
                 handler.exportAsDrag(balloon, evt, TransferHandler.COPY);
             }
 
             @Override
             public void mouseReleased(java.awt.event.MouseEvent evt) {
-                // Restaurar el cursor por defecto
+                // Restaura el cursor por defecto
                 balloon.setCursor(java.awt.Cursor.getDefaultCursor());
             }
         });
+    }
+
+    private void resetBalloonCounts() {
+        BalloonTransferHandler.resetPlacedBalloons();
+        actualizarLabelsContadores();
+        
+        for (Component component : panelContenedorGlobos.getComponents()) {
+            if (component instanceof JLabel label) {
+                label.setEnabled(true);
+                label.setToolTipText(null);
+            }
+        }
     }
 
     /**
@@ -456,6 +460,7 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
 
     private void btnReiniciarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnReiniciarMouseClicked
         gridDragDropHandler.limpiarTablero();
+        resetBalloonCounts();
     }//GEN-LAST:event_btnReiniciarMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
