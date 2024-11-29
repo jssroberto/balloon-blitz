@@ -54,8 +54,8 @@ public class ControllerPartida implements ActionHandlerPartida, ObservadorDispar
         if (evento.getEmisor().equals(model.getJugadorRival())) {
             model.setTablero(evento.getTablero());
             view.getFramePrincipal().getJugador().setNaves(evento.getNaves());
-//            Casilla casilla = model.getTablero().getCasilla(evento.getCoordenada());
-//            model.setUltimoDisparo(casilla);
+            Casilla casilla = model.getTablero().getCasilla(evento.getCoordenada());
+            model.setUltimoDisparo(casilla);
         } else {
             model.setTableroDeRival(evento.getTablero());
             model.getJugadorRival().setNaves(evento.getNaves());

@@ -25,6 +25,7 @@ import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.Tablero;
 import org.itson.edu.balloonblitz.FramePrincipal;
 import org.itson.edu.balloonblitz.entidades.Casilla;
+import org.itson.edu.balloonblitz.entidades.enumeradores.TipoNave;
 import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.vista.GanarPanel;
@@ -101,7 +102,7 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
                     break;
                 case ACTUALIZAR_ULTIMO_DISPARO:
                     Casilla casilla = event.model().getUltimoDisparo();
-
+                    actualizarLabelsNaves(casilla);
                     break;
                 default: {
                 }
@@ -404,7 +405,6 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
         if (casilla.getNave().isEmpty()) {
             return;
         }
-
         switch (casilla.getNave().get().getTipoNave()) {
             case BARCO:
                 actualizarTextoLabelsNaves(casilla, lblBarcoIntacto, lblBarcoAveriado, lblBarcoHundido);
@@ -420,15 +420,19 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
         }
     }
 
-    private void actualizarTextoLabelsNaves(Casilla casilla, JLabel lblBarcoIntacto, JLabel lblBarcoAveriado, JLabel lblBarcoHundido) {
+    private void actualizarTextoLabelsNaves(Casilla casilla, JLabel lblNaveIntacta, JLabel lblNaveAveriada, JLabel lblNaveHundida) {
         switch (casilla.getNave().get().getEstadoNave()) {
             case AVERIADA:
-                lblBarcoIntacto.setText(String.valueOf(Integer.parseInt(lblBarcoAveriado.getText()) - 1));
-                lblBarcoAveriado.setText(String.valueOf(Integer.parseInt(lblBarcoAveriado.getText()) + 1));
+                lblNaveIntacta.setText(String.valueOf(Integer.parseInt(lblNaveIntacta.getText()) - 1));
+                lblNaveAveriada.setText(String.valueOf(Integer.parseInt(lblNaveAveriada.getText()) + 1));
                 break;
             case HUNDIDA:
-                lblBarcoAveriado.setText(String.valueOf(Integer.parseInt(lblBarcoAveriado.getText()) - 1));
-                lblBarcoHundido.setText(String.valueOf(Integer.parseInt(lblBarcoHundido.getText()) + 1));
+                if (casilla.getNave().get().getTipoNave() == TipoNave.BARCO){
+                    lblNaveIntacta.setText(String.valueOf(Integer.parseInt(lblNaveIntacta.getText()) - 1));
+                }else{
+                lblNaveAveriada.setText(String.valueOf(Integer.parseInt(lblNaveAveriada.getText()) - 1));
+                }
+                lblNaveHundida.setText(String.valueOf(Integer.parseInt(lblNaveHundida.getText()) + 1));
                 break;
         }
     }
