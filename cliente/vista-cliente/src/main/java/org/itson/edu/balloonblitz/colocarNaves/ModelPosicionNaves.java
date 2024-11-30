@@ -25,6 +25,7 @@ public class ModelPosicionNaves {
     private ScheduledExecutorService temporizadorActual; // Referencia al temporizador actual.
     private final AtomicBoolean detener = new AtomicBoolean(false); // Señal para detener el temporizador.
     int tiempoRestante;
+    boolean entrarPartida;
 
     public ModelPosicionNaves() {
     }
@@ -70,7 +71,9 @@ public class ModelPosicionNaves {
             }, 0, 1, TimeUnit.SECONDS);
         } else if (evento.getTiempoRestante() == 0) {
             setTexto("Tiempo expirado");
+            if(isEntrarPartida()==false){
             notifyObservers(new UpdateEventPosicionNaves(this, EventTypePosicionNaves.TERMINAR_TIEMPO));
+            }
         }
     }
 
@@ -91,6 +94,15 @@ public class ModelPosicionNaves {
 
     public void setTexto(String texto) {
         this.texto = texto;
+    }
+
+    public boolean isEntrarPartida() {
+        return entrarPartida;
+    }
+
+    public void setEntrarPartida(boolean entrarPartida) {
+        this.entrarPartida = entrarPartida;
+        notifyObservers(new UpdateEventPosicionNaves(this, EventTypePosicionNaves.ENTRAR_PARTIDA));
     }
 
 }

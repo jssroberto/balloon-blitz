@@ -172,10 +172,12 @@ public class FramePrincipal extends javax.swing.JFrame {
     }
 
     public void cambiarPanelPosicionarNaves() {
+        eliminarObservadores();
         ModelPosicionNaves model = new ModelPosicionNaves();
         ColocacionPanel view = new ColocacionPanel(this);
         ControllerPosicionNaves controlador = new ControllerPosicionNaves(view, model);
         ConexionCliente.getInstancia().setObservadorTiempo(controlador);
+        ConexionCliente.getInstancia().setObservadorResultado(controlador);
         ConexionCliente.getInstancia().setObservadorJugador(controlador);
         controlador.confirmarUnion();
         cambiarPanel(view);

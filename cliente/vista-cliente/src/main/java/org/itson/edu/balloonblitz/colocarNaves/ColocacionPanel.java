@@ -36,7 +36,7 @@ import org.itson.edu.balloonblitz.vista.InicioPanel;
  * @author user
  */
 public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosicionNaves {
-
+    
     private static final Logger LOGGER = Logger.getLogger(InicioPanel.class.getName());
     private static final String FONT_PATH = "/fonts/oetztype/OETZTYPE.TTF";
     private static final float TITLE_FONT_SIZE = 28.0F;
@@ -57,7 +57,7 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
      */
     public ColocacionPanel(FramePrincipal framePrincipal) {
         initComponents();
-
+        
         this.framePrincipal = framePrincipal;
         this.gridDragDropHandler = new GridDragDropHandler(panelTablero);
         this.balloon_base_path = "/images/ballons/" + framePrincipal.getJugador().getColorPropio() + "/" + framePrincipal.getJugador().getColorPropio() + "-";
@@ -67,14 +67,14 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
         cantBarco = new JLabel("x3");
         cantCrucero = new JLabel("x2");
         cantPortaAviones = new JLabel("x2");
-
+        
         try {
             setupUI();
         } catch (FontFormatException | IOException e) {
             LOGGER.log(Level.SEVERE, "Error initializing UI: ", e);
         }
     }
-
+    
     @Override
     public void actualizarInterfaz(UpdateEventPosicionNaves event) {
         if (null != event.eventType()) {
@@ -82,13 +82,15 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
                 case ACTUALIZAR_LABEL:
                     lblTiempoRestante.setText(event.model().getTexto());
                     break;
-                case CONFIRMAR_UNION_PARTIDA:
-                    actionHandler.confirmarUnion();
+                case ENTRAR_PARTIDA:
+                    if (event.model().isEntrarPartida()) {
+                        framePrincipal.cambiarPanelPartida(gridDragDropHandler);
+                    }
                     break;
                 case OBTENER_JUGADOR:
                     jugador = event.model().getJugador();
                     break;
-
+                
                 case TERMINAR_TIEMPO:
                     lblTiempoRestante.setText(event.model().getTexto());
                     gridDragDropHandler.colorGlobos(String.valueOf(framePrincipal.getJugador().getColorPropio()));
@@ -99,89 +101,88 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
                     gridDragDropHandler.posicionarGlobosPorDefecto(); // Asegúrate de que este método funciona correctamente
                     framePrincipal.getJugador().setTableroPropio(gridDragDropHandler.obtenerTablero());
                     framePrincipal.eliminarObservadores();
-                {
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(ColocacionPanel.class.getName()).log(Level.SEVERE, null, ex);
+                     {
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(ColocacionPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
-                }
                     framePrincipal.cambiarPanelPartida(gridDragDropHandler);
                     enviarTablero(gridDragDropHandler.obtenerTablero());
                     break;
-
-
+                
                 default:
             }
         }
     }
-
+    
     @Override
     public void enviarTablero(Tablero tablero) {
         actionHandler.enviarPosicionNaves(tablero);
     }
-
+    
     public ActionHandlerColocarNaves getActionHandler() {
         return actionHandler;
     }
-
+    
     public void setActionHandler(ActionHandlerColocarNaves actionHandler) {
         this.actionHandler = actionHandler;
     }
-
+    
     private static final Map<String, Integer> BALLOON_LIMITS = Map.of(
             "barco", 3, // 3 barcos de 1 casilla
             "submarino", 4, // 3 submarinos de 2 casillas
             "crucero", 2, // 2 cruceros de 3 casillas
             "portaAviones", 2 // 2 portaaviones de 4 casillas
     );
-
+    
     private void setupUI() throws FontFormatException, IOException {
         setupFonts();
         setupBalloons();
-        
+
         // Reinicia los contadores estén en cero al iniciar
         BalloonTransferHandler.resetPlacedBalloons();
     }
-
+    
     private void setupFonts() throws FontFormatException, IOException {
         Font titleFont = framePrincipal.cargarFuente(FONT_PATH, TITLE_FONT_SIZE);
         Font textFont = framePrincipal.cargarFuente(FONT_PATH, TEXT_FONT_SIZE);
-
+        
         lblTiempoRestante.setFont(titleFont);
         lblTitulo1.setFont(titleFont);
         lblTitulo2.setFont(titleFont);
-
+        
         cantNave.setFont(textFont);
         cantBarco.setFont(textFont);
         cantCrucero.setFont(textFont);
         cantPortaAviones.setFont(textFont);
-
+        
         lblNaves.setFont(textFont);
         lblBarcos.setFont(textFont);
         lblCruceros.setFont(textFont);
         lblPortaAviones.setFont(textFont);
-
+        
         addTextBorder(lblTitulo1);
         addTextBorder(lblTitulo2);
-
+        
         addTextBorder(cantNave);
         addTextBorder(cantBarco);
         addTextBorder(cantCrucero);
         addTextBorder(cantPortaAviones);
-
+        
         addTextBorder(lblNaves);
         addTextBorder(lblBarcos);
         addTextBorder(lblCruceros);
         addTextBorder(lblPortaAviones);
     }
-
+    
     private void actualizarLabelsContadores() {
         int barcosRestantes = BALLOON_LIMITS.get("barco") - BalloonTransferHandler.getPlacedBalloonCount("barco");
         int submarinosRestantes = BALLOON_LIMITS.get("submarino") - BalloonTransferHandler.getPlacedBalloonCount("submarino");
         int crucerosRestantes = BALLOON_LIMITS.get("crucero") - BalloonTransferHandler.getPlacedBalloonCount("crucero");
         int portaAvionesRestantes = BALLOON_LIMITS.get("portaAviones") - BalloonTransferHandler.getPlacedBalloonCount("portaAviones");
-
+        
         cantNave.setText("x" + barcosRestantes);
         cantBarco.setText("x" + submarinosRestantes);
         cantCrucero.setText("x" + crucerosRestantes);
@@ -204,10 +205,10 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
                     JOptionPane.WARNING_MESSAGE);
             return false;
         }
-
+        
         Tablero tablero = gridDragDropHandler.obtenerTablero();
         Evento eventoTablero = new PosicionNavesEvento(tablero);
-
+        
         return true;
     }
 
@@ -218,7 +219,7 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
                 && BalloonTransferHandler.getPlacedBalloonCount("crucero") == 2
                 && BalloonTransferHandler.getPlacedBalloonCount("portaAviones") == 2;
     }
-
+    
     private void addTextBorder(JLabel label) {
         label.setForeground(Color.WHITE);
         label.setUI(new javax.swing.plaf.basic.BasicLabelUI() {
@@ -227,7 +228,7 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
                 Graphics2D g2d = (Graphics2D) g.create();
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                         RenderingHints.VALUE_ANTIALIAS_ON);
-
+                
                 String text = label.getText();
                 FontMetrics metrics = g2d.getFontMetrics(label.getFont());
                 int x = (label.getWidth() - metrics.stringWidth(text)) / 2;
@@ -248,18 +249,18 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
             }
         });
     }
-
+    
     private void setupBalloons() {
         panelContenedorGlobos.setLayout(null);
 
         // Tipos de barco y sus labels correspondientes
         String[] balloonTypes = {"barco", "submarino", "crucero", "portaAviones"};
         JLabel[] countLabels = {cantNave, cantBarco, cantCrucero, cantPortaAviones};
-
+        
         int baseX = 200;
         int baseY = 25;
         int yOffset = 50;
-
+        
         for (int i = 0; i < balloonTypes.length; i++) {
             JLabel balloon = createBalloon(i + 1, balloonTypes[i]);
             JLabel countLabel = countLabels[i];
@@ -284,12 +285,12 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
                 }
             };
             balloon.setTransferHandler(handler);
-
+            
             addDragListener(balloon);
             panelContenedorGlobos.add(balloon);
             panelContenedorGlobos.add(countLabel);
         }
-
+        
         actualizarLabelsContadores();
         panelContenedorGlobos.repaint();
     }
@@ -302,7 +303,7 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
         balloon.setTransferHandler(new BalloonTransferHandler(balloon, type));
         return balloon;
     }
-
+    
     private void addDragListener(JLabel balloon) {
         balloon.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -311,7 +312,7 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
                 TransferHandler handler = balloon.getTransferHandler();
                 handler.exportAsDrag(balloon, evt, TransferHandler.COPY);
             }
-
+            
             @Override
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 // Restaura el cursor por defecto
@@ -319,7 +320,7 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
             }
         });
     }
-
+    
     private void resetBalloonCounts() {
         BalloonTransferHandler.resetPlacedBalloons();
         actualizarLabelsContadores();
@@ -451,10 +452,8 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
     private void btnConfirmarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConfirmarMouseClicked
         if (construirTablero()) {
             framePrincipal.getJugador().setTableroPropio(gridDragDropHandler.obtenerTablero());
-            framePrincipal.eliminarObservadores();
             enviarTablero(gridDragDropHandler.obtenerTablero());
-            framePrincipal.cambiarPanelPartida(gridDragDropHandler);
-
+            btnConfirmar.setEnabled(false);
         }
     }//GEN-LAST:event_btnConfirmarMouseClicked
 

@@ -144,7 +144,7 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
     }
 
     private void cargarTableroRival(JLabel tableroLabel, Tablero tablero) {
-        TableroRenderer.cargarTableroRival(tableroLabel, tablero, String.valueOf(jugador.getColorRival()).toLowerCase());
+        TableroRenderer.cargarTableroRival(tableroRival, tablero, String.valueOf(jugador.getColorRival()).toLowerCase());
     }
 
     private void setupFonts() throws FontFormatException, IOException {

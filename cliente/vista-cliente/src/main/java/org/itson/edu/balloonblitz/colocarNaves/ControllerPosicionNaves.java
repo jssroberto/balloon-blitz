@@ -14,9 +14,10 @@ import org.itson.edu.balloonblitz.entidades.eventos.ResultadoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
 import org.itson.edu.balloonblitz.modelo.ConexionCliente;
 import org.itson.edu.balloonblitz.modelo.ObservadorJugador;
+import org.itson.edu.balloonblitz.modelo.ObservadorResultado;
 import org.itson.edu.balloonblitz.modelo.ObservadorTiempo;
 
-public class ControllerPosicionNaves implements ObservadorTiempo, ObservadorJugador, ActionHandlerColocarNaves {
+public class ControllerPosicionNaves implements ObservadorTiempo, ObservadorJugador, ObservadorResultado,ActionHandlerColocarNaves {
 
     private ConexionCliente cliente;
     private int tiempoRestante;
@@ -70,5 +71,12 @@ public class ControllerPosicionNaves implements ObservadorTiempo, ObservadorJuga
     @Override
     public void confirmarUnion() {
         enviarEvento(new ResultadoEvento(true));
+    }
+
+    @Override
+    public void manejarEvento(ResultadoEvento evento) {
+        if(evento.isValid()){
+            model.setEntrarPartida(true);
+        }
     }
 }

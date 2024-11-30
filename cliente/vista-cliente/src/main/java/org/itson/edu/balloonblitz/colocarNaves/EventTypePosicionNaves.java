@@ -10,7 +10,7 @@ package org.itson.edu.balloonblitz.colocarNaves;
  */
 public enum EventTypePosicionNaves {
     ACTUALIZAR_LABEL,
-    CONFIRMAR_UNION_PARTIDA, 
     OBTENER_JUGADOR,
-    TERMINAR_TIEMPO;
+    TERMINAR_TIEMPO,
+    ENTRAR_PARTIDA;
 }
