@@ -77,6 +77,8 @@ public class ControllerPosicionNaves implements ObservadorTiempo, ObservadorJuga
     public void manejarEvento(ResultadoEvento evento) {
         if(evento.isValid()){
             model.setEntrarPartida(true);
+        }else{
+            model.setEsperandoJugador(true);
         }
     }
 }

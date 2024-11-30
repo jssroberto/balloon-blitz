@@ -26,6 +26,7 @@ public class ModelPosicionNaves {
     private final AtomicBoolean detener = new AtomicBoolean(false); // Señal para detener el temporizador.
     int tiempoRestante;
     boolean entrarPartida;
+    boolean esperandoJugador;
 
     public ModelPosicionNaves() {
     }
@@ -50,29 +51,54 @@ public class ModelPosicionNaves {
     }
 
     public void correrTiempo(TimeOutEvento evento) {
-        detenerTemporizadorActivo(); // Limpia cualquier temporizador previo.
-        tiempoRestante = evento.getTiempoRestante();
+        if (!isEntrarPartida() && !esperandoJugador) {
+            tiempoRestante = evento.getTiempoRestante();
+            detenerTemporizadorActivo(); // Limpia cualquier temporizador previo.
 
-        if (tiempoRestante > 0) {
-            temporizadorActual = Executors.newSingleThreadScheduledExecutor();
-            detener.set(false); // Reinicia la señal de detención.
+            if (tiempoRestante > 0) {
+                temporizadorActual = Executors.newSingleThreadScheduledExecutor();
+                detener.set(false); // Reinicia la señal de detención.
 
-            temporizadorActual.scheduleAtFixedRate(() -> {
-                if (detener.get()) {
-                    temporizadorActual.shutdown(); // Detenemos el temporizador si se activa la señal.
-                    return;
-                }
+                temporizadorActual.scheduleAtFixedRate(() -> {
+                    if (detener.get()) {
+                        temporizadorActual.shutdown(); // Detenemos el temporizador si se activa la señal.
+                        return;
+                    }
 
-                if (tiempoRestante > 0) {
-                    setTexto(String.valueOf(tiempoRestante));
-                    notifyObservers(new UpdateEventPosicionNaves(this, EventTypePosicionNaves.ACTUALIZAR_LABEL));
-                    tiempoRestante--;
-                }
-            }, 0, 1, TimeUnit.SECONDS);
-        } else if (evento.getTiempoRestante() == 0) {
+                    if (tiempoRestante > 0) {
+                        setTexto(String.valueOf(tiempoRestante));
+                        notifyObservers(new UpdateEventPosicionNaves(this, EventTypePosicionNaves.ACTUALIZAR_LABEL));
+                        tiempoRestante--;
+                    }
+                }, 0, 1, TimeUnit.SECONDS);
+            }
+        } else if (esperandoJugador) {
+            detenerTemporizadorActivo();
+
+            if (tiempoRestante > 0) {
+                temporizadorActual = Executors.newSingleThreadScheduledExecutor();
+                detener.set(false); // Reinicia la señal de detención.
+
+                temporizadorActual.scheduleAtFixedRate(() -> {
+                    if (detener.get()) {
+                        temporizadorActual.shutdown(); // Detenemos el temporizador si se activa la señal.
+                        return;
+                    }
+
+                    if (tiempoRestante > 0) {
+                        setTexto("Esperando jugador, tiempo restante: " + String.valueOf(tiempoRestante));
+                        notifyObservers(new UpdateEventPosicionNaves(this, EventTypePosicionNaves.ACTUALIZAR_LABEL));
+                        tiempoRestante--;
+                    }
+                }, 0, 1, TimeUnit.SECONDS);
+            }
+
+        }
+
+        if (evento.getTiempoRestante() == 0) {
             setTexto("Tiempo expirado");
-            if(isEntrarPartida()==false){
-            notifyObservers(new UpdateEventPosicionNaves(this, EventTypePosicionNaves.TERMINAR_TIEMPO));
+            if (isEntrarPartida() == false) {
+                notifyObservers(new UpdateEventPosicionNaves(this, EventTypePosicionNaves.TERMINAR_TIEMPO));
             }
         }
     }
@@ -103,6 +129,14 @@ public class ModelPosicionNaves {
     public void setEntrarPartida(boolean entrarPartida) {
         this.entrarPartida = entrarPartida;
         notifyObservers(new UpdateEventPosicionNaves(this, EventTypePosicionNaves.ENTRAR_PARTIDA));
+    }
+
+    public boolean isEsperandoJugador() {
+        return esperandoJugador;
+    }
+
+    public void setEsperandoJugador(boolean esperandoJugador) {
+        this.esperandoJugador = esperandoJugador;
     }
 
 }

@@ -348,7 +348,6 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
         cantBarco = new javax.swing.JLabel();
         cantCrucero = new javax.swing.JLabel();
         cantPortaAviones = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
         lblTitulo2 = new javax.swing.JLabel();
         panelTablero = new javax.swing.JLabel();
         btnConfirmar = new javax.swing.JLabel();
@@ -372,14 +371,6 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
         jPanel1.add(cantBarco, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 220, -1, 40));
         jPanel1.add(cantCrucero, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 270, 50, 40));
         jPanel1.add(cantPortaAviones, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 320, 70, 40));
-
-        jButton1.setText("regresar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1170, 630, -1, -1));
 
         lblTitulo2.setText("derecho para rotarlas.");
         jPanel1.add(lblTitulo2, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 50, -1, 40));
@@ -416,7 +407,7 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
         jPanel1.add(lblPortaAviones, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 320, 160, 40));
 
         lblTiempoRestante.setText("Hora");
-        jPanel1.add(lblTiempoRestante, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 620, 170, 40));
+        jPanel1.add(lblTiempoRestante, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 620, 450, 40));
 
         lblNaves.setText("Naves");
         jPanel1.add(lblNaves, new org.netbeans.lib.awtextra.AbsoluteConstraints(262, 170, 80, 40));
@@ -445,15 +436,13 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-//        framePrincipal.cambiarPanel(new EsperandoJugador(framePrincipal, jugador));
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     private void btnConfirmarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConfirmarMouseClicked
         if (construirTablero()) {
             framePrincipal.getJugador().setTableroPropio(gridDragDropHandler.obtenerTablero());
             enviarTablero(gridDragDropHandler.obtenerTablero());
+            btnConfirmar.setText("CONFIRMADO");
             btnConfirmar.setEnabled(false);
+            btnReiniciar.setEnabled(false);
         }
     }//GEN-LAST:event_btnConfirmarMouseClicked
 
@@ -469,7 +458,6 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
     private javax.swing.JLabel cantCrucero;
     private javax.swing.JLabel cantNave;
     private javax.swing.JLabel cantPortaAviones;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblBarcos;
