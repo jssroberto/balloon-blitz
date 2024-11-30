@@ -28,11 +28,11 @@ import org.itson.edu.balloonblitz.entidades.Nave;
 import org.itson.edu.balloonblitz.entidades.Tablero;
 import org.itson.edu.balloonblitz.FramePrincipal;
 import org.itson.edu.balloonblitz.entidades.Casilla;
+import org.itson.edu.balloonblitz.entidades.Coordenada;
 import org.itson.edu.balloonblitz.entidades.enumeradores.TipoNave;
 import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.vista.GanarPanel;
-import org.itson.edu.balloonblitz.vista.PerderPanel;
 
 /**
  * @author user
@@ -84,7 +84,7 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
 
                     break;
 
-                case ACTUALIZAR_LABEL_TIEMPO, TIEMPO_TERMINADO:
+                case ACTUALIZAR_LABEL_TIEMPO:
                     lblTiempoRestante.setText(event.model().getTexto());
                     break;
                 case ACTUALIZAR_TABLERO_PROPIO:
@@ -109,6 +109,12 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
                     Casilla casilla = event.model().getUltimoDisparo();
                     actualizarLabelsNaves(casilla);
                     break;
+                case TIEMPO_TERMINADO: {
+                    Coordenada coordenada = new Coordenada(-1, -1);
+                    DisparoEvento evento = new DisparoEvento(coordenada);
+                    enviarEvento(evento);
+                }
+
                 default: {
                 }
             }
