@@ -255,7 +255,6 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
         lblGloboCrucero = new javax.swing.JLabel();
         lblGloboPortaAviones = new javax.swing.JLabel();
         lblFondo = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/clock.png"))); // NOI18N
 
@@ -313,52 +312,64 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
         jPanel1.add(lblTiempoRestante, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 630, 70, 40));
 
         lblSubmarinoHundido.setForeground(new java.awt.Color(255, 0, 0));
+        lblSubmarinoHundido.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblSubmarinoHundido.setText("0");
-        jPanel1.add(lblSubmarinoHundido, new org.netbeans.lib.awtextra.AbsoluteConstraints(93, 303, 24, 38));
+        jPanel1.add(lblSubmarinoHundido, new org.netbeans.lib.awtextra.AbsoluteConstraints(92, 303, 24, 38));
 
         lblCruceroIntacto.setForeground(new java.awt.Color(102, 255, 51));
+        lblCruceroIntacto.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblCruceroIntacto.setText("2");
-        jPanel1.add(lblCruceroIntacto, new org.netbeans.lib.awtextra.AbsoluteConstraints(34, 401, 24, 38));
+        jPanel1.add(lblCruceroIntacto, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 401, 24, 38));
 
         lblSubmarinoAveriado.setForeground(new java.awt.Color(255, 255, 51));
+        lblSubmarinoAveriado.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblSubmarinoAveriado.setText("0");
-        jPanel1.add(lblSubmarinoAveriado, new org.netbeans.lib.awtextra.AbsoluteConstraints(65, 303, 24, 38));
+        jPanel1.add(lblSubmarinoAveriado, new org.netbeans.lib.awtextra.AbsoluteConstraints(62, 303, 24, 38));
 
         lblCruceroHundido.setForeground(new java.awt.Color(255, 0, 0));
+        lblCruceroHundido.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblCruceroHundido.setText("0");
         jPanel1.add(lblCruceroHundido, new org.netbeans.lib.awtextra.AbsoluteConstraints(92, 401, 24, 38));
 
         lblSubmarinoIntacto.setForeground(new java.awt.Color(102, 255, 51));
+        lblSubmarinoIntacto.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblSubmarinoIntacto.setText("4");
-        jPanel1.add(lblSubmarinoIntacto, new org.netbeans.lib.awtextra.AbsoluteConstraints(34, 301, 24, 38));
+        jPanel1.add(lblSubmarinoIntacto, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 303, 24, 38));
 
         lblCruceroAveriado.setForeground(new java.awt.Color(255, 255, 51));
+        lblCruceroAveriado.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblCruceroAveriado.setText("0");
-        jPanel1.add(lblCruceroAveriado, new org.netbeans.lib.awtextra.AbsoluteConstraints(64, 401, 24, 38));
+        jPanel1.add(lblCruceroAveriado, new org.netbeans.lib.awtextra.AbsoluteConstraints(62, 401, 24, 38));
 
         lblBarcoIntacto.setForeground(new java.awt.Color(102, 255, 51));
+        lblBarcoIntacto.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblBarcoIntacto.setText("3");
-        jPanel1.add(lblBarcoIntacto, new org.netbeans.lib.awtextra.AbsoluteConstraints(35, 205, 24, 38));
+        jPanel1.add(lblBarcoIntacto, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 205, 24, 38));
 
         lblBarcoAveriado.setForeground(new java.awt.Color(255, 255, 51));
+        lblBarcoAveriado.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblBarcoAveriado.setText("0");
-        jPanel1.add(lblBarcoAveriado, new org.netbeans.lib.awtextra.AbsoluteConstraints(65, 205, 24, 38));
+        jPanel1.add(lblBarcoAveriado, new org.netbeans.lib.awtextra.AbsoluteConstraints(62, 205, 24, 38));
 
         lblBarcoHundido.setForeground(new java.awt.Color(255, 0, 0));
+        lblBarcoHundido.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblBarcoHundido.setText("0");
-        jPanel1.add(lblBarcoHundido, new org.netbeans.lib.awtextra.AbsoluteConstraints(93, 205, 24, 38));
+        jPanel1.add(lblBarcoHundido, new org.netbeans.lib.awtextra.AbsoluteConstraints(92, 205, 24, 38));
 
         lblPortaAvionesIntacto.setForeground(new java.awt.Color(102, 255, 51));
+        lblPortaAvionesIntacto.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblPortaAvionesIntacto.setText("2");
-        jPanel1.add(lblPortaAvionesIntacto, new org.netbeans.lib.awtextra.AbsoluteConstraints(34, 499, 24, 38));
+        jPanel1.add(lblPortaAvionesIntacto, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 499, 24, 38));
 
         lblPortaAvionesAveriado.setForeground(new java.awt.Color(255, 0, 0));
+        lblPortaAvionesAveriado.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblPortaAvionesAveriado.setText("0");
         jPanel1.add(lblPortaAvionesAveriado, new org.netbeans.lib.awtextra.AbsoluteConstraints(92, 499, 24, 38));
 
         lblPortaAvionesHundido.setForeground(new java.awt.Color(255, 255, 51));
+        lblPortaAvionesHundido.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblPortaAvionesHundido.setText("0");
-        jPanel1.add(lblPortaAvionesHundido, new org.netbeans.lib.awtextra.AbsoluteConstraints(64, 499, 24, 38));
+        jPanel1.add(lblPortaAvionesHundido, new org.netbeans.lib.awtextra.AbsoluteConstraints(62, 499, 24, 38));
 
         lblGloboBarco.setText("jLabel3");
         lblGloboBarco.setMaximumSize(new java.awt.Dimension(40, 40));
@@ -383,18 +394,15 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
         lblFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/partidaSinTablero.png"))); // NOI18N
         jPanel1.add(lblFondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1280, -1));
 
-        jLabel3.setText("jLabel3");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 200, -1, -1));
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -460,7 +468,6 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblBarcoAveriado;
     private javax.swing.JLabel lblBarcoHundido;
