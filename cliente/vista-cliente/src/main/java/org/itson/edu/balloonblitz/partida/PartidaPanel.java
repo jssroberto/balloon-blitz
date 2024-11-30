@@ -12,6 +12,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -22,6 +24,7 @@ import org.itson.edu.balloonblitz.auxiliar.GridDragDropHandler;
 import org.itson.edu.balloonblitz.auxiliar.TableroClickHandler;
 import org.itson.edu.balloonblitz.auxiliar.TableroRenderer;
 import org.itson.edu.balloonblitz.entidades.Jugador;
+import org.itson.edu.balloonblitz.entidades.Nave;
 import org.itson.edu.balloonblitz.entidades.Tablero;
 import org.itson.edu.balloonblitz.FramePrincipal;
 import org.itson.edu.balloonblitz.entidades.Casilla;
@@ -47,6 +50,7 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
     private static final float TITLE_FONT_SIZE = 28.0F;
     private static final int BORDER_THICKNESS = 2;
     private ActionHandlerPartida actionHandler;
+    private List<Nave> navesAveriadas;
 
     /**
      * Creates new form PersonalizarPanel
@@ -61,6 +65,7 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
         initComponents();
         jugador = framePrincipal.getJugador();
         tablero = gridDragDropHandler.obtenerTablero();
+        this.navesAveriadas = new ArrayList<>();
     }
 
     @Override
@@ -421,22 +426,30 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
     }
 
     private void actualizarTextoLabelsNaves(Casilla casilla, JLabel lblNaveIntacta, JLabel lblNaveAveriada, JLabel lblNaveHundida) {
-        switch (casilla.getNave().get().getEstadoNave()) {
-            case AVERIADA:
-                lblNaveIntacta.setText(String.valueOf(Integer.parseInt(lblNaveIntacta.getText()) - 1));
-                lblNaveAveriada.setText(String.valueOf(Integer.parseInt(lblNaveAveriada.getText()) + 1));
-                break;
-            case HUNDIDA:
-                if (casilla.getNave().get().getTipoNave() == TipoNave.BARCO){
-                    lblNaveIntacta.setText(String.valueOf(Integer.parseInt(lblNaveIntacta.getText()) - 1));
-                }else{
-                lblNaveAveriada.setText(String.valueOf(Integer.parseInt(lblNaveAveriada.getText()) - 1));
-                }
-                lblNaveHundida.setText(String.valueOf(Integer.parseInt(lblNaveHundida.getText()) + 1));
-                break;
-        }
+        casilla.getNave().ifPresent(nave -> {
+            switch (nave.getEstadoNave()) {
+                case AVERIADA:
+                    if (!navesAveriadas.contains(nave)) {
+                        navesAveriadas.add(nave);
+                        actualizarLabel(lblNaveIntacta, -1);
+                        actualizarLabel(lblNaveAveriada, 1);
+                    }
+                    break;
+                case HUNDIDA:
+                    if (nave.getTipoNave() == TipoNave.BARCO) {
+                        actualizarLabel(lblNaveIntacta, -1);
+                    } else {
+                        actualizarLabel(lblNaveAveriada, -1);
+                    }
+                    actualizarLabel(lblNaveHundida, 1);
+                    break;
+            }
+        });
     }
 
+    private void actualizarLabel(JLabel label, int delta) {
+        label.setText(String.valueOf(Integer.parseInt(label.getText()) + delta));
+    }
 
     public FramePrincipal getFramePrincipal() {
         return framePrincipal;
