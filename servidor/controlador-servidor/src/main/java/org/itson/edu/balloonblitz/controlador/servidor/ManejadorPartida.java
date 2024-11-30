@@ -294,11 +294,11 @@ public class ManejadorPartida implements EventoObserver {
      * establecido el turno de disparo
      */
     private void manejarTurnoJugador() {
-        enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(150));
-        enviarEventoAJugador(streamsJugador2.getSalida(), new TimeOutEvento(150));
+        enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(5));
+        enviarEventoAJugador(streamsJugador2.getSalida(), new TimeOutEvento(5));
         partida.getJugador2().setTurno(false);
         partida.getJugador1().setTurno(true);
-        iniciarTemporizadorActivo(150);
+        iniciarTemporizadorActivo(5);
     }
 
     /**
