@@ -5,6 +5,7 @@
 package org.itson.edu.balloonblitz.vista;
 
 import org.itson.edu.balloonblitz.FramePrincipal;
+import org.itson.edu.balloonblitz.vista.music.MusicPlayer;
 
 import java.awt.Color;
 import java.awt.FontFormatException;
@@ -26,6 +27,7 @@ public class PerderPanel extends javax.swing.JPanel {
 
     private static final Logger logger = Logger.getLogger(InicioPanel.class.getName());
     private final FramePrincipal framePrincipal;
+    private MusicPlayer musicPlayer;
 
     /**
      * Creates new form PersonalizarPanel
@@ -40,6 +42,8 @@ public class PerderPanel extends javax.swing.JPanel {
         } catch (FontFormatException | IOException e) {
             logger.log(Level.SEVERE, "Error al cargar fuentes: ", e);
         }
+        this.musicPlayer = new MusicPlayer("/audio/sound-effects/lose.wav");
+        this.musicPlayer.playOnce();
     }
 
     private void setFuentes() throws FontFormatException, IOException {
