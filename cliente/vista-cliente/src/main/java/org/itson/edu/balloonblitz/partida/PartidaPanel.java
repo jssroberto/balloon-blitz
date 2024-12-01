@@ -95,8 +95,8 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
                     break;
                 //TODO específicar sufijo lbl
                 case TURNO_ACTIVO:
-                    TableroClickHandler.configurarTableroRival(tableroRival, jugador, this);
                     TableroClickHandler.habilitarClicks(true);
+                    TableroClickHandler.configurarTableroRival(tableroRival, jugador, this);
                     tableroRival.setEnabled(true);
                     lblEsperandoMovimiento.setText("Haz tu movimiento!");
                     break;

@@ -42,7 +42,7 @@ public class PerderPanel extends javax.swing.JPanel {
         } catch (FontFormatException | IOException e) {
             logger.log(Level.SEVERE, "Error al cargar fuentes: ", e);
         }
-        this.musicPlayer = new MusicPlayer("/audio/sound-effects/lose.wav");
+        this.musicPlayer = new MusicPlayer("/audio/sound-effects/lost.wav");
         this.musicPlayer.playOnce();
     }
 
