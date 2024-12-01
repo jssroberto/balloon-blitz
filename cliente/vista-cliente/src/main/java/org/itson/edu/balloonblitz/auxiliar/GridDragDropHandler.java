@@ -441,7 +441,7 @@ public class GridDragDropHandler extends DropTargetAdapter {
             placeBalloonsDefecto(1, 7, 3, cargarIcono("crucero"));
             placeBalloonsDefecto(2, 1, 2, cargarIcono("submarino"));
             placeBalloonsDefecto(6, 0, 2, cargarIcono("submarino"));
-            placeBalloonsDefecto(9, 7, 1, cargarIcono("submarino"));
+            placeBalloonsDefecto(9, 7, 2, cargarIcono("submarino"));
 
             isVertical = true;
             placeBalloonsDefecto(4, 8, 4, cargarIcono("portaAviones"));

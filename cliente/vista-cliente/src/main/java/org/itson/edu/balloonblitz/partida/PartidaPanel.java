@@ -32,25 +32,23 @@ import org.itson.edu.balloonblitz.entidades.Coordenada;
 import org.itson.edu.balloonblitz.entidades.enumeradores.TipoNave;
 import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
-import org.itson.edu.balloonblitz.vista.GanarPanel;
 
 /**
  * @author user
  */
 public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida {
 
-    private Jugador jugador;
+    private final Jugador jugador;
     private Jugador jugadorRival;
     private Tablero tablero;
     private Tablero tableroDeRival;
-    private GridDragDropHandler gridDragDropHandler;
-    private static final Logger logger = Logger.getLogger(PartidaPanel.class.getName());
+    private final GridDragDropHandler gridDragDropHandler;
     private final FramePrincipal framePrincipal;
     private static final String FONT_PATH = "/fonts/oetztype/OETZTYPE.TTF";
     private static final float TITLE_FONT_SIZE = 28.0F;
     private static final int BORDER_THICKNESS = 2;
     private ActionHandlerPartida actionHandler;
-    private List<Nave> navesAveriadas;
+    private final List<Nave> navesAveriadas;
 
     /**
      * Creates new form PersonalizarPanel
@@ -115,6 +113,9 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
                     Coordenada coordenada = new Coordenada(-1, -1);
                     DisparoEvento evento = new DisparoEvento(coordenada);
                     enviarEvento(evento);
+                }
+                case VICTORIA: {
+                    framePrincipal.cambiarPanelVictoria(event.model().isVictoria());
                 }
 
                 default: {
@@ -387,12 +388,12 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
