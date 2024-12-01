@@ -4,15 +4,14 @@
  */
 package org.itson.edu.balloonblitz.modelo;
 
-import org.itson.edu.balloonblitz.entidades.eventos.Evento;
-import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
+import org.itson.edu.balloonblitz.entidades.eventos.VictoriaEvento;
 
 /**
  *
  * @author elimo
  */
-public interface ObservadorTiempo {
+public interface ObservadorVictoria {
     
-    void manejarEvento(TimeOutEvento evento);
+    void manejarEvento(VictoriaEvento evento);
     
 }

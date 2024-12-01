@@ -44,8 +44,8 @@ public class ControllerPosicionNaves implements ObservadorTiempo, ObservadorJuga
     }
 
     @Override
-    public void manejarEvento(Evento evento) {
-        model.correrTiempo((TimeOutEvento) evento);
+    public void manejarEvento(TimeOutEvento evento) {
+        model.correrTiempo(evento);
     }
 
     @Override

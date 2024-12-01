@@ -13,17 +13,18 @@ import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.entidades.eventos.ResultadoDisparoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.ResultadoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
+import org.itson.edu.balloonblitz.entidades.eventos.VictoriaEvento;
 import org.itson.edu.balloonblitz.modelo.ConexionCliente;
 import org.itson.edu.balloonblitz.modelo.ObservadorDisparo;
 import org.itson.edu.balloonblitz.modelo.ObservadorJugador;
 import org.itson.edu.balloonblitz.modelo.ObservadorResultado;
 import org.itson.edu.balloonblitz.modelo.ObservadorTiempo;
-
+import org.itson.edu.balloonblitz.modelo.ObservadorVictoria;
 
 /**
  * @author elimo
  */
-public class ControllerPartida implements ActionHandlerPartida, ObservadorDisparo, ObservadorJugador, ObservadorTiempo, ObservadorResultado {
+public class ControllerPartida implements ActionHandlerPartida, ObservadorDisparo, ObservadorJugador, ObservadorTiempo, ObservadorResultado, ObservadorVictoria {
 
     private final PartidaPanel view;
     private final ModelPartida model;
@@ -55,7 +56,6 @@ public class ControllerPartida implements ActionHandlerPartida, ObservadorDispar
 
     }
 
-
     @Override
     public void enviarEvento(DisparoEvento evento) {
         ConexionCliente.getInstancia().enviarMensaje(evento);
@@ -68,8 +68,8 @@ public class ControllerPartida implements ActionHandlerPartida, ObservadorDispar
 
     //TODO aquí se tiene que recibir un evento específico, no el evento padre
     @Override
-    public void manejarEvento(Evento evento) {
-        model.correrTiempo((TimeOutEvento) evento);
+    public void manejarEvento(TimeOutEvento evento) {
+        model.correrTiempo(evento);
     }
 
     //Resultado para los turnos
@@ -87,6 +87,15 @@ public class ControllerPartida implements ActionHandlerPartida, ObservadorDispar
             } else {
                 model.getPlayerExplosion().playOnce();
             }
+        }
+    }
+
+    @Override
+    public void manejarEvento(VictoriaEvento evento) {
+        if (evento.isVictoria()) {
+            model.setVictoria(true);
+        } else {
+            model.setVictoria(false);
         }
     }
 }

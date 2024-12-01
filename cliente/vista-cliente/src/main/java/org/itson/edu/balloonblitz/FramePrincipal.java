@@ -32,6 +32,8 @@ import org.itson.edu.balloonblitz.partida.PartidaPanel;
 import org.itson.edu.balloonblitz.personalizar.ControllerPersonalizar;
 import org.itson.edu.balloonblitz.personalizar.ModelPersonalizar;
 import org.itson.edu.balloonblitz.personalizar.PersonalizarPanel;
+import org.itson.edu.balloonblitz.vista.GanarPanel;
+import org.itson.edu.balloonblitz.vista.PerderPanel;
 import org.itson.edu.balloonblitz.vista.music.MusicPlayer;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
 
@@ -191,13 +193,23 @@ public class FramePrincipal extends javax.swing.JFrame {
         ConexionCliente.getInstancia().setObservadorJugador(controlador);
         ConexionCliente.getInstancia().setObservadorDisparo(controlador);
         ConexionCliente.getInstancia().setObservadorResultado(controlador);
+        ConexionCliente.getInstancia().setObservadorVictoria(controlador);
         cambiarPanel(view);
+    }
+
+    public void cambiarPanelVictoria(boolean victoria) {
+        if (victoria) {
+            GanarPanel view = new GanarPanel(this);
+            cambiarPanel(view);
+        } else {
+            PerderPanel view = new PerderPanel(this);
+            cambiarPanel(view);
+        }
     }
 
     public void eliminarObservadores() {
         ConexionCliente.getInstancia().eliminarTodosLosObservadores();
     }
-
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

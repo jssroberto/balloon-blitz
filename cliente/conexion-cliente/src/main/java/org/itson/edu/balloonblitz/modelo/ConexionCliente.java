@@ -23,6 +23,7 @@ public class ConexionCliente {
     private ObservadorTiempo observadorTiempo;
     private ObservadorResultado observadorResultado;
     private ObservadorJugador observadorJugador;
+    private ObservadorVictoria observadorVictoria;
     private boolean conectado;
     Evento mensajeRecibido;
     private final ExecutorService executorService = Executors.newFixedThreadPool(10);
@@ -69,6 +70,10 @@ public class ConexionCliente {
         this.observadorJugador = observadorJugador;
     }
 
+    public void setObservadorVictoria(ObservadorVictoria observadorVictoria) {
+        this.observadorVictoria = observadorVictoria;
+    }
+
     public void eliminarTodosLosObservadores() {
         this.observadorTiempo = null;
         this.observadorResultado = null;
@@ -108,35 +113,31 @@ public class ConexionCliente {
         switch (evento.getTipoEvento()) {
             case TIMEOUT:
                 if (observadorTiempo != null) {
-                    System.out.println("entrando al timeout");
                     TimeOutEvento time = (TimeOutEvento) evento;
-                    System.out.println(time.getTiempoRestante());
                     observadorTiempo.manejarEvento((TimeOutEvento) evento);
-                } else {
-                    System.out.println("observador tiempo nulo");
                 }
                 break;
             case ENVIO_JUGADOR:
                 if (observadorJugador != null) {
                     observadorJugador.manejarEvento((EnvioJugadorEvento) evento);
-                } else {
-                    System.out.println("observador jugador nulo");
                 }
                 break;
             case RESULTADO:
                 if (observadorResultado != null) {
                     observadorResultado.manejarEvento((ResultadoEvento) evento);
-                } else {
-                    System.out.println("observador resultado nulo");
                 }
                 break;
             case RESULTADO_DISPARO:
                 if (observadorDisparo != null) {
                     observadorDisparo.manejarEvento((ResultadoDisparoEvento) evento);
-                } else {
-               System.out.println("observador resultado nulo");
                 }
                 break;
+            case VICTORIA: {
+                if (observadorVictoria != null) {
+                    observadorVictoria.manejarEvento((VictoriaEvento) evento);
+                }
+                break;
+            }
             default:
                 System.out.println("Tipo de evento no reconocido: " + mensajeRecibido.getTipoEvento());
         }

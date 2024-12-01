@@ -1,18 +1,18 @@
 package org.itson.edu.balloonblitz.entidades.eventos;
 
-import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
 
 public class VictoriaEvento extends Evento {
 
-    private final Jugador jugador;
+    private boolean victoria;
 
-    public VictoriaEvento(Jugador jugador) {
+    public VictoriaEvento(boolean victoria) {
         super(TipoEvento.VICTORIA);
-        this.jugador = jugador;
+        this.victoria = victoria;
     }
 
-    public Jugador getJugador() {
-        return jugador;
+    public boolean isVictoria() {
+        return victoria;
     }
+
 }

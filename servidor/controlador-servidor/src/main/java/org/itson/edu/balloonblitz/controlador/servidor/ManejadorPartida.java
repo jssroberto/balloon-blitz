@@ -38,6 +38,9 @@ public class ManejadorPartida implements EventoObserver {
     private int contadorEnvio;
     private ScheduledExecutorService temporizadorActual; // Referencia al temporizador activo.
     private final AtomicBoolean detener;
+    private int contadorNavesHundidasJugador2 = 0;
+    private int contadorNavesHundidasJugador1 = 0;
+    private boolean victoria;
 
     /**
      * Constructor para inicializar la partida con los jugadores y sus streams.
@@ -75,8 +78,10 @@ public class ManejadorPartida implements EventoObserver {
         if (eventoProcesado != null) {
             enviarEventoAJugador(streamsJugador1.getSalida(), eventoProcesado);
             enviarEventoAJugador(streamsJugador2.getSalida(), eventoProcesado);
-            mandarTurno();
-            manejarTurnos();
+            if (!victoria) {
+                mandarTurno();
+                manejarTurnos();
+            }
         }
     }
 
@@ -152,9 +157,9 @@ public class ManejadorPartida implements EventoObserver {
             }
             if (contadorEnvio == 2) {
                 if (!detener.get()) {
+                    EnvioJugadorEvento evento2 = new EnvioJugadorEvento();
                     enviarEventoAJugador(streamsJugador1.getSalida(), new ResultadoEvento(true));
                     enviarEventoAJugador(streamsJugador2.getSalida(), new ResultadoEvento(true));
-                    EnvioJugadorEvento evento2 = new EnvioJugadorEvento();
                     evento2.setEmisor(partida.getJugador2());
                     enviarEventoAJugador(streamsJugador1.getSalida(), evento2);
                     EnvioJugadorEvento evento1 = new EnvioJugadorEvento();
@@ -174,8 +179,11 @@ public class ManejadorPartida implements EventoObserver {
                 ResultadoDisparoEvento resultado = manejadorDisparo.procesar();
                 resultado.setEmisor(emisor);
                 resultado.setCoordenada(((DisparoEvento) evento).getCoordenada());
-                verificarVictoria(jugadorRival);
+
                 Coordenada coordenadaDisparo = new Coordenada(disparo.getCoordenada().fila(), disparo.getCoordenada().columna());
+                if (resultado.getTablero().getCasilla(resultado.getCoordenada()).getNave().isPresent()) {
+                    victoria = verificarVictoria(resultado.getTablero().getCasilla(resultado.getCoordenada()).getNave().get(), jugadorRival);
+                }
                 if (resultado.getTablero().getCasilla(coordenadaDisparo).getNave().isPresent()) {
                     if (resultado.getTablero().getCasilla(coordenadaDisparo).getNave().get().getEstadoNave().equals(EstadoNave.AVERIADA) || resultado.getTablero().getCasilla(coordenadaDisparo).getNave().get().getEstadoNave().equals(EstadoNave.HUNDIDA)) {
                         cambiarTurnos();
@@ -190,6 +198,7 @@ public class ManejadorPartida implements EventoObserver {
                 manejarTurnos();
                 return null;
             }
+
         } else if (tipoEvento == TipoEvento.RESULTADO) {
             contadorEnvio++;
             if (contadorEnvio == 2) {
@@ -358,13 +367,27 @@ public class ManejadorPartida implements EventoObserver {
         }
     }
 
-    private boolean verificarVictoria(Jugador jugadorRival) {
-        List<Nave> naves = jugadorRival.getNaves();
-        for (Nave nave : naves) {
-            if (nave.getEstadoNave() == EstadoNave.COMPLETA || nave.getEstadoNave() == EstadoNave.AVERIADA) {
-                return false;
+    private boolean verificarVictoria(Nave nave, Jugador jugador) {
+        if (partida.getJugador1().equals(jugador)) {
+            if (nave.getEstadoNave().equals(EstadoNave.HUNDIDA)) {
+                contadorNavesHundidasJugador2++;
             }
+            if (contadorNavesHundidasJugador2 == 11) {
+                enviarEventoAJugador(streamsJugador2.getSalida(), new VictoriaEvento(true));
+                enviarEventoAJugador(streamsJugador1.getSalida(), new VictoriaEvento(false));
+                return true;
+            }
+            return false;
+        } else {
+            if (nave.getEstadoNave().equals(EstadoNave.HUNDIDA)) {
+                contadorNavesHundidasJugador1++;
+            } 
+            if (contadorNavesHundidasJugador1 == 11) {
+                enviarEventoAJugador(streamsJugador2.getSalida(), new VictoriaEvento(false));
+                enviarEventoAJugador(streamsJugador1.getSalida(), new VictoriaEvento(true));
+                return true;
+            }
+            return false;
         }
-        return true;
     }
 }

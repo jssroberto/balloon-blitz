@@ -30,12 +30,12 @@ public class ModelPartida {
     private Tablero tablero;
     private Tablero tableroDeRival;
     private ScheduledExecutorService temporizadorActual;
-    // Señal para detener el temporizador
     private final AtomicBoolean detener = new AtomicBoolean(false);
     private Casilla ultimoDisparo;
     private MusicPlayer playerPop;
     private MusicPlayer playerQuack;
     private MusicPlayer playerExplosion;
+    private boolean victoria;
 
     public ModelPartida() {
         playerPop = new MusicPlayer("/audio/sound-effects/pop.wav");
@@ -182,4 +182,16 @@ public class ModelPartida {
         this.ultimoDisparo = ultimoDisparo;
         notifyObservers(new UpdateEventPartida(this, EventTypePartida.ACTUALIZAR_ULTIMO_DISPARO));
     }
+
+    public boolean isVictoria() {
+        return victoria;
+    }
+
+    public void setVictoria(boolean victoria) {
+        this.victoria = victoria;
+        notifyObservers(new UpdateEventPartida(this, EventTypePartida.VICTORIA));
+    }
+    
+    
+    
 }
