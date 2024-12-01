@@ -181,14 +181,14 @@ public class ManejadorPartida implements EventoObserver {
                 resultado.setCoordenada(((DisparoEvento) evento).getCoordenada());
 
                 Coordenada coordenadaDisparo = new Coordenada(disparo.getCoordenada().fila(), disparo.getCoordenada().columna());
-                if (resultado.getTablero().getCasilla(resultado.getCoordenada()).getNave().isPresent()) {
-                    victoria = verificarVictoria(resultado.getTablero().getCasilla(resultado.getCoordenada()).getNave().get(), jugadorRival);
-                }
                 if (resultado.getTablero().getCasilla(coordenadaDisparo).getNave().isPresent()) {
                     if (resultado.getTablero().getCasilla(coordenadaDisparo).getNave().get().getEstadoNave().equals(EstadoNave.AVERIADA) || resultado.getTablero().getCasilla(coordenadaDisparo).getNave().get().getEstadoNave().equals(EstadoNave.HUNDIDA)) {
                         cambiarTurnos();
                         mandarTurno();
                     }
+                }
+                if (resultado.getTablero().getCasilla(resultado.getCoordenada()).getNave().isPresent()) {
+                    victoria = verificarVictoria(resultado.getTablero().getCasilla(resultado.getCoordenada()).getNave().get(), jugadorRival);
                 }
                 return resultado;
 
@@ -381,7 +381,7 @@ public class ManejadorPartida implements EventoObserver {
         } else {
             if (nave.getEstadoNave().equals(EstadoNave.HUNDIDA)) {
                 contadorNavesHundidasJugador1++;
-            } 
+            }
             if (contadorNavesHundidasJugador1 == 11) {
                 enviarEventoAJugador(streamsJugador2.getSalida(), new VictoriaEvento(false));
                 enviarEventoAJugador(streamsJugador1.getSalida(), new VictoriaEvento(true));
