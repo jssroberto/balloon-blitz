@@ -194,7 +194,13 @@ public class ManejadorPartida implements EventoObserver {
                 return resultado;
 
             } else {
-                cambiarTurnos();
+                contadorEnvio++;
+                if (contadorEnvio == 2) {
+                    cambiarTurnos();
+                    manejarTurnos();
+                    mandarTurno();
+                    contadorEnvio = 0;
+                }
                 return null;
             }
 

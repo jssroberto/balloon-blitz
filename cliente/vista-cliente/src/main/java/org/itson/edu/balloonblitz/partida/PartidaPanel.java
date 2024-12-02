@@ -113,9 +113,11 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
                     Coordenada coordenada = new Coordenada(-1, -1);
                     DisparoEvento evento = new DisparoEvento(coordenada);
                     enviarEvento(evento);
+                    break;
                 }
                 case VICTORIA: {
                     framePrincipal.cambiarPanelVictoria(event.model().isVictoria());
+                    break;
                 }
 
                 default: {
