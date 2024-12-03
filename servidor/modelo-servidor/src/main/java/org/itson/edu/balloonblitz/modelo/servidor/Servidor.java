@@ -1,5 +1,6 @@
 package org.itson.edu.balloonblitz.modelo.servidor;
 
+import org.itson.edu.balloonblitz.entidades.eventos.DesconexionEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.tinylog.Logger;
 
@@ -10,6 +11,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
 
 /**
@@ -146,10 +148,13 @@ public final class Servidor {
                 }
 
             } catch (IOException | ClassNotFoundException e) {
-                // Detecta la desconexión y realiza las acciones correspondientes
+                // Detecta la desconexión y realiza la8s acciones correspondientes
                 System.err.println("Cliente desconectado: " + entrada);
                 if (observadorJugador != null) {
                     observadorJugador.eliminarCliente(entrada);  // Elimina el cliente
+                }
+                if (observadorEventos != null) {
+                    observadorEventos.manejarEvento(new DesconexionEvento(), entrada);
                 }
                 break; // Salir del bucle para evitar más intentos de lectura
             }

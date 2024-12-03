@@ -19,5 +19,5 @@ public interface JugadorObserver {
      */
     void agregarJugador(Evento jugador, ObjectInputStream entrada);
     
-    public void eliminarCliente(ObjectInputStream entrada);
+    void eliminarCliente(ObjectInputStream entrada);
 }

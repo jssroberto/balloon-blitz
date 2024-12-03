@@ -191,7 +191,4 @@ public class ModelPartida {
         this.victoria = victoria;
         notifyObservers(new UpdateEventPartida(this, EventTypePartida.VICTORIA));
     }
-    
-    
-    
 }

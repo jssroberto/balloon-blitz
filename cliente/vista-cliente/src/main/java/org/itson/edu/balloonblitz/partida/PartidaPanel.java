@@ -119,7 +119,6 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
                     framePrincipal.cambiarPanelVictoria(event.model().isVictoria());
                     break;
                 }
-
                 default: {
                 }
             }
@@ -354,15 +353,15 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
         lblPortaAvionesIntacto.setText("2");
         jPanel1.add(lblPortaAvionesIntacto, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 499, 24, 38));
 
-        lblPortaAvionesAveriado.setForeground(new java.awt.Color(255, 0, 0));
+        lblPortaAvionesAveriado.setForeground(new java.awt.Color(255, 255, 51));
         lblPortaAvionesAveriado.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblPortaAvionesAveriado.setText("0");
-        jPanel1.add(lblPortaAvionesAveriado, new org.netbeans.lib.awtextra.AbsoluteConstraints(92, 499, 24, 38));
+        jPanel1.add(lblPortaAvionesAveriado, new org.netbeans.lib.awtextra.AbsoluteConstraints(62, 499, 24, 38));
 
-        lblPortaAvionesHundido.setForeground(new java.awt.Color(255, 255, 51));
+        lblPortaAvionesHundido.setForeground(new java.awt.Color(255, 0, 0));
         lblPortaAvionesHundido.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblPortaAvionesHundido.setText("0");
-        jPanel1.add(lblPortaAvionesHundido, new org.netbeans.lib.awtextra.AbsoluteConstraints(62, 499, 24, 38));
+        jPanel1.add(lblPortaAvionesHundido, new org.netbeans.lib.awtextra.AbsoluteConstraints(92, 499, 24, 38));
 
         lblGloboBarco.setText("jLabel3");
         lblGloboBarco.setMaximumSize(new java.awt.Dimension(40, 40));
@@ -390,12 +389,12 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 

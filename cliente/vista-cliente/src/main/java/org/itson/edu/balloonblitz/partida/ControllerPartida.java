@@ -7,24 +7,13 @@ package org.itson.edu.balloonblitz.partida;
 import org.itson.edu.balloonblitz.entidades.Casilla;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoNave;
-import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
-import org.itson.edu.balloonblitz.entidades.eventos.EnvioJugadorEvento;
-import org.itson.edu.balloonblitz.entidades.eventos.Evento;
-import org.itson.edu.balloonblitz.entidades.eventos.ResultadoDisparoEvento;
-import org.itson.edu.balloonblitz.entidades.eventos.ResultadoEvento;
-import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
-import org.itson.edu.balloonblitz.entidades.eventos.VictoriaEvento;
-import org.itson.edu.balloonblitz.modelo.ConexionCliente;
-import org.itson.edu.balloonblitz.modelo.ObservadorDisparo;
-import org.itson.edu.balloonblitz.modelo.ObservadorJugador;
-import org.itson.edu.balloonblitz.modelo.ObservadorResultado;
-import org.itson.edu.balloonblitz.modelo.ObservadorTiempo;
-import org.itson.edu.balloonblitz.modelo.ObservadorVictoria;
+import org.itson.edu.balloonblitz.entidades.eventos.*;
+import org.itson.edu.balloonblitz.modelo.*;
 
 /**
  * @author elimo
  */
-public class ControllerPartida implements ActionHandlerPartida, ObservadorDisparo, ObservadorJugador, ObservadorTiempo, ObservadorResultado, ObservadorVictoria {
+public class ControllerPartida implements ActionHandlerPartida, ObservadorDisparo, ObservadorJugador, ObservadorTiempo, ObservadorResultado, ObservadorVictoria, ObservadorDesconexion {
 
     private final PartidaPanel view;
     private final ModelPartida model;
@@ -97,5 +86,10 @@ public class ControllerPartida implements ActionHandlerPartida, ObservadorDispar
         } else {
             model.setVictoria(false);
         }
+    }
+
+    @Override
+    public void manejarEvento(DesconexionEvento evento) {
+        model.setVictoria(true);
     }
 }

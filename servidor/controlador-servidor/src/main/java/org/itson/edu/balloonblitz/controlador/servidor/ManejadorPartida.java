@@ -28,6 +28,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.itson.edu.balloonblitz.entidades.Coordenada;
 
 public class ManejadorPartida implements EventoObserver {
@@ -68,7 +69,7 @@ public class ManejadorPartida implements EventoObserver {
     /**
      * Maneja los eventos enviados por los clientes.
      *
-     * @param evento Evento enviado por el cliente.
+     * @param evento  Evento enviado por el cliente.
      * @param entrada Stream de entrada del cliente.
      */
     @Override
@@ -82,6 +83,8 @@ public class ManejadorPartida implements EventoObserver {
                 manejarTurnos();
                 mandarTurno();
             }
+        } else if (evento.getTipoEvento() == TipoEvento.DESCONEXION) {
+            manejarDesconexion(obtenerControlador(entrada));
         }
     }
 
@@ -115,7 +118,7 @@ public class ManejadorPartida implements EventoObserver {
      * Inicializa los recursos de la partida.
      */
     public void
-            crearPartida() {
+    crearPartida() {
         partida.setEstadoPartida(EstadoPartida.ACTIVA);
         partida.getJugador1().setTurno(true);
         partida.getJugador2().setTurno(true);
@@ -124,7 +127,7 @@ public class ManejadorPartida implements EventoObserver {
     /**
      * Procesa un evento recibido y lo asocia con el jugador correspondiente.
      *
-     * @param evento Evento recibido.
+     * @param evento  Evento recibido.
      * @param entrada Stream del jugador emisor.
      * @return Evento procesado o null si hay un error.
      */
@@ -190,6 +193,7 @@ public class ManejadorPartida implements EventoObserver {
                 }
                 if (resultado.getTablero().getCasilla(resultado.getCoordenada()).getNave().isPresent()) {
                     victoria = verificarVictoria(resultado.getTablero().getCasilla(resultado.getCoordenada()).getNave().get(), jugadorRival);
+
                 }
                 return resultado;
 
@@ -210,6 +214,8 @@ public class ManejadorPartida implements EventoObserver {
                 manejarTurnos();
                 contadorEnvio = 0;
             }
+            return null;
+        } else if (tipoEvento == TipoEvento.DESCONEXION) {
             return null;
         } else {
             Logger.error("No se reconoció el tipo de evento");
@@ -392,5 +398,22 @@ public class ManejadorPartida implements EventoObserver {
             }
             return false;
         }
+    }
+
+    public void manejarDesconexion(ControladorStreams controlador) {
+        if (controlador.equals(streamsJugador1)) {
+            enviarEventoAJugador(streamsJugador2.getSalida(), new DesconexionEvento());
+        } else {
+            enviarEventoAJugador(streamsJugador1.getSalida(), new DesconexionEvento());
+        }
+    }
+
+    private ControladorStreams obtenerControlador(ObjectInputStream entrada) {
+        if (entrada.equals(streamsJugador1.getEntrada())) {
+            return streamsJugador1;
+        } else if (entrada.equals(streamsJugador2.getEntrada())) {
+            return streamsJugador2;
+        }
+        return null;
     }
 }

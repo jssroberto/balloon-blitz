@@ -1,5 +1,6 @@
 package org.itson.edu.balloonblitz.controlador.servidor;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.logging.Logger;
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
+
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.modelo.servidor.ConexionObserver;
@@ -24,7 +26,6 @@ public class Lobby implements ConexionObserver, JugadorObserver {
     private static final Map<ControladorStreams, Jugador> clientesEnLobby = new HashMap<>();
     private static final List<Map<ControladorStreams, Jugador>> partidas = new ArrayList<>();
     private static final Logger logger = Logger.getLogger(Lobby.class.getName());
-
     private final ExecutorService executorService = Executors.newFixedThreadPool(10);
     private static Lobby instancia;
 
@@ -53,8 +54,24 @@ public class Lobby implements ConexionObserver, JugadorObserver {
                 .orElse(null);
 
         if (controlador != null) {
+            try {
+                controlador.getEntrada().close();
+                controlador.getSalida().close();
+            } catch (IOException e) {
+                logger.warning("Error al cerrar recursos del cliente: " + e.getMessage());
+            }
+
             Jugador jugador = clientesEnLobby.remove(controlador);
             logger.info("Cliente desconectado y eliminado del lobby: " + (jugador != null ? jugador.getNombre() : "Desconocido"));
+
+            // Notificar al otro jugador en la partida
+            partidas.stream()
+                    .filter(partida -> partida.containsKey(controlador))
+                    .findFirst()
+                    .ifPresent(partida -> {
+                        ManejadorPartida manejadorPartida = new ManejadorPartida(partida);
+                        manejadorPartida.manejarDesconexion(controlador);
+                    });
         } else {
             logger.warning("No se encontró un cliente con la entrada proporcionada.");
         }

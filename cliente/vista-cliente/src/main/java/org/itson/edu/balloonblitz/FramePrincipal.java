@@ -130,7 +130,7 @@ public class FramePrincipal extends javax.swing.JFrame {
     private void iniciarMusica() {
         MusicPlayer musicPlayer = new MusicPlayer("/audio/main-theme.wav");
         musicPlayer.play();
-        musicPlayer.setVolume((float) 70.0);
+        musicPlayer.setVolume((float) 65.0);
     }
 
     // Métodos de aviso, confirmación, etc., sin cambios
@@ -194,6 +194,7 @@ public class FramePrincipal extends javax.swing.JFrame {
         ConexionCliente.getInstancia().setObservadorDisparo(controlador);
         ConexionCliente.getInstancia().setObservadorResultado(controlador);
         ConexionCliente.getInstancia().setObservadorVictoria(controlador);
+        ConexionCliente.getInstancia().setObservadorDesconexion(controlador);
         cambiarPanel(view);
     }
 

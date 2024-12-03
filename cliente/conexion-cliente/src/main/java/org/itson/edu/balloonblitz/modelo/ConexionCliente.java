@@ -1,6 +1,7 @@
 package org.itson.edu.balloonblitz.modelo;
 
 import org.itson.edu.balloonblitz.entidades.eventos.*;
+import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -24,6 +25,7 @@ public class ConexionCliente {
     private ObservadorResultado observadorResultado;
     private ObservadorJugador observadorJugador;
     private ObservadorVictoria observadorVictoria;
+    private ObservadorDesconexion observadorDesconexion;
     private boolean conectado;
     Evento mensajeRecibido;
     private final ExecutorService executorService = Executors.newFixedThreadPool(10);
@@ -74,11 +76,17 @@ public class ConexionCliente {
         this.observadorVictoria = observadorVictoria;
     }
 
+    public void setObservadorDesconexion(ObservadorDesconexion observadorDesconexion) {
+        this.observadorDesconexion = observadorDesconexion;
+    }
+
     public void eliminarTodosLosObservadores() {
         this.observadorTiempo = null;
         this.observadorResultado = null;
         this.observadorDisparo = null;
         this.observadorJugador = null;
+        this.observadorVictoria = null;
+        this.observadorDesconexion = null;
     }
 
     public void recibirEvento() {
@@ -105,7 +113,7 @@ public class ConexionCliente {
                 salida.flush();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.error(e.getMessage());
         }
     }
 
@@ -113,7 +121,6 @@ public class ConexionCliente {
         switch (evento.getTipoEvento()) {
             case TIMEOUT:
                 if (observadorTiempo != null) {
-                    TimeOutEvento time = (TimeOutEvento) evento;
                     observadorTiempo.manejarEvento((TimeOutEvento) evento);
                 }
                 break;
@@ -132,14 +139,19 @@ public class ConexionCliente {
                     observadorDisparo.manejarEvento((ResultadoDisparoEvento) evento);
                 }
                 break;
-            case VICTORIA: {
+            case VICTORIA:
                 if (observadorVictoria != null) {
                     observadorVictoria.manejarEvento((VictoriaEvento) evento);
                 }
                 break;
-            }
+            case DESCONEXION:
+                if (observadorDesconexion != null) {
+                    observadorDesconexion.manejarEvento((DesconexionEvento) evento);
+                }
+                break;
+
             default:
-                System.out.println("Tipo de evento no reconocido: " + mensajeRecibido.getTipoEvento());
+                Logger.error("Tipo de evento no reconocido: " + mensajeRecibido.getTipoEvento());
         }
     }
 
