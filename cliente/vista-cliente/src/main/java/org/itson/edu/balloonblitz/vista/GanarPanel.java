@@ -94,6 +94,7 @@ public class GanarPanel extends javax.swing.JPanel {
         btnJugar.setBorder(null);
         btnJugar.setBorderPainted(false);
         btnJugar.setContentAreaFilled(false);
+        btnJugar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnJugar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnJugarActionPerformed(evt);
