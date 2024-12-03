@@ -37,19 +37,8 @@ public class GanarPanel extends javax.swing.JPanel {
     public GanarPanel(FramePrincipal framePrincipal) {
         this.framePrincipal = framePrincipal;
         initComponents();
-        try {
-            setFuentes();
-        } catch (FontFormatException | IOException e) {
-            logger.log(Level.SEVERE, "Error al cargar fuentes: ", e);
-        }
         this.musicPlayer = new MusicPlayer("/audio/sound-effects/win.wav");
         this.musicPlayer.playOnce();
-    }
-
-    private void setFuentes() throws FontFormatException, IOException {
-        lblMensaje.setFont(framePrincipal.cargarFuente("/fonts/oetztype/OETZTYPE.TTF", 40.0F));
-
-        addTextBorder(lblMensaje);
     }
 
     // Método para añadir borde al texto en JLabel
@@ -96,14 +85,21 @@ public class GanarPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        lblMensaje = new javax.swing.JLabel();
+        btnJugar = new javax.swing.JButton();
         lblFondo = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        lblMensaje.setText("GANASTE!");
-        jPanel1.add(lblMensaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 350, -1, -1));
+        btnJugar.setBorder(null);
+        btnJugar.setBorderPainted(false);
+        btnJugar.setContentAreaFilled(false);
+        btnJugar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnJugarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnJugar, new org.netbeans.lib.awtextra.AbsoluteConstraints(699, 447, 267, 58));
 
         lblFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/panels/ganaste.png"))); // NOI18N
         jPanel1.add(lblFondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
@@ -120,10 +116,14 @@ public class GanarPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnJugarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnJugarActionPerformed
+        framePrincipal.cambiarPanelPersonalizar();
+    }//GEN-LAST:event_btnJugarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnJugar;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblFondo;
-    private javax.swing.JLabel lblMensaje;
     // End of variables declaration//GEN-END:variables
 }
