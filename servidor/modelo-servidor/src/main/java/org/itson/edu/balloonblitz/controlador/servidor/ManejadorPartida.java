@@ -117,8 +117,7 @@ public class ManejadorPartida implements EventoObserver {
     /**
      * Inicializa los recursos de la partida.
      */
-    public void
-    crearPartida() {
+    public void crearPartida() {
         partida.setEstadoPartida(EstadoPartida.ACTIVA);
         partida.getJugador1().setTurno(true);
         partida.getJugador2().setTurno(true);
@@ -136,103 +135,87 @@ public class ManejadorPartida implements EventoObserver {
         evento.setEmisor(emisor);
         TipoEvento tipoEvento = evento.getTipoEvento();
 
-        if (tipoEvento == TipoEvento.POSICION_NAVES) {
-            PosicionNavesEvento posicion = (PosicionNavesEvento) evento;
-            assert emisor != null;
-            if (emisor.equals(partida.getJugador1())) {
-                partida.setTableroJugador1(posicion.getTablero());
-                partida.getJugador1().setNaves(
-                        ManejadorPosicionNaves.inicializarNaves(partida.getTableroJugador1())
-                );
-                contadorEnvio++;
-                if (contadorEnvio != 2) {
-                    enviarEventoAJugador(streamsJugador1.getSalida(), new ResultadoEvento(false));
-                }
-            } else {
-                partida.setTableroJugador2(posicion.getTablero());
-                partida.getJugador2().setNaves(
-                        ManejadorPosicionNaves.inicializarNaves(partida.getTableroJugador2())
-                );
-                contadorEnvio++;
-                if (contadorEnvio != 2) {
-                    enviarEventoAJugador(streamsJugador2.getSalida(), new ResultadoEvento(false));
-                }
+        return switch (tipoEvento) {
+            case POSICION_NAVES -> procesarPosicionNaves((PosicionNavesEvento) evento, emisor);
+            case DISPARO -> procesarDisparo((DisparoEvento) evento, emisor);
+            case RESULTADO -> procesarResultado();
+            case DESCONEXION -> null;
+            default -> {
+                Logger.error("Evento no soportado: {}", tipoEvento);
+                yield null;
             }
-            if (contadorEnvio == 2) {
-                if (!detener.get()) {
-                    EnvioJugadorEvento evento2 = new EnvioJugadorEvento();
-                    enviarEventoAJugador(streamsJugador1.getSalida(), new ResultadoEvento(true));
-                    enviarEventoAJugador(streamsJugador2.getSalida(), new ResultadoEvento(true));
-                    evento2.setEmisor(partida.getJugador2());
-                    enviarEventoAJugador(streamsJugador1.getSalida(), evento2);
-                    EnvioJugadorEvento evento1 = new EnvioJugadorEvento();
-                    evento1.setEmisor(partida.getJugador1());
-                    enviarEventoAJugador(streamsJugador2.getSalida(), evento1);
-                    mandadoPorDosJugadores();
-                }
-            }
-            return null;
-        } else if (tipoEvento == TipoEvento.DISPARO) {
-            DisparoEvento disparo = (DisparoEvento) evento;
-            if (disparo.getCoordenada().columna() != -1) {
-                detenerTemporizadorActivo();
-                Tablero tableroRival = obtenerTableroRival(emisor);
-                Jugador jugadorRival = obtenerJugadorRival(emisor);
-                ManejadorDisparo manejadorDisparo = new ManejadorDisparo((DisparoEvento) evento, tableroRival, jugadorRival);
-                ResultadoDisparoEvento resultado = manejadorDisparo.procesar();
-                resultado.setEmisor(emisor);
-                resultado.setCoordenada(((DisparoEvento) evento).getCoordenada());
+        };
+    }
 
-                Coordenada coordenadaDisparo = new Coordenada(disparo.getCoordenada().fila(), disparo.getCoordenada().columna());
-                if (resultado.getTablero().getCasilla(coordenadaDisparo).getNave().isPresent()) {
-                    if (resultado.getTablero().getCasilla(coordenadaDisparo).getNave().get().getEstadoNave().equals(EstadoNave.AVERIADA) || resultado.getTablero().getCasilla(coordenadaDisparo).getNave().get().getEstadoNave().equals(EstadoNave.HUNDIDA)) {
+    private Evento procesarResultado() {
+        contadorEnvio++;
+        if (contadorEnvio == 2) {
+            manejarTurnos();
+            contadorEnvio = 0;
+        }
+        return null;
+    }
 
-                    }
-                } else {
-                    cambiarTurnos();
-                }
-                if (resultado.getTablero().getCasilla(resultado.getCoordenada()).getNave().isPresent()) {
-                    victoria = verificarVictoria(resultado.getTablero().getCasilla(resultado.getCoordenada()).getNave().get(), jugadorRival);
-
-                }
-                return resultado;
-
-            } else {
-                contadorEnvio++;
-                if (contadorEnvio == 2) {
-                    cambiarTurnos();
-                    manejarTurnos();
-                    mandarTurno();
-                    contadorEnvio = 0;
-                }
-                return null;
-            }
-
-        } else if (tipoEvento == TipoEvento.RESULTADO) {
+    private ResultadoDisparoEvento procesarDisparo(DisparoEvento evento, Jugador emisor) {
+        if (evento.getCoordenada().columna() == -1) {
             contadorEnvio++;
             if (contadorEnvio == 2) {
+                cambiarTurnos();
                 manejarTurnos();
+                mandarTurno();
                 contadorEnvio = 0;
             }
             return null;
-        } else if (tipoEvento == TipoEvento.DESCONEXION) {
-            return null;
         } else {
-            Logger.error("No se reconoció el tipo de evento");
-            return null;
+            detenerTemporizadorActivo();
+            Tablero tableroRival = obtenerTableroRival(emisor);
+            Jugador jugadorRival = obtenerJugadorRival(emisor);
+            ManejadorDisparo manejadorDisparo = new ManejadorDisparo(evento, tableroRival, jugadorRival);
+            return procesarResultadoDisparo(evento, emisor, manejadorDisparo, jugadorRival);
         }
     }
 
-    public void mandarJugador(ObjectInputStream entrada) {
-        if (obtenerEmisor(entrada).equals(partida.getJugador1())) {
-            EnvioJugadorEvento evento2 = new EnvioJugadorEvento();
-            evento2.setEmisor(partida.getJugador2());
-            enviarEventoAJugador(streamsJugador1.getSalida(), evento2);
-        } else {
-            EnvioJugadorEvento evento1 = new EnvioJugadorEvento();
-            evento1.setEmisor(partida.getJugador1());
-            enviarEventoAJugador(streamsJugador2.getSalida(), evento1);
+    private ResultadoDisparoEvento procesarResultadoDisparo(DisparoEvento evento, Jugador emisor, ManejadorDisparo manejadorDisparo, Jugador jugadorRival) {
+        ResultadoDisparoEvento resultado = manejadorDisparo.procesar();
+        resultado.setEmisor(emisor);
+        resultado.setCoordenada(evento.getCoordenada());
+
+        Coordenada coordenadaDisparo = new Coordenada(evento.getCoordenada().fila(), evento.getCoordenada().columna());
+        if (resultado.getTablero().getCasilla(coordenadaDisparo).getNave().isEmpty()) {
+            cambiarTurnos();
         }
+        if (resultado.getTablero().getCasilla(resultado.getCoordenada()).getNave().isPresent()) {
+            victoria = verificarVictoria(resultado.getTablero().getCasilla(resultado.getCoordenada()).getNave().get(), jugadorRival);
+
+        }
+        return resultado;
+    }
+
+    private Evento procesarPosicionNaves(PosicionNavesEvento evento, Jugador emisor) {
+        assert emisor != null;
+        if (emisor.equals(partida.getJugador1())) {
+            procesarPosicionJugador1(evento);
+        } else {
+            procesarPosicionJugador2(evento);
+        }
+        if (contadorEnvio == 2) {
+            if (!detener.get()) {
+                intercambiarJugadoresEntreClientes();
+            }
+        }
+        return null;
+    }
+
+    private void intercambiarJugadoresEntreClientes() {
+        EnvioJugadorEvento evento2 = new EnvioJugadorEvento();
+        enviarEventoAJugador(streamsJugador1.getSalida(), new ResultadoEvento(true));
+        enviarEventoAJugador(streamsJugador2.getSalida(), new ResultadoEvento(true));
+        evento2.setEmisor(partida.getJugador2());
+        enviarEventoAJugador(streamsJugador1.getSalida(), evento2);
+        EnvioJugadorEvento evento1 = new EnvioJugadorEvento();
+        evento1.setEmisor(partida.getJugador1());
+        enviarEventoAJugador(streamsJugador2.getSalida(), evento1);
+        mandadoPorDosJugadores();
     }
 
     public void mandadoPorDosJugadores() {
@@ -244,8 +227,31 @@ public class ManejadorPartida implements EventoObserver {
         }
     }
 
+
+    private void procesarPosicionJugador1(PosicionNavesEvento evento) {
+        partida.setTableroJugador1(evento.getTablero());
+        partida.getJugador1().setNaves(
+                ManejadorPosicionNaves.inicializarNaves(partida.getTableroJugador1())
+        );
+        contadorEnvio++;
+        if (contadorEnvio != 2) {
+            enviarEventoAJugador(streamsJugador1.getSalida(), new ResultadoEvento(false));
+        }
+    }
+
+    private void procesarPosicionJugador2(PosicionNavesEvento evento) {
+        partida.setTableroJugador2(evento.getTablero());
+        partida.getJugador2().setNaves(
+                ManejadorPosicionNaves.inicializarNaves(partida.getTableroJugador2())
+        );
+        contadorEnvio++;
+        if (contadorEnvio != 2) {
+            enviarEventoAJugador(streamsJugador2.getSalida(), new ResultadoEvento(false));
+        }
+    }
+
     private void iniciarTemporizadorActivo(int segundos) {
-        detenerTemporizadorActivo(); // Asegúrate de limpiar temporizadores anteriores.
+        detenerTemporizadorActivo();
 
         temporizadorActual = Executors.newSingleThreadScheduledExecutor();
         detener.set(false); // Reinicia la señal de detención.
@@ -261,7 +267,7 @@ public class ManejadorPartida implements EventoObserver {
             }, segundos, TimeUnit.SECONDS);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Logger.error("Error al iniciar el temporizador activo: {}", e.getMessage());
         }
     }
 
@@ -312,11 +318,11 @@ public class ManejadorPartida implements EventoObserver {
      * establecido el turno de disparo
      */
     private void manejarTurnoJugador() {
-        enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(90));
-        enviarEventoAJugador(streamsJugador2.getSalida(), new TimeOutEvento(90));
+        enviarEventoAJugador(streamsJugador1.getSalida(), new TimeOutEvento(30));
+        enviarEventoAJugador(streamsJugador2.getSalida(), new TimeOutEvento(30));
         partida.getJugador2().setTurno(false);
         partida.getJugador1().setTurno(true);
-        iniciarTemporizadorActivo(90);
+        iniciarTemporizadorActivo(30);
     }
 
     /**
