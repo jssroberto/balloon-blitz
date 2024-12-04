@@ -206,6 +206,8 @@ public class FramePrincipal extends javax.swing.JFrame {
             PerderPanel view = new PerderPanel(this);
             cambiarPanel(view);
         }
+        eliminarObservadores();
+        ConexionCliente.eliminarIntancia();
     }
 
     public void eliminarObservadores() {

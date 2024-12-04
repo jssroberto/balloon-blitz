@@ -43,6 +43,10 @@ public class ConexionCliente {
         }
     }
 
+    public static void eliminarIntancia() {
+        instancia = null;
+    }
+
     public static synchronized ConexionCliente getInstancia() {
         if (instancia == null) {
             instancia = new ConexionCliente();

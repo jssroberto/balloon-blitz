@@ -39,7 +39,7 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="lblTitulo1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Arrastra tus naves (globos) para colocarlas en el tablero, usa click"/>
+            <Property name="text" type="java.lang.String" value="Arrastra tus naves (globos) para colocarlas en el tablero, usa R"/>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -77,7 +77,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="lblTitulo2">
           <Properties>
-            <Property name="text" type="java.lang.String" value="derecho para rotarlas."/>
+            <Property name="text" type="java.lang.String" value="en el teclado para rotarla."/>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">

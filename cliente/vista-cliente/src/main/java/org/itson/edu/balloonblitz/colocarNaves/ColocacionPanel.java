@@ -371,14 +371,14 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        lblTitulo1.setText("Arrastra tus naves (globos) para colocarlas en el tablero, usa click");
+        lblTitulo1.setText("Arrastra tus naves (globos) para colocarlas en el tablero, usa R");
         jPanel1.add(lblTitulo1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 6, 1020, 40));
         jPanel1.add(cantNave, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 170, -1, 40));
         jPanel1.add(cantBarco, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 220, -1, 40));
         jPanel1.add(cantCrucero, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 270, 50, 40));
         jPanel1.add(cantPortaAviones, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 320, 70, 40));
 
-        lblTitulo2.setText("derecho para rotarlas.");
+        lblTitulo2.setText("en el teclado para rotarla.");
         jPanel1.add(lblTitulo2, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 50, -1, 40));
 
         panelTablero.setFont(new java.awt.Font("Segoe UI", 0, 8)); // NOI18N
@@ -433,12 +433,12 @@ public class ColocacionPanel extends javax.swing.JPanel implements ObserverPosic
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
