@@ -1,4 +1,4 @@
-package org.itson.edu.balloonblitz;
+package org.itson.edu.balloonblitz.main.servidor;
 
 import org.itson.edu.balloonblitz.modelo.servidor.Lobby;
 import org.itson.edu.balloonblitz.conexion.servidor.ConexionObserver;
