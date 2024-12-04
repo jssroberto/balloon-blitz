@@ -12,10 +12,10 @@ import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.entidades.eventos.PosicionNavesEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.ResultadoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.TimeOutEvento;
-import org.itson.edu.balloonblitz.modelo.ConexionCliente;
-import org.itson.edu.balloonblitz.modelo.ObservadorJugador;
-import org.itson.edu.balloonblitz.modelo.ObservadorResultado;
-import org.itson.edu.balloonblitz.modelo.ObservadorTiempo;
+import org.itson.edu.balloonblitz.modelo.servidor.ConexionCliente;
+import org.itson.edu.balloonblitz.modelo.servidor.ObservadorJugador;
+import org.itson.edu.balloonblitz.modelo.servidor.ObservadorResultado;
+import org.itson.edu.balloonblitz.modelo.servidor.ObservadorTiempo;
 
 public class ControllerPosicionNaves implements ObservadorTiempo, ObservadorJugador, ObservadorResultado,ActionHandlerColocarNaves {
 

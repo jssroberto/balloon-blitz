@@ -1,4 +1,4 @@
-package org.itson.edu.balloonblitz.controlador.servidor;
+package org.itson.edu.balloonblitz.modelo.servidor;
 
 import org.itson.edu.balloonblitz.entidades.Casilla;
 import org.itson.edu.balloonblitz.entidades.Coordenada;
@@ -6,10 +6,6 @@ import org.itson.edu.balloonblitz.entidades.Nave;
 import org.itson.edu.balloonblitz.entidades.Tablero;
 import org.itson.edu.balloonblitz.entidades.enumeradores.TipoNave;
 import org.itson.edu.balloonblitz.entidades.eventos.PosicionNavesEvento;
-import org.itson.edu.balloonblitz.entidades.navefactory.Barco;
-import org.itson.edu.balloonblitz.entidades.navefactory.Crucero;
-import org.itson.edu.balloonblitz.entidades.navefactory.PortaAviones;
-import org.itson.edu.balloonblitz.entidades.navefactory.Submarino;
 
 import java.util.*;
 

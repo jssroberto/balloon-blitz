@@ -1,16 +1,4 @@
-package org.itson.edu.balloonblitz.controlador.servidor;
-
-import org.itson.edu.balloonblitz.entidades.Casilla;
-import org.itson.edu.balloonblitz.entidades.Nave;
-import org.itson.edu.balloonblitz.entidades.Tablero;
-import org.itson.edu.balloonblitz.entidades.eventos.PosicionNavesEvento;
-import org.itson.edu.balloonblitz.entidades.eventos.ResultadoEvento;
-import org.itson.edu.balloonblitz.entidades.navefactory.Barco;
-import org.itson.edu.balloonblitz.entidades.navefactory.Crucero;
-import org.itson.edu.balloonblitz.entidades.navefactory.PortaAviones;
-import org.itson.edu.balloonblitz.entidades.navefactory.Submarino;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+package org.itson.edu.balloonblitz.modelo.servidor;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;

@@ -2,15 +2,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package org.itson.edu.balloonblitz.controlador.servidor;
+package org.itson.edu.balloonblitz.modelo.servidor;
 
 import org.itson.edu.balloonblitz.entidades.*;
 import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoCasilla;
 import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoNave;
 import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.ResultadoDisparoEvento;
-
-import java.util.List;
 
 /**
  * @author elimo

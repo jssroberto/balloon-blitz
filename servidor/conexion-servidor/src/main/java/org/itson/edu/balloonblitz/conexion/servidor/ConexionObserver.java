@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
  */
-package org.itson.edu.balloonblitz.modelo.servidor;
+package org.itson.edu.balloonblitz.conexion.servidor;
 
 /**
  * Interfaz para los suscriptores de la conexion

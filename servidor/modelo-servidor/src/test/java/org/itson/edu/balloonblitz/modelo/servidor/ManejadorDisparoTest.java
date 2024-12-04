@@ -1,17 +1,4 @@
-package org.itson.edu.balloonblitz.controlador.servidor;
-
-import org.itson.edu.balloonblitz.entidades.*;
-import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoCasilla;
-import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoNave;
-import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
-import org.itson.edu.balloonblitz.entidades.eventos.ResultadoDisparoEvento;
-import org.itson.edu.balloonblitz.entidades.navefactory.Crucero;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.*;
+package org.itson.edu.balloonblitz.modelo.servidor;
 
 class ManejadorDisparoTest {
 

@@ -6,8 +6,8 @@ package org.itson.edu.balloonblitz.emparejamiento;
 
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 import org.itson.edu.balloonblitz.entidades.eventos.ResultadoEvento;
-import org.itson.edu.balloonblitz.modelo.ConexionCliente;
-import org.itson.edu.balloonblitz.modelo.ObservadorResultado;
+import org.itson.edu.balloonblitz.modelo.servidor.ConexionCliente;
+import org.itson.edu.balloonblitz.modelo.servidor.ObservadorResultado;
 
 /**
  * @author elimo

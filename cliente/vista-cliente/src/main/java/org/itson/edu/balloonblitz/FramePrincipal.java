@@ -25,7 +25,7 @@ import org.itson.edu.balloonblitz.emparejamiento.ControllerEmparejamiento;
 import org.itson.edu.balloonblitz.emparejamiento.EmparejamientoPanel;
 import org.itson.edu.balloonblitz.emparejamiento.ModelEmparejamiento;
 import org.itson.edu.balloonblitz.entidades.Jugador;
-import org.itson.edu.balloonblitz.modelo.ConexionCliente;
+import org.itson.edu.balloonblitz.modelo.servidor.ConexionCliente;
 import org.itson.edu.balloonblitz.partida.ControllerPartida;
 import org.itson.edu.balloonblitz.partida.ModelPartida;
 import org.itson.edu.balloonblitz.partida.PartidaPanel;

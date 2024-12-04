@@ -1,4 +1,4 @@
-package org.itson.edu.balloonblitz.controlador.servidor;
+package org.itson.edu.balloonblitz.modelo.servidor;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -12,13 +12,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
 
+import org.itson.edu.balloonblitz.conexion.servidor.*;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
-import org.itson.edu.balloonblitz.modelo.servidor.ConexionObserver;
-import org.itson.edu.balloonblitz.modelo.servidor.ControladorStreams;
-import org.itson.edu.balloonblitz.modelo.servidor.EventoObserver;
-import org.itson.edu.balloonblitz.modelo.servidor.JugadorObserver;
-import org.itson.edu.balloonblitz.modelo.servidor.Servidor;
 
 public class Lobby implements ConexionObserver, JugadorObserver {
 

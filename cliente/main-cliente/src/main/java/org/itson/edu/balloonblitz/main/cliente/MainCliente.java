@@ -14,7 +14,6 @@ public class MainCliente {
 
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(() -> {
-        
             FramePrincipal framePrincipal = new FramePrincipal();
             framePrincipal.cambiarPanel(new InicioPanel(framePrincipal));
             framePrincipal.setVisible(true);

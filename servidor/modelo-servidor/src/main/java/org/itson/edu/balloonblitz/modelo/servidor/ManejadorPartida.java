@@ -1,5 +1,8 @@
-package org.itson.edu.balloonblitz.controlador.servidor;
+package org.itson.edu.balloonblitz.modelo.servidor;
 
+import org.itson.edu.balloonblitz.conexion.servidor.ControladorStreams;
+import org.itson.edu.balloonblitz.conexion.servidor.EventoObserver;
+import org.itson.edu.balloonblitz.conexion.servidor.Servidor;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.Nave;
 import org.itson.edu.balloonblitz.entidades.Partida;
@@ -8,12 +11,8 @@ import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoNave;
 import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoPartida;
 import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.*;
-import org.itson.edu.balloonblitz.modelo.servidor.ControladorStreams;
-import org.itson.edu.balloonblitz.modelo.servidor.EventoObserver;
-import org.itson.edu.balloonblitz.modelo.servidor.Servidor;
 import org.tinylog.Logger;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,7 +22,6 @@ import java.util.Map;
  */
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;

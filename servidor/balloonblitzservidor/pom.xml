@@ -9,6 +9,7 @@
     <modules>
         <module>../conexion-servidor</module>
         <module>../modelo-servidor</module>
+        <module>../main-servidor</module>
     </modules>
     <dependencies>
         <dependency>

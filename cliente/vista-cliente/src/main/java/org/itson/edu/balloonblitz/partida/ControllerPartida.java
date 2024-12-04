@@ -8,7 +8,7 @@ import org.itson.edu.balloonblitz.entidades.Casilla;
 import org.itson.edu.balloonblitz.entidades.Jugador;
 import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoNave;
 import org.itson.edu.balloonblitz.entidades.eventos.*;
-import org.itson.edu.balloonblitz.modelo.*;
+import org.itson.edu.balloonblitz.modelo.servidor.*;
 
 /**
  * @author elimo

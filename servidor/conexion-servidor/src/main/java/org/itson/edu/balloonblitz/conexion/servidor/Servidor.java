@@ -1,4 +1,4 @@
-package org.itson.edu.balloonblitz.modelo.servidor;
+package org.itson.edu.balloonblitz.conexion.servidor;
 
 import org.itson.edu.balloonblitz.entidades.eventos.DesconexionEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;

@@ -2,23 +2,22 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
  */
-package org.itson.edu.balloonblitz.modelo.servidor;
+package org.itson.edu.balloonblitz.conexion.servidor;
 
 import java.io.ObjectInputStream;
 import org.itson.edu.balloonblitz.entidades.eventos.Evento;
 
 /**
- * Interfaz para los suscriptores de los eventos
- *
+ * Interfaz para los suscriptores de la conexion
  * @author elimo
  */
-public interface EventoObserver {
-
+public interface JugadorObserver {
+    
     /**
-     * Metodo para manejar eventos
-     *
-     * @param evento Eventos a manejar por el observador
-     * @return
+     * Metodo que agrega un jugador
+     * @param jugador 
      */
-    void manejarEvento(Evento evento, ObjectInputStream entrada);
+    void agregarJugador(Evento jugador, ObjectInputStream entrada);
+    
+    void eliminarCliente(ObjectInputStream entrada);
 }
