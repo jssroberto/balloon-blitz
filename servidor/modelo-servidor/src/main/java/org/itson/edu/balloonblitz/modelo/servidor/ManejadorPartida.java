@@ -8,7 +8,6 @@ import org.itson.edu.balloonblitz.entidades.Nave;
 import org.itson.edu.balloonblitz.entidades.Partida;
 import org.itson.edu.balloonblitz.entidades.Tablero;
 import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoNave;
-import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoPartida;
 import org.itson.edu.balloonblitz.entidades.enumeradores.TipoEvento;
 import org.itson.edu.balloonblitz.entidades.eventos.*;
 import org.tinylog.Logger;
@@ -116,7 +115,6 @@ public class ManejadorPartida implements EventoObserver {
      * Inicializa los recursos de la partida.
      */
     public void crearPartida() {
-        partida.setEstadoPartida(EstadoPartida.ACTIVA);
         partida.getJugador1().setTurno(true);
         partida.getJugador2().setTurno(true);
     }

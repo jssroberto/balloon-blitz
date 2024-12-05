@@ -6,7 +6,6 @@ package org.itson.edu.balloonblitz.partida;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -23,18 +22,17 @@ import org.itson.edu.balloonblitz.vista.music.MusicPlayer;
 public class ModelPartida {
 
     private final List<ObserverPartida> observers = new ArrayList<>();
-    private String texto;
-    private final int contador = 0;
-    private Jugador jugadorRival;
+    private String textoTiempoRestante;
     private int tiempoRestante;
+    private Jugador jugadorRival;
     private Tablero tablero;
     private Tablero tableroDeRival;
     private ScheduledExecutorService temporizadorActual;
     private final AtomicBoolean detener = new AtomicBoolean(false);
     private Casilla ultimoDisparo;
-    private MusicPlayer playerPop;
-    private MusicPlayer playerQuack;
-    private MusicPlayer playerExplosion;
+    private final MusicPlayer playerPop;
+    private final MusicPlayer playerQuack;
+    private final MusicPlayer playerExplosion;
     private boolean victoria;
 
     public ModelPartida() {
@@ -45,10 +43,6 @@ public class ModelPartida {
 
     public void addObserver(ObserverPartida observer) {
         observers.add(observer);
-    }
-
-    public void removeOberver(ObserverPartida observer) {
-        observers.remove(observer);
     }
 
     private void notifyObservers(UpdateEventPartida event) {
@@ -87,6 +81,43 @@ public class ModelPartida {
         notifyObservers(new UpdateEventPartida(this, EventTypePartida.ENVIAR_JUGADOR));
     }
 
+    public String getTextoTiempoRestante() {
+        return textoTiempoRestante;
+    }
+
+    public void setTextoTiempoRestante(String textoTiempoRestante) {
+        this.textoTiempoRestante = textoTiempoRestante;
+    }
+
+    public MusicPlayer getPlayerPop() {
+        return playerPop;
+    }
+
+    public MusicPlayer getPlayerQuack() {
+        return playerQuack;
+    }
+
+    public MusicPlayer getPlayerExplosion() {
+        return playerExplosion;
+    }
+
+    public Casilla getUltimoDisparo() {
+        return ultimoDisparo;
+    }
+
+    public void setUltimoDisparo(Casilla ultimoDisparo) {
+        this.ultimoDisparo = ultimoDisparo;
+        notifyObservers(new UpdateEventPartida(this, EventTypePartida.ACTUALIZAR_ULTIMO_DISPARO));
+    }
+
+    public boolean isVictoria() {
+        return victoria;
+    }
+
+    public void setVictoria(boolean victoria) {
+        this.victoria = victoria;
+        notifyObservers(new UpdateEventPartida(this, EventTypePartida.VICTORIA));
+    }
 
     public void correrTiempo(TimeOutEvento evento) {
         detenerTemporizadorActivo(); // Limpia cualquier temporizador previo.
@@ -103,13 +134,13 @@ public class ModelPartida {
                 }
 
                 if (tiempoRestante > 0) {
-                    setTexto(String.valueOf(tiempoRestante));
+                    setTextoTiempoRestante(String.valueOf(tiempoRestante));
                     notifyObservers(new UpdateEventPartida(this, EventTypePartida.ACTUALIZAR_LABEL_TIEMPO));
                     tiempoRestante--;
                 }
             }, 0, 1, TimeUnit.SECONDS);
         } else if (evento.getTiempoRestante() == 0) {
-            setTexto("Tiempo expirado");
+            setTextoTiempoRestante("Tiempo expirado");
             notifyObservers(new UpdateEventPartida(this, EventTypePartida.TIEMPO_TERMINADO));
         }
     }
@@ -132,63 +163,11 @@ public class ModelPartida {
         }
     }
 
-
     public void obtenerTurno(ResultadoEvento evento) {
         if (evento.isValid()) {
             notifyObservers(new UpdateEventPartida(this, EventTypePartida.TURNO_ACTIVO));
         } else {
             notifyObservers(new UpdateEventPartida(this, EventTypePartida.TURNO_INACTIVO));
         }
-    }
-
-    public String getTexto() {
-        return texto;
-    }
-
-    public void setTexto(String texto) {
-        this.texto = texto;
-    }
-
-
-    public MusicPlayer getPlayerPop() {
-        return playerPop;
-    }
-
-    public void setPlayerPop(MusicPlayer playerPop) {
-        this.playerPop = playerPop;
-    }
-
-    public MusicPlayer getPlayerQuack() {
-        return playerQuack;
-    }
-
-    public void setPlayerQuack(MusicPlayer playerQuack) {
-        this.playerQuack = playerQuack;
-    }
-
-    public MusicPlayer getPlayerExplosion() {
-        return playerExplosion;
-    }
-
-    public void setPlayerExplosion(MusicPlayer playerExplosion) {
-        this.playerExplosion = playerExplosion;
-    }
-
-    public Casilla getUltimoDisparo() {
-        return ultimoDisparo;
-    }
-
-    public void setUltimoDisparo(Casilla ultimoDisparo) {
-        this.ultimoDisparo = ultimoDisparo;
-        notifyObservers(new UpdateEventPartida(this, EventTypePartida.ACTUALIZAR_ULTIMO_DISPARO));
-    }
-
-    public boolean isVictoria() {
-        return victoria;
-    }
-
-    public void setVictoria(boolean victoria) {
-        this.victoria = victoria;
-        notifyObservers(new UpdateEventPartida(this, EventTypePartida.VICTORIA));
     }
 }

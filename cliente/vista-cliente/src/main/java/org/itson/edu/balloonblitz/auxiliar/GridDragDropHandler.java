@@ -28,10 +28,8 @@ import javax.swing.JLabel;
 import org.itson.edu.balloonblitz.entidades.Casilla;
 import org.itson.edu.balloonblitz.entidades.Nave;
 import org.itson.edu.balloonblitz.entidades.Tablero;
-import org.itson.edu.balloonblitz.entidades.navefactory.Barco;
-import org.itson.edu.balloonblitz.entidades.navefactory.Crucero;
-import org.itson.edu.balloonblitz.entidades.navefactory.PortaAviones;
-import org.itson.edu.balloonblitz.entidades.navefactory.Submarino;
+import org.itson.edu.balloonblitz.entidades.enumeradores.TipoNave;
+import org.itson.edu.balloonblitz.entidades.navefactory.*;
 
 public class GridDragDropHandler extends DropTargetAdapter {
 
@@ -274,10 +272,10 @@ public class GridDragDropHandler extends DropTargetAdapter {
         Nave nave;
 
         switch (size) {
-            case 4 -> nave = new PortaAviones();
-            case 3 -> nave = new Crucero();
-            case 2 -> nave = new Submarino();
-            default -> nave = new Barco();
+            case 4 -> nave = NaveFactory.crearNave(TipoNave.PORTAAVIONES);
+            case 3 -> nave = NaveFactory.crearNave(TipoNave.CRUCERO);
+            case 2 -> nave = NaveFactory.crearNave(TipoNave.SUBMARINO);
+            default -> nave = NaveFactory.crearNave(TipoNave.BARCO);
         }
 
         naves.add(nave);
@@ -310,10 +308,10 @@ public class GridDragDropHandler extends DropTargetAdapter {
         Nave nave;
 
         switch (size) {
-            case 4 -> nave = new PortaAviones();
-            case 3 -> nave = new Crucero();
-            case 2 -> nave = new Submarino();
-            default -> nave = new Barco();
+            case 4 -> nave = NaveFactory.crearNave(TipoNave.PORTAAVIONES);
+            case 3 -> nave = NaveFactory.crearNave(TipoNave.CRUCERO);
+            case 2 -> nave = NaveFactory.crearNave(TipoNave.SUBMARINO);
+            default -> nave = NaveFactory.crearNave(TipoNave.BARCO);
         }
 
         naves.add(nave);

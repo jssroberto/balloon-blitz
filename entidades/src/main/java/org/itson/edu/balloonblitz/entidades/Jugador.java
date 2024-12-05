@@ -22,15 +22,12 @@ public class Jugador implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     private final String id;
-    private Integer numJugador;
     private String nombre;
     private String fotoPerfil;
     private Tablero tableroPropio;
-    private Tablero tableroContrincante;
     private List<Nave> naves;
     private ColorNaves colorPropio;
     private ColorNaves colorRival;
-    private Integer navesRestantes;
     private boolean turno;
 
     public Jugador() {
@@ -47,14 +44,6 @@ public class Jugador implements Serializable {
 
     public String getId() {
         return id;
-    }
-
-    public Integer getNumJugador() {
-        return numJugador;
-    }
-
-    public void setNumJugador(Integer numJugador) {
-        this.numJugador = numJugador;
     }
 
     public String getNombre() {
@@ -81,14 +70,6 @@ public class Jugador implements Serializable {
         this.tableroPropio = tableroPropio;
     }
 
-    public Tablero getTableroContrincante() {
-        return tableroContrincante;
-    }
-
-    public void setTableroContrincante(Tablero tableroContrincante) {
-        this.tableroContrincante = tableroContrincante;
-    }
-
     public List<Nave> getNaves() {
         return naves;
     }
@@ -111,14 +92,6 @@ public class Jugador implements Serializable {
 
     public void setColorRival(ColorNaves colorRival) {
         this.colorRival = colorRival;
-    }
-
-    public Integer getNavesRestantes() {
-        return navesRestantes;
-    }
-
-    public void setNavesRestantes(Integer navesRestantes) {
-        this.navesRestantes = navesRestantes;
     }
 
     public boolean isTurno() {

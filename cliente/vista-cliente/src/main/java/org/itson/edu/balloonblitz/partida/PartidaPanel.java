@@ -71,19 +71,10 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
         if (null != event.eventType()) {
             switch (event.eventType()) {
                 case ENVIAR_JUGADOR:
-                    jugadorRival = event.model().getJugadorRival();
-                    lblNombreEnemigo.setText(jugadorRival.getNombre());
-
-                    try {
-                        setupUI();
-                    } catch (FontFormatException | IOException ex) {
-                        Logger.getLogger(PartidaPanel.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-
+                    updateEnviarJugador(event);
                     break;
-
                 case ACTUALIZAR_LABEL_TIEMPO:
-                    lblTiempoRestante.setText(event.model().getTexto());
+                    lblTiempoRestante.setText(event.model().getTextoTiempoRestante());
                     break;
                 case ACTUALIZAR_TABLERO_PROPIO:
                     tablero = event.model().getTablero();
@@ -93,37 +84,53 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
                     tableroDeRival = event.model().getTableroDeRival();
                     cargarTableroRival(tableroRival, tableroDeRival);
                     break;
-                //TODO específicar sufijo lbl
                 case TURNO_ACTIVO:
-                    TableroClickHandler.habilitarClicks(true);
-                    TableroClickHandler.configurarTableroRival(tableroRival, jugador, this);
-                    tableroRival.setEnabled(true);
-                    lblEsperandoMovimiento.setText("Haz tu movimiento!");
+                    updateTurnoActivo();
                     break;
                 case TURNO_INACTIVO:
-                    TableroClickHandler.habilitarClicks(false);
-                    lblEsperandoMovimiento.setText("Esperando movimiento...");
-                    tableroRival.setEnabled(false);
+                    updateTurnoInactivo();
                     break;
                 case ACTUALIZAR_ULTIMO_DISPARO:
                     Casilla casilla = event.model().getUltimoDisparo();
                     actualizarLabelsNaves(casilla);
                     break;
-                case TIEMPO_TERMINADO: {
-                    Coordenada coordenada = new Coordenada(-1, -1);
-                    DisparoEvento evento = new DisparoEvento(coordenada);
-                    enviarEvento(evento);
+                case TIEMPO_TERMINADO:
+                    updateTiempoTerminado();
                     break;
-                }
-                case VICTORIA: {
+                case VICTORIA:
                     framePrincipal.cambiarPanelVictoria(event.model().isVictoria());
                     break;
-                }
-                default: {
-                }
             }
         }
+    }
 
+    private void updateTiempoTerminado() {
+        Coordenada coordenada = new Coordenada(-1, -1);
+        DisparoEvento evento = new DisparoEvento(coordenada);
+        enviarEvento(evento);
+    }
+
+    private void updateTurnoInactivo() {
+        TableroClickHandler.habilitarClicks(false);
+        lblEsperandoMovimiento.setText("Esperando movimiento...");
+        tableroRival.setEnabled(false);
+    }
+
+    private void updateTurnoActivo() {
+        TableroClickHandler.habilitarClicks(true);
+        TableroClickHandler.configurarTableroRival(tableroRival, jugador, this);
+        tableroRival.setEnabled(true);
+        lblEsperandoMovimiento.setText("Haz tu movimiento!");
+    }
+
+    private void updateEnviarJugador(UpdateEventPartida event) {
+        jugadorRival = event.model().getJugadorRival();
+        lblNombreEnemigo.setText(jugadorRival.getNombre());
+        try {
+            setupUI();
+        } catch (FontFormatException | IOException ex) {
+            Logger.getLogger(PartidaPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
@@ -142,7 +149,6 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
     private void setupUI() throws FontFormatException, IOException {
         setupFonts();
         renderizarTableroJugador();
-
     }
 
     private void renderizarTableroJugador() {
@@ -389,12 +395,12 @@ public class PartidaPanel extends javax.swing.JPanel implements ObserverPartida 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 

@@ -24,21 +24,12 @@ public class NaveFactory {
      * @throws IllegalArgumentException si el tipo de nave no es reconocido.
      */
     public static Nave crearNave(TipoNave tipo) {
-        switch (tipo) {
-            case PORTAAVIONES -> {
-                return new PortaAviones();
-            }
-            case CRUCERO -> {
-                return new Crucero();
-            }
-            case SUBMARINO -> {
-                return new Submarino();
-            }
-            case BARCO -> {
-                return new Barco();
-            }
-            default -> throw new IllegalArgumentException("Tipo de nave no reconocido: " + tipo);
-        }
+        return switch (tipo) {
+            case PORTAAVIONES -> new PortaAviones();
+            case CRUCERO -> new Crucero();
+            case SUBMARINO -> new Submarino();
+            case BARCO -> new Barco();
+        };
     }
 }
 

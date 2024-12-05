@@ -7,8 +7,6 @@ package org.itson.edu.balloonblitz.entidades;
 import java.io.Serial;
 import java.io.Serializable;
 
-import org.itson.edu.balloonblitz.entidades.enumeradores.EstadoPartida;
-
 import java.util.List;
 
 /**
@@ -26,48 +24,15 @@ public class Partida implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
-    private List<Disparo> registroDisparos;
     private Jugador jugador1;
     private Jugador jugador2;
-    private EstadoPartida estadoPartida;
     private Tablero tableroJugador1;
     private Tablero tableroJugador2;
 
     /**
-     * Constructor vacío de la clase Partida, que inicializa el estado de la partida en ESPERA.
+     * Constructor vacío de la clase Partida
      */
     public Partida() {
-        this.estadoPartida = EstadoPartida.ESPERA;
-    }
-
-    /**
-     * Constructor que recibe dos jugadores y configura el estado de la partida en ESPERA.
-     *
-     * @param jugador1 El primer jugador de la partida.
-     * @param jugador2 El segundo jugador de la partida.
-     */
-    public Partida(Jugador jugador1, Jugador jugador2) {
-        this.jugador1 = jugador1;
-        this.jugador2 = jugador2;
-        this.estadoPartida = EstadoPartida.ESPERA;
-    }
-
-    /**
-     * Obtiene el registro de los disparos realizados durante la partida.
-     *
-     * @return Una lista con los disparos registrados en la partida.
-     */
-    public List<Disparo> getRegistroDisparos() {
-        return registroDisparos;
-    }
-
-    /**
-     * Establece el registro de los disparos realizados durante la partida.
-     *
-     * @param registroDisparos Una lista con los disparos realizados.
-     */
-    public void setRegistroDisparos(List<Disparo> registroDisparos) {
-        this.registroDisparos = registroDisparos;
     }
 
     /**
@@ -104,24 +69,6 @@ public class Partida implements Serializable {
      */
     public void setJugador2(Jugador jugador2) {
         this.jugador2 = jugador2;
-    }
-
-    /**
-     * Obtiene el estado actual de la partida.
-     *
-     * @return El estado de la partida.
-     */
-    public EstadoPartida getEstadoPartida() {
-        return estadoPartida;
-    }
-
-    /**
-     * Establece el estado de la partida.
-     *
-     * @param estadoPartida El nuevo estado de la partida.
-     */
-    public void setEstadoPartida(EstadoPartida estadoPartida) {
-        this.estadoPartida = estadoPartida;
     }
 
     /**

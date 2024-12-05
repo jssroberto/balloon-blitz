@@ -12,9 +12,5 @@ import org.itson.edu.balloonblitz.entidades.eventos.DisparoEvento;
  * @author elimo
  */
 public interface ActionHandlerPartida {
-    //aquí irían eventos de interacción de la vista que se enviarían al controlador
-//    void clickRegresar();
     void enviarEvento(DisparoEvento evento);
-    
-
 }
